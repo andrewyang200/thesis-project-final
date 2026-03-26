@@ -1,0 +1,649 @@
+% ============================================================
+% results.tex
+% ============================================================
+
+This chapter presents the full empirical results of our
+competing-risks survival analysis. We proceed from
+nonparametric characterization of litigation duration and
+outcomes, through progressively richer covariate-adjusted
+models, to robustness checks and machine learning
+benchmarking. The organizing question throughout is: how do
+the PSLRA, circuit geography, and case-level structural
+characteristics jointly shape the timing and probability of
+settlement versus dismissal?
+
+\section{Nonparametric Duration and Outcome Estimates}
+
+\subsection{Overall Duration}
+
+Figure~\ref{fig:km_overall} presents the Kaplan-Meier
+estimate of the overall survival function for the full
+analysis sample of 12,968 federal securities class actions.
+The curve drops steeply in the first two years, reflecting
+the concentration of dismissals during the
+motion-to-dismiss phase: approximately 25\% of cases are
+resolved within the first year, and roughly 50\% within two
+years. Resolution slows markedly after year four, with fewer
+than 10\% of cases remaining pending beyond eight years.
+
+\begin{figure}[htb]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./Figures/figure1_km_overall.png}
+        \caption{Kaplan-Meier Survival Function}
+        \label{fig:km_overall}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./Figures/figure2_cif_overall.png}
+        \caption{Aalen-Johansen CIF}
+        \label{fig:cif_overall}
+    \end{subfigure}
+    \vskip 10pt
+    \caption[Overall Duration and Competing-Outcome Patterns]{Overall duration and competing-outcome patterns. Left: Kaplan-Meier overall survival ($n = 12,968$); shaded band = 95\% pointwise CI. Right: Aalen-Johansen CIFs for settlement and dismissal under Scheme A.}
+    \label{fig:baseline_plots}
+\end{figure}
+
+\subsection{Competing-Risks Cumulative Incidence: Overall}
+
+Figure~\ref{fig:cif_overall} decomposes overall resolution
+into its two competing terminal events. Dismissal incidence
+climbs rapidly: by two years post-filing, roughly 35\% of
+cases have been dismissed, and by five years the cumulative
+dismissal probability approaches 60\%. Settlement incidence
+accumulates slowly and reaches only approximately 20\% by
+eight years. The two curves do not converge, reflecting the
+fundamental asymmetry between the two outcomes: dismissal
+is the dominant resolution pathway, operating primarily
+through early pleading-stage motions, while settlement is
+a comparatively rare and temporally dispersed event
+concentrated among cases that survive the initial
+motion-to-dismiss.
+
+A naive Kaplan-Meier estimate of time to settlement that
+censors dismissals would produce upwardly biased settlement
+probabilities by treating dismissed cases as though they
+remained at risk of eventual settlement---precisely the
+type of bias the Aalen-Johansen competing-risks estimator
+avoids.
+
+\subsection{Cumulative Incidence by PSLRA Regime}
+
+Figure~\ref{fig:cif_pslra} stratifies the CIFs by PSLRA
+regime. Post-PSLRA dismissal incidence rises sharply in
+the first year and reaches nearly 63\% by five years,
+substantially above the pre-PSLRA trajectory of 42\%.
+Post-PSLRA settlement incidence is simultaneously
+suppressed, reaching only 15.7\% at five years compared
+with 43.8\% pre-PSLRA. The reform affects both competing
+processes simultaneously and in opposite directions.
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=\linewidth]{./Figures/figure3_cif_pslra.png}
+    \vskip 5pt
+    \caption[Cumulative Incidence of Outcomes by PSLRA Regime]{Aalen-Johansen CIFs stratified by PSLRA regime. Solid lines = Pre-PSLRA ($n = 1,032$); dashed = Post-PSLRA ($n = 11,936$). Green = settlement; orange/red = dismissal. Gray's test rejects equality for both settlement ($\text{stat} = 397.6, p < 0.001$) and dismissal ($\text{stat} = 179.8, p < 0.001$).}
+    \label{fig:cif_pslra}
+\end{figure}
+
+Table~\ref{tab:cif_horizons} quantifies differences at four
+key horizons. The PSLRA effect is particularly pronounced
+in the first year: one-year dismissal incidence is 29.6\%
+post-PSLRA versus 15.0\% pre-PSLRA. By contrast, the
+settlement gap narrows only modestly over time: the five-year
+settlement difference is 28.1 percentage points, indicating
+that the PSLRA's suppression of settlement is a permanent
+reduction in outcome probability rather than a timing
+effect. Notably, pre-PSLRA five-year dismissal and
+settlement CIFs are nearly equal (42.2\% vs.\ 43.8\%),
+suggesting that under the old regime the two outcomes were
+roughly equiprobable for long-duration cases. Post-PSLRA,
+dismissal probability far exceeds settlement probability
+at every horizon.
+
+\begin{table}[htbp]
+\centering
+\caption{Cumulative Incidence at Key Horizons by PSLRA Regime (\%), Aalen-Johansen Estimates}
+\label{tab:cif_horizons}
+\renewcommand{\arraystretch}{1.3} % Adds vertical padding for a professional feel
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l l r r r r @{}}
+\toprule
+\textbf{Regime} & \textbf{Outcome} & \textbf{1 yr} & \textbf{2 yr} & \textbf{3 yr} & \textbf{5 yr} \\
+\midrule
+Pre-PSLRA  & Settlement &  4.7 & 19.1 & 28.1 & 43.8 \\
+           & Dismissal  & 15.0 & 25.9 & 29.5 & 42.2 \\
+\midrule
+Post-PSLRA & Settlement &  2.0 &  5.8 & 10.1 & 15.7 \\
+           & Dismissal  & 29.6 & 38.9 & 48.5 & 62.9 \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\subsection{Cumulative Incidence by Circuit}
+
+Figures~\ref{fig:cif_circuit_dismissal}
+and~\ref{fig:cif_circuit_settlement} present CIFs for the
+four largest circuits. Circuit heterogeneity is substantial
+and the patterns are not symmetric across outcomes---a
+nuanced finding that a competing-risks framework reveals
+and that standard single-outcome analyses would miss.
+
+\begin{figure}[htb]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./Figures/figure4_cif_circuit_dismissal.png}
+        \caption{Dismissal Incidence by Circuit}
+        \label{fig:cif_circuit_dismissal}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./Figures/figure5_cif_circuit_settlement.png}
+        \caption{Settlement Incidence by Circuit}
+        \label{fig:cif_circuit_settlement}
+    \end{subfigure}
+    \vskip 10pt
+    \caption[Cumulative Incidence of Outcomes by Judicial Circuit]{Aalen-Johansen CIFs by circuit (top 4 by volume). Gray's test rejects equality for dismissal ($\text{stat} = 812.6, p < 0.001$) and settlement ($\text{stat} = 38.2, p < 0.001$).}
+    \label{fig:cif_circuit}
+\end{figure}
+
+For dismissal (Figure~\ref{fig:cif_circuit_dismissal}),
+the Second Circuit exhibits the highest long-run dismissal
+incidence, reaching approximately 75\% by six years. The
+Fifth Circuit leads in early dismissal---nearly 40\% by year
+one---reflecting aggressive early motion practice in Texas
+and Louisiana. The Third Circuit has the lowest overall
+dismissal incidence, plateauing near 50\%.
+
+The settlement picture is qualitatively different
+(Figure~\ref{fig:cif_circuit_settlement}). The Third Circuit
+has the highest settlement incidence, reaching approximately
+30\% by year three. The Second Circuit has the lowest
+settlement incidence of any major circuit, barely reaching
+5\% by six years. This combination---low settlement
+probability and high dismissal incidence---is the defining
+empirical signature of the Southern District of New York.
+
+\section{Baseline Cause-Specific Cox Models}
+
+Table~\ref{tab:cox_baseline} presents baseline cause-specific
+Cox models. Post-PSLRA cases have a 62\% lower settlement
+hazard (HR $= 0.378$, 95\% CI: 0.337--0.424) and a 64\%
+higher dismissal hazard (HR $= 1.638$, 95\% CI:
+1.478--1.815). The Grambsch-Therneau test fails to reject
+proportional hazards for settlement ($p = 0.12$) but
+strongly rejects for dismissal ($p = 0.0001$), motivating
+the piecewise analysis in Section~\ref{sec:piecewise}.
+
+\begin{table}[htb]
+\centering
+\caption{Baseline Cause-Specific Cox Models (PSLRA Only)}
+\label{tab:cox_baseline}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r c r r @{}}
+\toprule
+\textbf{Outcome} & \textbf{HR} & \textbf{95\% CI} & \textbf{$p$} & \textbf{PH $p$} \\
+\midrule
+Settlement & 0.378 & (0.337, 0.424) & $<$0.001 & 0.120 \\
+Dismissal  & 1.638 & (1.478, 1.815) & $<$0.001 & 0.0001 \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\subsection{Time-Varying PSLRA Effect on Dismissal Hazard}
+\label{sec:piecewise}
+
+Table~\ref{tab:piecewise} presents the piecewise constant
+dismissal hazard model. The temporal decomposition reveals
+a three-phase PSLRA effect. In the first year, post-PSLRA
+cases face more than double the dismissal hazard of
+pre-PSLRA cases (HR $= 2.18$): the PSLRA's heightened
+pleading requirements and automatic discovery stay
+concentrate dismissals at the pleading stage. In years one
+to two, the PSLRA effect vanishes entirely (HR $= 0.922$,
+$p = 0.444$): cases that survived the first-year gauntlet
+face no differential dismissal risk. For cases surviving
+beyond two years, a modest but significant PSLRA effect
+re-emerges (HR $= 1.55$).
+
+\begin{table}[htb]
+\centering
+\caption{PSLRA Effect on Dismissal Hazard by Time Period}
+\label{tab:piecewise}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r c r @{}}
+\toprule
+\textbf{Period} & \textbf{HR} & \textbf{95\% CI} & \textbf{$p$} \\
+\midrule
+0--1 years & 2.180 & (1.850, 2.560) & $<$0.001 \\
+1--2 years & 0.922 & (0.748, 1.140) & 0.444    \\
+2$+$ years & 1.550 & (1.300, 1.840) & $<$0.001 \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+This three-phase pattern---strong early effect, null
+middle-period effect, modest late re-emergence---is the
+first formal empirical documentation of the PSLRA's
+time-varying causal signature using a piecewise survival
+framework on population-level data.
+
+\section{Circuit Effects in Cause-Specific Cox Models}
+
+Table~\ref{tab:cox_circuit} presents cause-specific Cox
+models with PSLRA and circuit fixed effects. The Second
+Circuit serves as the reference category.
+
+\begin{table}[htb]
+\centering
+\caption{Cause-Specific Cox Models with Circuit Effects (Ref: Second Circuit)}
+\label{tab:cox_circuit}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r c r c @{}}
+\toprule
+& \multicolumn{2}{c}{\textbf{Settlement}} & \multicolumn{2}{c}{\textbf{Dismissal}} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5}
+\textbf{Covariate} & \textbf{HR} & \textbf{95\% CI} & \textbf{HR} & \textbf{95\% CI} \\
+\midrule
+Post-PSLRA    & 0.609 & (0.542, 0.684)
+              & 1.846 & (1.664, 2.049) \\
+First Circ.   & 8.52  & (6.26, 11.61)
+              & 1.385 & (1.203, 1.595) \\
+Third Circ.   & 16.57 & (13.53, 20.30)
+              & 1.178 & (1.054, 1.317) \\
+Fourth Circ.  & 1.765 & (1.397, 2.230)
+              & 0.262 & (0.228, 0.301) \\
+Fifth Circ.   & 7.519 & (5.929, 9.536)
+              & 1.483 & (1.343, 1.639) \\
+Sixth Circ.   & 15.89 & (12.62, 20.02)
+              & 0.726 & (0.607, 0.867) \\
+Seventh Circ. & 9.587 & (7.570, 12.14)
+              & 1.251 & (1.109, 1.412) \\
+Eighth Circ.  & 13.60 & (10.70, 17.30)
+              & 0.913 & (0.788, 1.059) \\
+Ninth Circ.   & 7.359 & (6.188, 8.752)
+              & 1.103 & (1.039, 1.171) \\
+Tenth Circ.   & 8.290 & (6.529, 10.52)
+              & 0.805 & (0.703, 0.923) \\
+Eleventh Circ.& 8.265 & (6.438, 10.61)
+              & 1.607 & (1.447, 1.784) \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+The most striking finding is the extreme magnitude of circuit
+effects on settlement hazard. Every other circuit has a
+settlement hazard 1.8 to 16.6 times higher than the Second
+Circuit's. The Second Circuit is, by a wide margin, the
+jurisdiction in which securities class actions are least
+likely to settle at any given duration. On the dismissal
+side, the Fourth Circuit stands out in the opposite
+direction: its dismissal hazard is only 26\% of the Second
+Circuit's (HR $= 0.262$), the lowest of any circuit.
+
+\section{Extended Covariate Models}
+
+The extended analysis uses 12,866 cases with complete data
+on origin, MDL flag, and jurisdiction. Statutory basis
+coverage is 97.5\%; a missingness indicator preserves the
+full estimation sample.
+
+\subsection{Extended Cause-Specific Cox Models}
+
+Tables~\ref{tab:cox_ext_settle}
+and~\ref{tab:cox_ext_dismiss} present the extended
+cause-specific Cox models. The PSLRA effects are robust to
+the inclusion of all extended covariates: the settlement HR
+remains 0.617 and the dismissal HR increases slightly to
+1.941. The PSLRA structural break is not an artifact of
+compositional differences in origin, MDL status, or
+statutory basis across regimes.
+
+\begin{table}[htbp]
+\centering
+\caption{Extended Cause-Specific Cox Model: Settlement ($n = 12{,}866$)}
+\label{tab:cox_ext_settle}
+\renewcommand{\arraystretch}{1.1} % Slightly tighter for long lists, but with better padding
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r c @{}}
+\toprule
+\textbf{Covariate} & \textbf{HR} & \textbf{95\% CI} \\
+\midrule
+Post-PSLRA            & 0.617 & (0.548, 0.695) \\
+\addlinespace[0.5em]
+\textit{Circuit (Ref: Second Circuit)} & & \\
+Third Circuit         & 11.62 & (9.414, 14.340) \\
+Sixth Circuit         & 11.49 & (9.027, 14.612) \\
+Eighth Circuit        & 10.08 & (7.880, 12.889) \\
+Ninth Circuit         &  5.20 & (4.338,  6.222) \\
+Fifth Circuit         &  5.84 & (4.581,  7.442) \\
+First Circuit         &  6.04 & (4.413,  8.259) \\
+Seventh Circuit       &  6.88 & (5.388,  8.772) \\
+Tenth Circuit         &  5.99 & (4.630,  7.737) \\
+Eleventh Circuit      &  5.56 & (4.300,  7.194) \\
+Fourth Circuit        &  2.93 & (2.058,  4.172) \\
+\addlinespace[0.5em]
+\textit{Case Characteristics} & & \\
+Origin: Removed       &  1.44 & (0.926,  2.226) \\
+Origin: MDL           &  0.351 & (0.252, 0.489) \\
+Origin: Other         &  1.57 & (1.336,  1.834) \\
+MDL Flag              &  0.262 & (0.181, 0.380) \\
+Federal Question      &  4.37 & (1.635, 11.672) \\
+\addlinespace[0.5em]
+\textit{Statutory Basis (Ref: 10(b))} & & \\
+Section 11            &  1.02 & (0.861,  1.202) \\
+Other/Both Statutory  &  1.01 & (0.882,  1.146) \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Extended Cause-Specific Cox Model: Dismissal ($n = 12{,}866$)}
+\label{tab:cox_ext_dismiss}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r c @{}}
+\toprule
+\textbf{Covariate} & \textbf{HR} & \textbf{95\% CI} \\
+\midrule
+Post-PSLRA            & 1.941 & (1.748, 2.157) \\
+\addlinespace[0.5em]
+\textit{Circuit (Ref: Second Circuit)} & & \\
+Third Circuit         & 0.984 & (0.879, 1.101) \\
+Sixth Circuit         & 0.632 & (0.526, 0.760) \\
+Eighth Circuit        & 0.808 & (0.696, 0.938) \\
+Ninth Circuit         & 0.907 & (0.855, 0.964) \\
+Fifth Circuit         & 1.298 & (1.174, 1.434) \\
+First Circuit         & 1.158 & (1.006, 1.334) \\
+Seventh Circuit       & 0.909 & (0.800, 1.034) \\
+Tenth Circuit         & 0.714 & (0.618, 0.824) \\
+Eleventh Circuit      & 1.265 & (1.139, 1.405) \\
+Fourth Circuit        & 0.597 & (0.497, 0.717) \\
+\addlinespace[0.5em]
+\textit{Case Characteristics} & & \\
+Origin: Removed       & 0.783 & (0.615, 0.998) \\
+Origin: MDL           & 0.227 & (0.186, 0.276) \\
+Origin: Other         & 0.975 & (0.889, 1.069) \\
+MDL Flag              & 0.274 & (0.242, 0.310) \\
+Federal Question      & 2.290 & (1.545, 3.395) \\
+\addlinespace[0.5em]
+\textit{Statutory Basis (Ref: 10(b))} & & \\
+Section 11            & 1.121 & (1.041, 1.207) \\
+Other/Both Statutory  & 1.015 & (0.947, 1.088) \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+MDL consolidation has a large and symmetric effect on both
+outcomes. Cases assigned to an MDL docket have a 74\% lower
+settlement hazard (HR $= 0.262$) and a 73\% lower dismissal
+hazard (HR $= 0.274$). This bilateral suppression indicates
+that MDL consolidation dramatically prolongs case pendency by
+suspending normal resolution dynamics while coordinating
+discovery and bellwether proceedings across related cases.
+Federal question jurisdiction is associated with higher
+hazards for both outcomes. Section~11 cases have a modestly
+higher dismissal hazard than Section~10(b) cases (HR $=
+1.121$, 95\% CI: 1.041--1.207), with no significant
+difference in settlement hazard.
+
+Grambsch-Therneau global tests reject proportional hazards
+in both extended models (settlement: $\chi^2 = 102.9$,
+$p < 0.001$; dismissal: $\chi^2 = 436.9$, $p < 0.001$),
+driven primarily by circuit, origin, MDL flag, and statutory
+basis. The extended Cox estimates should be interpreted as
+average effects over the study period. Full time-varying
+coefficient models are deferred to the final thesis.
+
+\subsection{Extended Fine-Gray Subdistribution Models}
+
+Table~\ref{tab:fg_comparison} compares cause-specific and
+Fine-Gray subdistribution hazard ratios for selected
+covariates, illustrating the substantively important
+divergence between the two frameworks.
+
+\begin{table}[htbp]
+\centering
+\caption{Cause-Specific vs.\ Subdistribution Hazard Ratios: Selected Covariates, Extended Models}
+\label{tab:fg_comparison}
+\renewcommand{\arraystretch}{1.3} % More vertical space for clarity
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l l r r @{}}
+\toprule
+\textbf{Outcome} & \textbf{Covariate} & \textbf{CS HR} & \textbf{FG SHR} \\
+\midrule
+Settlement & Post-PSLRA & 0.617 & 0.411 \\
+           & MDL Flag   & 0.262 & 0.963 \\
+\midrule
+Dismissal  & Post-PSLRA & 1.941 & 2.050 \\
+           & MDL Flag   & 0.274 & 0.500 \\
+\bottomrule
+\end{tabular*}
+\begin{minipage}{\textwidth}
+\vskip 4pt
+\footnotesize \textit{Note:} CS = cause-specific hazard ratio; FG = Fine-Gray subdistribution hazard ratio. CS models treat competing events as censored, while FG models account for the reduced "at-risk" pool.
+\end{minipage}
+\end{table}
+
+For PSLRA, Fine-Gray subdistribution hazard ratios are more
+extreme than cause-specific ratios for both outcomes. The
+amplification occurs because the PSLRA increases dismissals,
+reducing the pool of cases available to settle; the
+subdistribution model captures this indirect pathway while
+the cause-specific model holds the competing risk fixed.
+
+The MDL comparison is more analytically revealing. Despite
+the dramatically lower cause-specific settlement hazard (HR
+$= 0.262$), the Fine-Gray subdistribution effect on
+settlement is essentially null (SHR $= 0.963$). The
+reconciliation is that MDL cases also have very low dismissal
+hazard: because MDL cases rarely get dismissed, the pool
+available to settle remains large throughout, and cumulative
+settlement probability is not substantially lower than for
+non-MDL cases despite the lower instantaneous rate. This
+result is invisible to single-outcome analyses.
+
+\section{PSLRA $\times$ Circuit Interaction}
+
+Likelihood ratio tests comparing the additive
+circuit-PSLRA specification against the interaction model
+reject the null of a uniform PSLRA effect: settlement
+($\chi^2 = 13.46$, df $= 5$, $p = 0.019$) and dismissal
+($\chi^2 = 25.05$, df $= 5$, $p = 0.0001$). The PSLRA did
+not operate uniformly across jurisdictions.
+
+For settlement, all interaction terms are below 1. Because the 
+baseline PSLRA effect (referenced to the Second Circuit) is 
+already below 1, interaction multipliers below 1 indicate that 
+the PSLRA's suppression of settlement hazard was \emph{amplified} 
+in other circuits. In other words, the Second Circuit experienced 
+the weakest absolute PSLRA-induced reduction in settlement hazard. 
+This is consistent with the Second Circuit already possessing a 
+highly restrictive baseline settlement environment, leaving less 
+room for the PSLRA to further suppress settlement probabilities 
+relative to more plaintiff-friendly venues. 
+
+For dismissal, the most striking interaction is in the Eleventh 
+Circuit (interaction HR $= 0.426$), indicating strong attenuation 
+of the PSLRA's baseline positive effect on dismissals. The Ninth 
+Circuit shows a slight amplification (HR $= 1.052$). These patterns 
+are consistent with documented variation in judicial application of 
+the ``strong inference'' scienter pleading standard across circuits 
+\citep{johnson2001, choi2007}.
+
+\section{Robustness Checks}
+
+Figure~\ref{fig:robustness} and Table~\ref{tab:robustness}
+present PSLRA hazard ratios from six distinct Cox models.
+Across every specification, settlement HRs are below 1 and
+dismissal HRs are above 1. The direction of the PSLRA effect
+is not an artifact of any particular coding or sampling
+choice.
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=\linewidth]{./Figures/figure6_robustness_hr.png}
+    \vskip 5pt
+    \caption[PSLRA Hazard Ratios Across Robustness Specifications]{PSLRA hazard ratios across robustness specifications. Each row is a separate baseline Cox model. Green triangles = settlement HR; red circles = dismissal HR. Dashed line at HR $= 1$ (null). Note the log scale on the horizontal axis.}
+    \label{fig:robustness}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\caption{PSLRA Hazard Ratios Across Robustness Specifications}
+\label{tab:robustness}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l l r c r @{}}
+\toprule
+\textbf{Specification} & \textbf{Outcome} & \textbf{HR} & \textbf{95\% CI} & \textbf{$p$} \\
+\midrule
+Scheme A: Primary       & Settlement & 0.378 & (0.337, 0.424) & $<$0.001 \\
+                        & Dismissal  & 1.638 & (1.478, 1.815) & $<$0.001 \\
+\addlinespace[0.5em]
+Scheme B: Code 12 = S   & Settlement & 0.696 & (0.630, 0.769) & $<$0.001 \\
+                        & Dismissal  & 1.470 & (1.310, 1.650) & $<$0.001 \\
+\addlinespace[0.5em]
+Scheme C: Codes 12+5 = S & Settlement & 0.691 & (0.627, 0.761) & $<$0.001 \\
+                        & Dismissal  & 1.470 & (1.310, 1.650) & $<$0.001 \\
+\addlinespace[0.5em]
+Excl. post-2020         & Settlement & 0.377 & (0.336, 0.423) & $<$0.001 \\
+                        & Dismissal  & 1.570 & (1.420, 1.740) & $<$0.001 \\
+\addlinespace[0.5em]
+Second Circuit only     & Settlement & 0.794 & (0.396, 1.590) & 0.515    \\
+                        & Dismissal  & 1.680 & (1.300, 2.180) & $<$0.001 \\
+\addlinespace[0.5em]
+Ninth Circuit only      & Settlement & 0.771 & (0.629, 0.944) & 0.012    \\
+                        & Dismissal  & 2.340 & (1.940, 2.830) & $<$0.001 \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+Three observations warrant emphasis. First, Scheme~B and~C
+estimates for settlement (HR $\approx 0.69$--$0.70$) are
+larger than Scheme~A (HR $= 0.378$), as expected when
+Code~12 cases are reclassified as settlements. Even so, the
+effect remains large and highly significant under all liberal
+coding assumptions. Second, excluding post-2020 cases has
+virtually no effect on estimates, indicating that recently
+filed cases with high censoring rates do not distort the
+main results. Third, the Second Circuit sub-model yields a
+non-significant PSLRA effect on settlement hazard ($p =
+0.515$): within the Second Circuit, the PSLRA did not
+significantly alter settlement dynamics, though it did
+significantly increase the dismissal hazard (HR $= 1.68$).
+The Ninth Circuit, by contrast, shows a significant PSLRA
+effect on both outcomes, with a dismissal HR of 2.34 that
+substantially exceeds the pooled estimate.
+
+\section{Random Survival Forest: Variable Importance
+and Predictive Performance}
+
+\subsection{Variable Importance}
+
+Figure~\ref{fig:rsf_vimp} presents permutation-based VIMP
+scores from the final RSF (200 trees, $m_{\text{try}} = 2$,
+selected by 5-fold cross-validation with optimal OOB error
+of 0.408).
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=\linewidth]{./Figures/figure7_rsf_vimp.png}
+    \vskip 5pt
+    \caption[RSF Variable Importance by Outcome]{Random Survival Forest variable importance (VIMP) by outcome. VIMP represents the increase in OOB prediction error when the variable is randomly permuted. Left: dismissal; right: settlement. RSF: 200 trees, $m_{\text{try}} = 2$.}
+    \label{fig:rsf_vimp}
+\end{figure}
+
+Circuit identity is the single most important predictor for
+both outcomes (VIMP: 0.087 for settlement, 0.154 for
+dismissal). This nonparametric confirmation of circuit
+dominance reinforces the parametric findings in
+Sections~5.3 and~5.4. The PSLRA indicator ranks second for
+dismissal (VIMP $= 0.130$), confirming the reform's
+importance as a predictor of dismissal outcomes. For
+settlement, MDL flag ranks second (VIMP $= 0.074$),
+reflecting the bilateral hazard suppression documented in
+Section~5.5. Statutory basis has the lowest VIMP, consistent
+with its near-null coefficients in the extended Cox models.
+
+\subsection{Model Comparison: Discrimination Performance}
+
+Table~\ref{tab:performance} and Figure~\ref{fig:auc_comparison}
+compare predictive discrimination across models on the
+held-out 30\% test set ($n = 3{,}861$).
+\begin{table}[htbp]
+\centering
+\caption{Model Performance: Held-Out Test Set ($n = 3{,}861$)}
+\label{tab:performance}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r r r r @{}}
+\toprule
+\textbf{Model} & \textbf{C-Idx} & \textbf{AUC@1} & \textbf{AUC@3} & \textbf{AUC@5} \\
+\midrule
+Cox (Settlement)       & 0.735 & 0.746 & 0.741 & 0.836 \\
+Cox (Dismissal)        & 0.602 & 0.606 & 0.639 & 0.772 \\
+\addlinespace[0.5em]
+Fine-Gray (Settlement) & 0.735 & ---   & ---   & ---   \\
+Fine-Gray (Dismissal)  & 0.602 & ---   & ---   & ---   \\
+\addlinespace[0.5em]
+RSF (Settlement)       & 0.549 & 0.538 & 0.598 & 0.768 \\
+RSF (Dismissal)        & 0.540 & 0.554 & 0.622 & 0.735 \\
+\bottomrule
+\end{tabular*}
+\begin{minipage}{\textwidth}
+\vskip 4pt
+\footnotesize \textit{Note:} Fine-Gray and Cox share the same linear predictor under the \texttt{finegray} augmented-data implementation; C-indices are therefore identical. Separate Fine-Gray AUC computation and Integrated Brier Score (IBS) are deferred to the final thesis.
+\end{minipage}
+\end{table}
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=\linewidth]{./Figures/figure8_auc_comparison.png}
+    \vskip 5pt
+    \caption[Time-Dependent AUC for Cox and RSF Models]{Time-dependent AUC for Cox and RSF at 1, 2, 3, and 5-year prediction horizons. Solid lines = Cox; dashed = RSF. Green = settlement; red = dismissal. Dotted line at AUC $= 0.5$ indicates no-skill performance.}
+    \label{fig:auc_comparison}
+\end{figure}
+
+The Cox model substantially outperforms the current proof-of-concept 
+RSF implementation across every metric and outcome. For settlement, 
+the Cox C-index is 0.735 versus RSF's 0.549, a gap of 18.6 percentage 
+points. For dismissal, Cox C-index is 0.602 versus RSF's 0.540. The 
+AUC comparison confirms this: Cox settlement AUC is consistently
+0.74--0.84 across horizons, while RSF settlement AUC ranges
+from 0.54 to 0.77. 
+
+The near-random discrimination of the RSF (C-index $\approx 0.54$) 
+is highly characteristic of an underpowered ensemble. Because this 
+interim implementation utilizes only 200 trees and a limited 
+$m_{\text{try}}$ grid search over highly censored data, the trees 
+likely lack the depth and variance necessary to stabilize the 
+cumulative hazard estimates. While the Cox model's linear predictor 
+currently captures the dominant main effects (circuit and PSLRA regime) 
+effectively, a definitive conclusion regarding the value of nonlinear 
+ML methods in this domain must await the fully scaled, computationally 
+tuned RSF ensemble planned for the final thesis.
+
+\section{Summary of Results}
+
+Our analysis yields six main findings. First, the PSLRA
+fundamentally restructured securities litigation outcomes,
+with effects robust to all disposition coding schemes,
+temporal restrictions, and extended covariate controls.
+Second, the PSLRA's impact on dismissal hazard is
+concentrated in the first year (HR $= 2.18$), vanishes in
+year two (HR $= 0.922$, $p = 0.444$), and re-emerges
+modestly thereafter (HR $= 1.55$). Third, circuit geography
+is the dominant predictor of case outcomes in both
+parametric and nonparametric frameworks, with the Second
+Circuit exhibiting anomalously low settlement hazard and
+the highest dismissal incidence. Fourth, the PSLRA's effects
+are heterogeneous across circuits, with the reform's settlement 
+suppression being weakest in the Second Circuit and its dismissal 
+amplification strongly attenuated in the Eleventh Circuit. 
+Fifth, MDL consolidation suppresses both cause-specific hazards, 
+but Fine-Gray analysis reveals no lower cumulative settlement 
+probability---a result invisible to single-outcome analyses. 
+Sixth, the semi-parametric Cox model currently achieves strong 
+out-of-sample discrimination (Settlement C-Index = 0.735), 
+establishing a rigorous baseline that the final scaled machine 
+learning models must overcome.

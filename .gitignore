@@ -1,0 +1,31 @@
+# Claude Code local files
+CLAUDE.local.md
+.claude/agent-memory-local/
+
+# R artifacts
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+*.Rproj
+
+# Data (Absolute blanket ban to prevent 500MB Repo Bombs)
+data/raw/*
+data/cleaned/*
+!data/raw/.gitkeep
+!data/cleaned/.gitkeep
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# LaTeX build artifacts
+writing/*.aux
+writing/*.log
+writing/*.out
+writing/*.toc
+writing/*.bbl
+writing/*.blg
+writing/*.fdb_latexmk
+writing/*.fls
+writing/*.synctex.gz

@@ -1,0 +1,265 @@
+% ============================================================
+% methodology.tex
+% ============================================================
+
+
+This chapter formalizes the statistical framework used to model
+time-to-resolution and competing outcomes in federal securities
+class actions. Our goal is to estimate how quickly cases
+resolve, whether they resolve via settlement or dismissal, and
+how observable case characteristics alter those probabilities.
+Because settlement and dismissal are mutually exclusive terminal
+events, standard single-event survival methods are insufficient,
+requiring a competing-risks framework throughout. Before detailing 
+the models, we note a convention used throughout this thesis: to 
+avoid ambiguity in a legal context, any reference to a ``violation'' 
+denotes a statistical failure of the proportional hazards assumption, 
+not a legal or regulatory infraction.
+
+\section{Notation and Data Structure}
+
+Let $i = 1, \ldots, n$ index individual securities class action
+cases. For each case, we observe:
+\begin{itemize}
+    \item $T_i \geq 0$: time from filing to resolution,
+    measured in years.
+    \item $\delta_i \in \{0, 1, 2\}$: event type indicator,
+    where $\delta_i = 0$ denotes right-censoring (case still
+    pending), $\delta_i = 1$ denotes settlement, and 
+    $\delta_i = 2$ denotes dismissal.
+    \item $\mathbf{X}_i = (X_{i1}, \ldots, X_{ip})^\top$: a 
+    $p$-dimensional vector of covariates measured at or near
+    case filing.
+\end{itemize}
+
+The observed data are $\{(T_i, \delta_i,
+\mathbf{X}_i)\}_{i=1}^n$. The time scale is years since
+filing. There is no left truncation. Right censoring at the
+IDB snapshot date is assumed to be non-informative: the
+probability of censoring is independent of the latent event
+time conditional on covariates.
+
+\subsection{Covariate Definitions}
+
+\textbf{Core covariates} (available for all cases):
+\begin{itemize}
+    \item $\text{PSLRA}_i \in \{0,1\}$: binary indicator equal
+    to 1 if case $i$ was filed on or after December~22, 1995.
+    \item $\text{Circuit}_i$: federal circuit of filing,
+    categorical with the Second Circuit as reference.
+    \item $\text{FilingYear}_i$: calendar year of filing.
+\end{itemize}
+
+\textbf{Extended covariates} (available for cases with
+non-missing IDB fields):
+\begin{itemize}
+    \item $\text{Origin}_i \in \{\text{Original},
+    \text{Removed}, \text{MDL}, \text{Other}\}$: how the case
+    entered federal court. ``Original'' is the reference
+    category.
+    \item $\text{MDLFlag}_i \in \{0,1\}$: binary indicator
+    equal to 1 if the IDB \texttt{mdldock} field is populated,
+    indicating MDL docket assignment.
+    \item $\text{JurisFQ}_i \in \{0,1\}$: binary indicator
+    equal to 1 if the case invokes federal question
+    jurisdiction (IDB \texttt{juris} code~3).
+    \item $\text{StatBasis}_i \in \{\text{10(b)},
+    \text{Section~11}, \text{Other/Both}\}$: statutory basis
+    coded from the IDB \texttt{section} field. A binary
+    missingness indicator $\text{StatBasisMiss}_i$ is included
+    in all models to preserve the full estimation sample.
+\end{itemize}
+
+\section{Nonparametric Estimation of Cumulative Incidence}
+
+The \emph{overall survival function} $S(t) = P(T > t)$ estimates the probability that a case remains unresolved beyond time $t$. We estimate $S(t)$ using the Kaplan-Meier estimator:
+\begin{equation}
+\hat{S}(t) = \prod_{t_j \leq t} \left(1 - \frac{d_j}{n_j}\right)
+\end{equation}
+where $t_j$ are the distinct observed event times, $d_j$ is the total number of events at $t_j$, and $n_j$ is the number of cases at risk just before $t_j$ \citep{kaplan1958}.
+
+The \emph{cumulative incidence function} (CIF) for event type $k \in \{1,2\}$ is:
+\begin{equation}
+F_k(t) = P(T \leq t, \delta = k)
+\end{equation}
+which represents the probability that a case has experienced event type $k$ by time $t$. The Aalen-Johansen estimator is given by:
+\begin{equation}
+\hat{F}_k(t) = \sum_{t_j \leq t} \hat{S}(t_{j-1}) \frac{d_{kj}}{n_j}
+\end{equation}
+where $d_{kj}$ is the number of type-$k$ events at $t_j$ \citep{aalen1978}. We plot $\hat{F}_1(t)$ and $\hat{F}_2(t)$ stratified by PSLRA regime and circuit. Equality of CIFs across groups is tested using Gray's $K$-sample test \citep{gray1988}.
+
+\section{Semi-Parametric Hazard Regression}
+
+\subsection{Cause-Specific Cox Proportional Hazards Models}
+
+The \emph{cause-specific hazard} for event type $k$ is defined as:
+\begin{equation}
+\lambda_k(t \mid \mathbf{X}) = \lim_{\Delta t \to 0} \frac{P(t \leq T < t + \Delta t, \delta = k \mid T \geq t, \mathbf{X})}{\Delta t}
+\end{equation}
+Under the Cox proportional hazards model:
+\begin{equation}
+\lambda_k(t \mid \mathbf{X}) = \lambda_{0k}(t) \exp(\boldsymbol{\beta}_k^\top \mathbf{X})
+\end{equation}
+where $\lambda_{0k}(t)$ is the unspecified baseline hazard for event type $k$ and $\boldsymbol{\beta}_k$ is the vector of log-hazard ratios \citep{cox1972}. We estimate separate cause-specific Cox models for settlement ($k = 1$) and dismissal ($k = 2$); in each model, cases experiencing the competing event are treated as censored. The partial likelihood is:
+\begin{equation}
+L_k(\boldsymbol{\beta}_k) = \prod_{i:\delta_i = k} \frac{\exp(\boldsymbol{\beta}_k^\top \mathbf{X}_i)}{\sum_{j \in \mathcal{R}(T_i)} \exp(\boldsymbol{\beta}_k^\top \mathbf{X}_j)}
+\end{equation}
+where $\mathcal{R}(T_i) = \{j : T_j \geq T_i\}$ is the risk set at time $T_i$.
+
+\subsection{Fine-Gray Subdistribution Hazard Models}
+
+The Fine-Gray model parameterizes the \emph{subdistribution hazard} \citep{fine1999}:
+\begin{equation}
+\lambda_k^*(t \mid \mathbf{X}) = \lambda_{0k}^*(t) \exp(\boldsymbol{\gamma}_k^\top \mathbf{X})
+\end{equation}
+where the subdistribution hazard $\lambda_k^*(t)$ is defined via:
+\begin{equation}
+F_k(t) = 1 - \exp\left(-\int_0^t \lambda_k^*(u) \, du\right)
+\end{equation}
+and $\boldsymbol{\gamma}_k$ is the subdistribution log-hazard ratio vector. Unlike cause-specific hazards, the subdistribution hazard has a direct marginal interpretation: $\exp(\gamma_{kj})$ describes how $X_j$ shifts $F_k(t \mid \mathbf{X})$ over time. We fit Fine-Gray models using the \texttt{finegray} function in R's \texttt{survival} package.
+
+\subsection{Extended Covariate Specifications}
+
+The baseline models include only PSLRA and circuit. Extended specifications add origin category, MDL flag, jurisdictional basis, and statutory basis. The extended model linear predictor is:
+\begin{align}
+\eta_i ={}& \beta_1 \text{PSLRA}_i + \boldsymbol{\beta}_{\text{circ}}^\top \mathbf{C}_i + \boldsymbol{\beta}_{\text{orig}}^\top \mathbf{O}_i \notag \\
+&+ \beta_4 \text{MDLFlag}_i + \beta_5 \text{JurisFQ}_i \notag \\
+&+ \boldsymbol{\beta}_{\text{stat}}^\top \mathbf{S}_i + \beta_6 \text{StatBasisMiss}_i
+\end{align}
+where $\mathbf{C}_i$, $\mathbf{O}_i$, and $\mathbf{S}_i$ are indicator vectors for circuit, origin category, and statutory basis respectively, and $\eta_i$ enters the hazard as $\lambda_k(t \mid \mathbf{X}_i) = \lambda_{0k}(t)\exp(\eta_i)$.
+
+\subsection{PSLRA $\times$ Circuit Interaction}
+
+To test whether the PSLRA's effect is uniform across circuits, we augment the extended specification with PSLRA $\times$ circuit interaction terms:
+\begin{align}
+\eta_i ={}& \beta_1 \text{PSLRA}_i + \boldsymbol{\beta}_{\text{circ}}^\top \mathbf{C}_i + \boldsymbol{\theta}^\top (\text{PSLRA}_i \cdot \mathbf{C}_i) \notag \\
+&+ \boldsymbol{\beta}_{\text{orig}}^\top \mathbf{O}_i + \beta_4 \text{MDLFlag}_i + \beta_5 \text{JurisFQ}_i
+\end{align}
+where $\boldsymbol{\theta}$ captures circuit-specific deviations from the baseline PSLRA effect. The interaction model is compared to the additive specification using a likelihood ratio test (LRT). We restrict the interaction analysis to the top-six circuits by case volume to ensure stable estimates.
+
+\subsection{Proportional Hazards Diagnostics and Remediation}
+\label{sec:ph_diag}
+
+The Cox model requires that hazard ratios remain constant over time. We test this assumption using the Grambsch-Therneau test, which regresses scaled Schoenfeld residuals on a function of time; a significant result ($p < 0.05$) indicates that the hazard ratio for that covariate varies over the study period \citep{grambsch1994}.
+
+When the proportional hazards assumption is violated for a given covariate, we employ two strategies.
+\textbf{Stratification}: for categorical covariates with proportional hazards assumption violations, we allow stratum-specific baseline hazards:
+\begin{equation}
+\lambda_k(t \mid \mathbf{X}, g) = \lambda_{0k,g}(t) \exp(\boldsymbol{\beta}_k^\top \mathbf{X})
+\end{equation}
+where $g$ indexes strata and $\boldsymbol{\beta}_k$ is estimated jointly across strata.
+\textbf{Time-varying coefficients}: for the PSLRA indicator, we fit a piecewise constant hazard model by splitting each case's time axis at $t = 1$ and $t = 2$ years:
+\begin{equation}
+\lambda_2(t \mid \text{PSLRA}, \mathbf{X}) = \lambda_{02}(t) \exp \left( \sum_{m=1}^{3} \beta_{2m} \left( \text{PSLRA} \cdot \mathbf{1}_{I_m}(t) \right) + \boldsymbol{\beta}_{\text{other}}^\top \mathbf{X} \right)
+\end{equation}
+where $I_1 = [0,1)$, $I_2 = [1,2)$, and $I_3 = [2,\infty)$. Proportional hazards assumption violations in circuit, origin, MDL, and statutory basis in the extended models are documented in Section~5.4 and addressed via stratification where feasible; full time-varying coefficient models for these variables are deferred to the final thesis.
+
+\section{Robustness and Sensitivity Analyses}
+
+To assess the sensitivity of our central findings to
+disposition code misclassification, cohort composition, and
+circuit-specific confounding, we implement three sets of
+robustness checks.
+
+\textbf{Alternative disposition coding.} We implement three
+coding schemes: Scheme~A (primary), Scheme~B (Code~12
+reclassified as settlement), and Scheme~C (Codes~12 and~5
+reclassified as settlement), as defined in Section~4.3. We
+re-estimate baseline PSLRA Cox models under all three schemes
+and compare hazard ratios.
+
+\textbf{Temporal restriction.} We exclude cases filed after
+December~31, 2020, to assess whether recently filed cases with
+high censoring rates distort estimates.
+
+\textbf{Circuit-specific sub-samples.} We re-estimate PSLRA
+Cox models separately within the Second and Ninth Circuits to
+assess whether pooled estimates mask circuit-level
+heterogeneity.
+
+\section{Machine Learning Benchmark: Random Survival Forests}
+
+Random Survival Forests (RSF) extend Breiman's random forests
+to right-censored survival data \citep{ishwaran2008}. An
+ensemble of $B$ survival trees is constructed on bootstrap
+samples. At each internal node, a random subset of
+$m_{\text{try}}$ covariates is considered for splitting; the
+split maximizing a log-rank-type criterion is selected. For
+competing risks, we use the implementation in
+\texttt{randomForestSRC}, which employs Gray's test statistic
+for splits and Aalen-Johansen estimators within terminal nodes
+to estimate event-specific CIFs $\hat{F}_k^{\text{RSF}}(t \mid
+\mathbf{X})$ \citep{ishwaran2014}.
+
+We tune $m_{\text{try}}$ via 5-fold cross-validation over the
+grid $\{1, 2, \lfloor\sqrt{p}\rfloor\}$, evaluating OOB
+prediction error for settlement at the final tree. The final
+RSF uses $B = 200$ trees on the 70\% training split; this is a
+proof-of-concept implementation. Variable importance (VIMP)
+is computed as the increase in OOB prediction error when a
+covariate's values are randomly permuted.
+
+\section{Model Comparison and Performance Metrics}
+
+\subsection{Concordance Index}
+
+Harrell's concordance index (C-index) measures the proportion
+of comparable case pairs for which predicted risk ordering
+agrees with observed event ordering \citep{harrell1982}:
+\begin{equation}
+C = \frac{\sum_{i \neq j} I(T_i < T_j, \delta_i \neq 0) \cdot I(\widehat{\text{risk}}_i > \widehat{\text{risk}}_j)}{\sum_{i \neq j} I(T_i < T_j, \delta_i \neq 0)}
+\end{equation}
+where $C = 0.5$ is random ordering and $C = 1.0$ is perfect
+discrimination.
+
+\subsection{Time-Dependent AUC}
+
+Time-dependent AUC quantifies discrimination at specific
+prediction horizons by constructing ROC curves from incident
+case sensitivity and dynamic specificity \citep{heagerty2000}.
+We report AUC at $t^* \in \{1, 2, 3, 5\}$ years.
+
+\subsection{Integrated Brier Score}
+
+The Brier score at horizon $t$ measures mean squared prediction
+error with inverse probability of censoring weighting (IPCW)
+\citep{graf1999}. For competing risks, the cause-specific Brier 
+score evaluates the predicted cumulative incidence $\hat{F}_k(t \mid \mathbf{X}_i)$ 
+against the observed event status:
+\begin{equation}
+\text{BS}_k(t) = \frac{1}{n} \sum_{i=1}^n \widehat{W}_i(t) \left( Y_{ik}(t) - \hat{F}_k(t \mid \mathbf{X}_i) \right)^2
+\end{equation}
+where $Y_{ik}(t) = I(T_i \leq t, \delta_i = k)$ is the binary indicator that event $k$ occurred prior to time $t$, and $\widehat{W}_i(t)$ represents the IPCW weights derived from the Kaplan-Meier estimate of the censoring distribution $\hat{G}(t)$. The integrated Brier score averages $\text{BS}_k(t)$ over a grid of evaluation times. IBS computation encountered a technical issue in the current implementation and is deferred to the final thesis; C-index and AUC provide sufficient discrimination characterization for the interim report.
+
+\subsection{Validation Strategy}
+
+We partition the analysis sample into a 70\% training set and
+30\% test set, stratified by PSLRA regime, yielding 9,005
+training cases and 3,861 test cases. All models are fit on
+training data. All C-index and AUC values reported in
+Chapter~\ref{ch:results} are computed on the held-out test set.
+RSF hyperparameters are tuned via 5-fold cross-validation
+within the training set only.
+
+Because Fine-Gray models under the \texttt{finegray}
+augmented-data approach share the same linear predictor as the
+corresponding cause-specific Cox models, their C-index values
+are identical by construction. Separate Fine-Gray AUC
+computation is deferred to the final thesis.
+
+\section{Unobserved Heterogeneity and Limitations}
+
+Our models assume that observed covariates capture the
+relevant dimensions of case heterogeneity. Unobserved
+factors---case-specific merit signals, judge-level
+characteristics, law firm quality, and the magnitude of
+alleged investor losses---may influence both the probability
+and timing of outcomes. Frailty models could account for
+unobserved heterogeneity via random effects, but the IDB
+lacks consistent judge identifiers necessary to define
+meaningful clusters, and frailty estimation in
+competing-risks contexts with limited cluster sizes is
+computationally challenging. We interpret all hazard ratios
+as conditional on observed covariates and rely on the breadth
+of our robustness checks to bound the range of plausible
+estimates.

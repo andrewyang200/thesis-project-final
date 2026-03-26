@@ -1,0 +1,132 @@
+% ============================================================
+% future.tex
+% ============================================================
+
+This chapter outlines the remaining tasks and timeline for
+completing the final thesis, due April~9, 2026. The interim
+report has established the core empirical foundation. The
+remaining work falls into four categories: data infrastructure
+improvements, model completion and diagnostics, writing
+integration, and final polish.
+
+\section{Data Infrastructure}
+
+\begin{itemize}
+    \item \textbf{CourtListener merge.} Attempt to merge the
+    IDB sample with CourtListener bulk docket data using
+    district-year-case number triplets. If successful, this
+    enables keyword-based class action identification to
+    validate the IDB flag, docket entry counts as a baseline
+    complexity proxy, and attorney identifiers for extended
+    specifications. If the match rate is insufficient,
+    document as future work.
+
+    \item \textbf{Code~12 manual review.} Draw a random
+    sample of voluntary dismissal cases with available
+    docket text and manually classify each as
+    settlement-like or genuine dismissal. Use the estimated
+    misclassification rate to sharpen the bounds discussion
+    for Schemes~B and~C in the Results chapter.
+
+    \item \textbf{Stanford Clearinghouse cross-reference.}
+    Time permitting, cross-reference a subset of cases
+    against the Stanford Securities Class Action
+    Clearinghouse to obtain merit proxies---stock price
+    drop, restatement indicator, parallel SEC action---and
+    test whether including these proxies attenuates the
+    PSLRA hazard ratio estimates.
+\end{itemize}
+
+\section{Model Completion and Diagnostics}
+
+\begin{itemize}
+    \item \textbf{Integrated Brier Score.} Diagnose and fix
+    the silent failure of the \texttt{pec} IBS computation.
+    Test alternative implementations using the
+    \texttt{riskRegression} package's \texttt{Score()}
+    function. Report IBS alongside C-index and AUC in the
+    model comparison table.
+
+    \item \textbf{Time-varying coefficient models.} The
+    Grambsch-Therneau tests reject proportional hazards in
+    the extended models for circuit, origin, MDL flag, and
+    statutory basis. Implement stratified baseline hazard
+    models for circuit and, where feasible, time-varying
+    terms for MDL flag and origin. Report whether estimates
+    materially change relative to the current
+    average-effect specification.
+
+    \item \textbf{Piecewise settlement model.} The extended
+    settlement model rejects proportional hazards for the
+    PSLRA indicator. Fit the piecewise constant settlement
+    hazard model with breakpoints at one and two years
+    within the extended specification, and report whether
+    the three-phase pattern found for dismissal has a
+    settlement counterpart.
+
+    \item \textbf{RSF scale-up.} Re-run the final RSF with
+    $B = 500$ trees using the cross-validated $m_{\text{try}}
+    = 2$. Update the variable importance plot, AUC
+    comparison figure, and performance table. Document
+    whether the performance gap relative to Cox narrows.
+
+    \item \textbf{Fine-Gray AUC.} Compute time-dependent
+    AUC for Fine-Gray models using predicted cumulative
+    incidence as the marker, distinct from the Cox linear
+    predictor. Add to the model comparison table.
+
+    \item \textbf{Filing year trend robustness.} Add a
+    linear filing year control to the extended Cox models
+    to verify that PSLRA hazard ratio estimates are not
+    confounded by secular trends in dismissal rates.
+\end{itemize}
+
+\section{Writing and Integration}
+
+\begin{itemize}
+    \item \textbf{Results chapter updates.} Integrate all
+    model completion results into the Results chapter
+    narrative. Verify that every number cited in prose
+    matches the current R output.
+
+    \item \textbf{Introduction and Literature Review.}
+    Revise to accurately preview any findings added after
+    the interim report, and add any references motivated
+    by new analyses.
+
+    \item \textbf{Discussion and Conclusion.} Remove from
+    the Limitations section any issues resolved during
+    model completion. Update the Future Research section
+    to reflect which CourtListener tasks were completed
+    or attempted.
+
+    \item \textbf{Notation audit.} Verify that all symbols
+    are defined in the unified notation block, that the
+    stratification index $g$ is used consistently, and
+    that ``violations'' refers exclusively to proportional
+    hazards assumption violations throughout.
+
+    \item \textbf{Abstract.} Write the final abstract
+    (200--250 words) summarizing research question, data
+    and methods, key findings, and implications.
+\end{itemize}
+
+\section{Contingency Plans}
+
+\textbf{CourtListener merge fails.} If the match rate is
+below a useful threshold, document the attempt and
+obstacles in the Limitations section; all main results
+are unaffected.
+
+\textbf{IBS computation unfixable.} If all fix strategies
+fail, omit IBS from the performance table with a brief
+note; C-index and AUC provide sufficient discrimination
+characterization.
+
+\textbf{Time-varying models fail to converge.} Retain the
+stratified-by-circuit baseline hazard specification and
+document full time-varying implementation as future work.
+
+\textbf{500-tree RSF computationally prohibitive.} Retain
+200-tree results with an explicit note; core contributions
+do not depend on RSF predictive performance.

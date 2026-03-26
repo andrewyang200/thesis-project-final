@@ -1,0 +1,81 @@
+% ============================================================
+% intro.tex
+% ============================================================
+
+Federal securities class actions represent one of the most
+economically significant categories of civil litigation in the
+United States, with annual filings fluctuating between 200 and
+400 cases and aggregate settlements frequently exceeding \$2
+billion \citep{cornerstone2024, nera2024}. 
+
+These cases arise when investors allege violations of federal
+securities laws---primarily Section~10(b) of the Securities
+Exchange Act of 1934 and SEC Rule 10b-5, which prohibit
+fraudulent misrepresentations, or Section~11 of the Securities
+Act of 1933, which imposes strict liability for material
+misstatements in registration statements. Defendants include
+publicly traded corporations and their officers, with plaintiffs
+ranging from individual retail investors to large institutional
+investors who increasingly serve as lead plaintiffs following the
+Private Securities Litigation Reform Act of 1995 (PSLRA)
+\citep{cox2008, cheng2010}.
+
+The stakes are substantial. For defendants, direct legal
+expenses and settlement payouts range from millions to over a
+billion dollars in so-called ``mega-settlements''
+\citep{cornerstone2024}. Beyond monetary costs, securities
+litigation generates elevated cost of capital, shifts in
+investment policies, managerial distraction, and reputational
+damage \citep{karpoff2008, graham2008}. For plaintiffs and their
+attorneys, duration and outcome directly affect net recovery and
+the feasibility of pursuing future cases. For courts and
+policymakers, resolution patterns inform debates over the
+efficacy of procedural reforms and the balance between deterring
+fraud and curbing frivolous litigation.
+
+Despite the prominence of securities class actions, empirical
+research on litigation duration and outcomes has been limited in
+both methodology and data quality. Practitioner reports provide
+valuable descriptive statistics, but do not employ formal survival
+analysis or competing-risks frameworks \citep{cornerstone2024,
+nera2024}. Academic studies have applied Cox proportional hazards 
+models to settlement speed in selected samples \citep{brochet2014}, 
+but ignore the competing nature of case dismissal. In practice, 
+nearly all core federal securities class actions ultimately either 
+settle or are dismissed. Treating these mutually exclusive outcomes
+independently introduces selection bias and provides an incomplete 
+picture of litigation dynamics. Furthermore, this methodological gap 
+is compounded by a profound data challenge: administrative court 
+databases frequently misclassify voluntary dismissals, masking 
+``hidden settlements'' and distorting true resolution probabilities 
+\citep{scales2024}.
+
+This thesis addresses these gaps through three core contributions. 
+\textbf{First, in methods:} this is, to our knowledge, the first 
+application of a full competing-risks survival framework to federal 
+securities class actions using population-level administrative data. 
+We characterize litigation duration nonparametrically using 
+Aalen-Johansen cumulative incidence functions (CIFs), and estimate 
+both cause-specific Cox proportional hazards and Fine-Gray 
+subdistribution models. To assess whether machine learning methods 
+improve predictive performance over these semi-parametric approaches, 
+we also deploy Random Survival Forests (RSF) as a nonparametric benchmark.
+
+\textbf{Second, in findings:} we provide the first rigorous
+estimates of how the PSLRA, circuit practices, case origin, 
+multidistrict litigation (MDL) status, and statutory basis jointly 
+shape the hazard and cumulative incidence of settlement versus dismissal. 
+While existing work documents that the PSLRA increased early dismissal 
+rates \citep{johnson2001, cox2008, cheng2010}, our competing-risks 
+analysis quantifies exactly how this effect varies over litigation 
+duration, systematically differing across circuits, and how MDL 
+consolidation bilaterally suppresses both competing hazards.
+
+\textbf{Third, in data:} we confront and mitigate the well-documented 
+challenges inherent to the Federal Judicial Center's Integrated 
+Database (IDB) \citep{clermont2002, alexander1991}. We address the 
+ambiguity of disposition codes through composite case identification 
+strategies and rigorous sensitivity analyses under alternative outcome 
+coding schemes. Ultimately, we demonstrate that the structural breaks 
+identified in our survival models are highly robust to these underlying 
+administrative measurement errors.

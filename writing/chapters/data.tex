@@ -1,0 +1,307 @@
+% ============================================================
+% data.tex
+% ============================================================
+
+This chapter describes the data sources, sample construction
+procedure, and variable definitions underlying our analysis.
+We document known data quality challenges in the Federal
+Judicial Center's Integrated Database, explain how we address
+them through composite identification strategies and
+alternative coding schemes, and report the final sample
+characteristics used in all subsequent analyses.
+
+\section{Primary Data Source: FJC Integrated Database}
+
+The Federal Judicial Center's Integrated Database (IDB)
+aggregates case-level records from all 94 federal district
+courts, reported by the Administrative Office of the
+U.S.\ Courts \citep{fjc_idb_portal, fjc_idb_guide}. Civil
+case records span from approximately 1970 to the present,
+with substantially improved coverage quality after 1988.
+The IDB is the most comprehensive source for population-level
+data on federal civil litigation, covering virtually all cases
+filed in federal district courts regardless of whether they
+generate published opinions or disclosed settlement amounts.
+This population-level coverage is a key advantage over
+practitioner datasets, which typically track only high-profile
+cases with publicly disclosed outcomes \citep{cornerstone2024}.
+
+\subsection{Key Fields}
+
+For each civil case, the IDB provides: filing date;
+termination date (missing for pending cases, treated as
+right-censored); nature-of-suit (NOS) code; disposition code;
+district and circuit identifiers; origin code; class action
+flag; procedural progress code; jurisdiction code; jury demand
+indicator; monetary demand amount; and the \texttt{section}
+field recording the statutory provision under which the case
+was filed. Securities class actions are identified using
+NOS Code~850 (``Securities, Commodities, and Exchange'').
+
+\subsection{Data Quality and Known Limitations}
+
+Empirical researchers have documented several data quality
+issues directly relevant to our analysis
+\citep{clermont2002, hadfield2004, scales2024}:
+
+\begin{itemize}
+    \item \textbf{Class action flag unreliability.} The IDB
+    class action flag misses substantial fractions of actual
+    class actions and incorrectly flags some non-class
+    actions \citep{clermont2002, alexander1991}. Because the
+    IDB case title field exhibits over 99\% missingness in our
+    NOS~850 sample, keyword-based identification is not
+    feasible with IDB data alone. CourtListener integration
+    for title-based validation is deferred to the final
+    thesis.
+
+    \item \textbf{Disposition code ambiguity.} The IDB
+    voluntary dismissal code (Code~12) is known to include
+    hidden settlements: parties sometimes stipulate to
+    voluntary dismissal as the formal docket entry while
+    privately settling \citep{scales2024}. We address this
+    through three alternative coding schemes described in
+    Section~\ref{sec:coding_schemes}.
+
+    \item \textbf{Missingness in secondary fields.} Monetary
+    demand amounts exhibit 98.4\% missingness; jury demand
+    information is missing for 50.7\% of cases. Critical
+    fields for duration analysis---filing date, termination
+    date, disposition code, circuit, and origin---are
+    well-populated.
+\end{itemize}
+
+\section{Sample Construction}
+
+We construct the analysis sample through three stages.
+
+\textbf{Stage 1: NOS~850 Cases.} We begin with all civil
+cases coded as NOS~850 filed from 1990 onward, yielding
+65,899 cases. The 1990 start date balances sample size
+against data quality and provides a meaningful pre-PSLRA
+comparison period.
+
+\textbf{Stage 2: Class Action Identification.} We retain
+cases with IDB class action flag equal to 1, yielding
+13,708 cases (20.8\% of NOS~850).
+
+\textbf{Stage 3: Valid Duration.} We exclude cases with
+non-positive computed durations, removing 740 cases and
+yielding a final sample of \textbf{12,968} federal securities
+class actions filed between 1990 and 2024.
+
+\begin{table}[htbp]
+\centering
+\caption{Sample Construction}
+\label{tab:sample_construction}
+\renewcommand{\arraystretch}{1.2} % Vertical breathing room
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r r @{}}
+\toprule
+\textbf{Stage} & \textbf{N} & \textbf{\%} \\
+\midrule
+All NOS 850 cases (1990--present) & 65,899 & 100.0 \\
+Class action flag $= 1$            & 13,708 &  20.8 \\
+Valid duration ($> 0$ days)       & 12,968 &  19.7 \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\section{Disposition Coding Schemes}
+\label{sec:coding_schemes}
+
+We implement three coding schemes that span the plausible
+range of settlement/dismissal classifications given the
+known Code~12 ambiguity:
+
+\begin{itemize}
+    \item \textbf{Scheme~A (Primary).} Code~13 $\to$
+    settlement; Codes~2, 3, 4, 12, 14, 15, 17, 18, 19
+    $\to$ dismissal. Trial codes, transfer codes, remands,
+    and reopened cases are treated as censored, as they do
+    not represent terminal resolution. This is the most
+    conservative treatment and is used for all main results.
+
+    \item \textbf{Scheme~B (Liberal).} Identical to
+    Scheme~A except Code~12 is reclassified as settlement,
+    reflecting the hypothesis that voluntary dismissals
+    predominantly represent private settlements
+    \citep{scales2024}.
+
+    \item \textbf{Scheme~C (Expanded).} Identical to
+    Scheme~B with the additional reclassification of
+    Code~5 (consent judgment) as settlement.
+\end{itemize}
+
+\begin{table}[htbp]
+\centering
+\caption{Outcome Distribution by Disposition Coding Scheme}
+\label{tab:schemes}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l c c c c c c @{}}
+\toprule
+\textbf{Scheme} & \textbf{N} & \textbf{Settl.} & \textbf{Dism.} & \textbf{Cens.} & \textbf{\% S} & \textbf{\% D} \\
+\midrule
+A (Primary)  & 12,968 & 2,015 & 7,313 & 3,640 & 15.5 & 56.4 \\
+B (Liberal)  & 12,968 & 3,819 & 5,509 & 3,640 & 29.4 & 42.5 \\
+C (Expanded) & 12,968 & 4,133 & 5,509 & 3,326 & 31.9 & 42.5 \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+Under Scheme~A, 15.5\% of cases settle and 56.4\% are
+dismissed, with 28.1\% censored. The Scheme~A settlement
+rate is substantially below the roughly 46\% reported by
+Cornerstone Research \citep{cornerstone2024}, reflecting two
+factors: Cornerstone tracks cases with publicly disclosed
+settlements, while the IDB captures the full population
+including small cases dismissed early; and Scheme~A
+conservatively treats Code~12 as dismissal. Under Scheme~B,
+the settlement rate rises to 29.4\%, substantially closing
+the gap with industry benchmarks.
+
+\section{Variable Definitions}
+
+\subsection{Outcome Variable Construction}
+
+The outcome variable for all survival models is the pair
+$(T_i, \delta_i)$, where $T_i$ is the duration in years from filing 
+to termination, and $\delta_i \in \{0, 1, 2\}$ is the event indicator 
+under the applicable coding scheme. Cases still pending at the IDB 
+snapshot are treated as right-censored ($\delta_i = 0$).
+
+\subsection{PSLRA Regime}
+
+The PSLRA indicator is a binary variable equal to 1 if the case 
+\texttt{filedate} $\geq$ December~22, 1995, representing cases filed 
+subject to the Act's heightened pleading standards.
+
+\subsection{Circuit}
+
+Circuit is coded from the IDB district identifier and treated
+as a categorical variable. The Second Circuit serves as the
+reference category in all regression models.
+
+\subsection{Case Origin and MDL Flag}
+
+We capture procedural pathways using two variables. First, the IDB 
+origin code is categorized into: ``Original'' (federal filing, reference category), 
+``Removed'' (from state court), ``MDL'' (transfers), and ``Other''. 
+Second, because MDL cases can originate differently but share 
+post-filing consolidation mechanics, we define a binary MDL flag 
+equal to 1 if the \texttt{mdldock} field is populated with a 
+non-missing, non-sentinel value. 
+
+\subsection{Jurisdictional and Statutory Basis}
+
+We construct a binary indicator for federal question jurisdiction 
+using the IDB \texttt{juris} field. For statutory basis, we use the 
+IDB \texttt{section} field to classify claims as: \texttt{0078} 
+(Exchange Act \S~10(b)) $\to$ ``10(b)''; \texttt{0077} (Securities Act
+\S~11) $\to$ ``Section~11''; and all other values $\to$ ``Other/Both''. 
+A missingness indicator is included in all models to preserve the 
+estimation sample.
+
+\section{Sample Summary Statistics}
+
+With our sample and variables defined, we present the baseline 
+descriptive statistics that motivate our survival models. 
+
+\subsection{Geographic Distribution}
+The sample is heavily concentrated geographically. The Ninth Circuit 
+accounts for 31.2\% (4,051 cases) and the Second Circuit accounts for 
+28.8\% (3,737 cases), reflecting California and New York as the 
+undisputed centers of U.S. securities litigation. Table~\ref{tab:bycircuit} 
+details the full distribution.
+
+\begin{table}[htb]
+\centering
+\caption{Sample Distribution by Circuit}
+\label{tab:bycircuit}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r r @{}}
+\toprule
+\textbf{Circuit} & \textbf{N} & \textbf{\%} \\
+\midrule
+Ninth (CA)         & 4,051 & 31.2 \\
+Second (NYC)       & 3,737 & 28.8 \\
+Third (PA/NJ/DE)   &   828 &  6.4 \\
+Fifth (TX/LA)      &   752 &  5.8 \\
+Fourth             &   695 &  5.4 \\
+Eleventh           &   627 &  4.8 \\
+Seventh            &   535 &  4.1 \\
+Tenth              &   532 &  4.1 \\
+Eighth             &   453 &  3.5 \\
+First              &   381 &  2.9 \\
+Sixth              &   361 &  2.8 \\
+D.C.               &    16 &  0.1 \\
+\midrule
+\textbf{Total}     & \textbf{12,968} & \textbf{100.0} \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\subsection{Duration by Outcome}
+Table~\ref{tab:duration} presents duration statistics for resolved 
+cases under the primary conservative coding assumption (Scheme A). 
+Settlements take substantially longer to resolve than
+dismissals: median 2.53 years versus 1.13 years. The
+dismissal distribution is strongly right-skewed, reflecting
+a large mass of cases dismissed quickly on pleadings within
+the first six months, alongside a long right tail of cases
+that survive initial motions.
+
+\begin{table}[htbp]
+\centering
+\caption{Duration Statistics by Outcome (Resolved Cases, Scheme A)}
+\label{tab:duration}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r r r r r @{}}
+\toprule
+\textbf{Outcome} & \textbf{N} & \textbf{Mean} & \textbf{Median} & \textbf{Q25} & \textbf{Q75} \\
+\midrule
+Settlement & 2,015 & 2.85 & 2.53 & 1.45 & 3.56 \\
+Dismissal  & 7,313 & 1.97 & 1.13 & 0.23 & 3.04 \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+
+
+\subsection{Outcomes by PSLRA Regime}
+Table~\ref{tab:byregime} illustrates the stark compositional shift 
+in outcomes associated with the PSLRA. Of the 12,968 total cases, 
+1,032 (8.0\%) were filed pre-PSLRA and 11,936 (92.0\%) post-PSLRA. 
+The pre-PSLRA settlement rate sits at 35.6\%, whereas the post-PSLRA 
+settlement rate plummets to 13.8\%. This raw disparity underscores 
+the necessity of our formal hazard modeling in Chapter 5 to control 
+for competing risks and concurrent case characteristics.
+
+\begin{table}[htbp]
+\centering
+\caption{Sample Characteristics by PSLRA Regime (Scheme A)}
+\label{tab:byregime}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r r r r r r @{}}
+\toprule
+\textbf{Regime} & \textbf{N} & \textbf{Settl.} & \textbf{Dism.} & \textbf{Cens.} & \textbf{\% S} & \textbf{\% D} \\
+\midrule
+Pre-PSLRA   & 1,032  & 367   & 386   & 279   & 35.6 & 37.4 \\
+Post-PSLRA  & 11,936 & 1,648 & 6,927 & 3,361 & 13.8 & 58.0 \\
+\midrule
+\textbf{Total} & \textbf{12,968} & \textbf{2,015} & \textbf{7,313} & \textbf{3,640} & \textbf{15.5} & \textbf{56.4} \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+
+\section{Data Access and Replication}
+
+The IDB is publicly available from the Federal Judicial Center
+upon request at no cost. All data cleaning, variable
+construction, and coding scheme implementation are documented
+in the R analysis script and will be released as a public
+replication package alongside the final thesis submission.
+CourtListener data integration---which would enable
+title-based class action identification, docket activity
+counts, and attorney identifiers---is planned for the final
+thesis.
