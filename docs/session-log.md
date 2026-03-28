@@ -204,3 +204,32 @@ Read this FIRST at the start of every session (via /project:plan).
 - **Cross-script data derivation duplication**: Still present in 03, 04, 07. Not blocking.
 - **Previous open issues still unresolved**: RISK-C1 (IPTW framing), narrow-window IPTW, Second Circuit anomaly — all deferred to Phase 2.
 ---
+
+## Session: 2026-03-28 (Task 5 — RSF Pruning)
+### Plan Progress
+- Tasks completed this session: Task 5 (Prune RSF from Codebase and Delete Stale Outputs)
+- Current position in plan: Task 5 of 16 COMPLETE — Phase 1 DONE. Ready for Phase 2: Task 6 (IPTW)
+- Plan modifications needed: None. Task 5 scope was already reduced during Task 4 (RSF rows/sections in results.tex already removed). All remaining items completed this session.
+### Completed
+- Removed RSF sentence from `intro.tex` (line 60-62)
+- Removed RSF paragraph from `litreview.tex` (lines 50-56)
+- Deleted entire RSF section from `methodology.tex` (Section 3.5, ~20 lines)
+- Replaced false Fine-Gray C-index claim in `methodology.tex` (lines 244-248) with accurate description of independent Fine-Gray concordance approximation
+- Removed "RSF variable importance rankings" reference from `discussion.tex` (line 95), replaced with "Fine-Gray subdistribution analysis"
+- Deleted entire "Semi-Parametric Advantage" section from `discussion.tex` (~25 lines comparing Cox vs RSF performance)
+- Cleared `future.tex` planning memo, replaced with placeholder comment for future rewrite
+- Deleted 8 stale figure files: `figure7_rsf_vimp.png`, `figure8_auc_comparison.png`, plus 6 old numbered `figure1-6_*.png` duplicates from InterimScript
+- Verified: zero RSF/VIMP mentions remain in any `.tex` chapter file or modular R script
+- `refs.bib` RSF entries (ishwaran2008, ishwaran2014) left intact per DO NOT TOUCH policy — harmless uncited entries
+### Key Decisions
+- **Fine-Gray C-index claim fixed opportunistically**: While removing RSF from methodology.tex, noticed the false claim that Fine-Gray C-index equals Cox C-index "by construction." Replaced with accurate description noting the approximation limitation. This aligns with the Task 3 fix and will be discussed in the thesis.
+- **Old numbered figures deleted**: The `figure1-6_*.png` files from InterimScript were duplicates of the new `fig_*.png` files from modular scripts. Deleted to prevent confusion.
+- **InterimScript.R not modified**: RSF code remains in the archived monolithic script. It's not sourced by any modular script and serves as historical reference.
+### Next Steps
+- **Task 6**: Implement IPTW Causal Analysis (`code/05_causal_iptw.R`)
+- **CRITICAL PRE-TASK**: Before writing any code, resolve the IPTW conceptual framing (RISK-C1 kill-switch). Key question: is IPTW defensible for a legislative date cutoff? What language will the thesis use? This decision propagates into every chapter.
+- Preparation: read `docs/new_lit_sources.txt` for Austin & Fine (2025) reference, review the Risk Matrix RISK-C1/C2 sections
+### Open Issues
+- **All previous open issues carry forward**: stale prose in results.tex (7 TODO markers), timeROC iid=TRUE, cross-script duplication, RISK-C1 (IPTW framing), narrow-window IPTW, Second Circuit anomaly
+- **Phase 1 fully complete**: Tasks 1-5 all done. Foundation is solid. Phase 2 (Causal Build) begins next session.
+---

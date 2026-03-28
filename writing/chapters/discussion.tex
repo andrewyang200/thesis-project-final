@@ -92,8 +92,8 @@ cases they could credibly dismiss at the pleading stage.
 \section{Circuit Heterogeneity and Judicial Geography}
 
 The dominance of circuit geography in our results---confirmed
-by both the parametric Cox models and the nonparametric RSF
-variable importance rankings---raises fundamental questions
+by both the cause-specific Cox models and the Fine-Gray
+subdistribution analysis---raises fundamental questions
 about the role of judicial institutions in shaping litigation
 outcomes. The Second Circuit's anomalous position is the
 most striking geographic finding. Cases filed there are
@@ -171,32 +171,6 @@ Section~10(b) cases (HR $= 1.121$), which may reflect
 tracing and standing requirements in IPO and secondary
 offering contexts that create early dismissal opportunities
 defendants exploit aggressively.
-
-\section{The Semi-Parametric Advantage (and Computational Limits)}
-
-The comparison between our semi-parametric and nonparametric 
-models yields a stark divergence in out-of-sample discrimination: 
-the Cox model substantially outperforms the current RSF implementation 
-across all outcomes and horizons. The Cox settlement C-index of 0.735 
-versus the RSF's 0.549 represents a gap of nearly 0.19 concordance units.
-
-While it is tempting to interpret this as definitive evidence that 
-securities litigation outcomes are strictly dominated by linear main 
-effects (circuit identity and PSLRA regime) without complex interactions, 
-such a conclusion is premature. The current RSF performance (barely 
-exceeding random chance) is highly characteristic of an under-tuned 
-ensemble. With heavily right-censored competing-risks data, 200 trees 
-and a restricted $m_{\text{try}}$ grid are insufficient to stabilize 
-the cumulative hazard estimates or reliably map complex recursive 
-partitions. 
-
-Therefore, the proper interpretation at this interim stage is that 
-the Cox model's partial likelihood efficiently captures the massive, 
-first-order institutional shocks (the PSLRA) and geographic disparities 
-(Circuit effects). Whether a fully scaled, computationally intensive 
-RSF can uncover subtle, nonlinear interactions among secondary case 
-characteristics remains an open empirical question for the final 
-computation.
 
 \section{Limitations}
 

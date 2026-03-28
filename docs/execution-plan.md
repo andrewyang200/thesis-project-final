@@ -317,7 +317,7 @@ Fix ALL known bugs during extraction:
 ---
 
 #### Task 5 [FIX]: Prune RSF from Codebase and Delete Stale Outputs
-- [ ] Not started
+- [x] COMPLETE (2026-03-28)
 
 **WHAT**: Surgically remove all RSF traces:
 - Delete `output/figures/figure7_rsf_vimp.png`

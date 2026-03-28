@@ -177,28 +177,6 @@ Cox models separately within the Second and Ninth Circuits to
 assess whether pooled estimates mask circuit-level
 heterogeneity.
 
-\section{Machine Learning Benchmark: Random Survival Forests}
-
-Random Survival Forests (RSF) extend Breiman's random forests
-to right-censored survival data \citep{ishwaran2008}. An
-ensemble of $B$ survival trees is constructed on bootstrap
-samples. At each internal node, a random subset of
-$m_{\text{try}}$ covariates is considered for splitting; the
-split maximizing a log-rank-type criterion is selected. For
-competing risks, we use the implementation in
-\texttt{randomForestSRC}, which employs Gray's test statistic
-for splits and Aalen-Johansen estimators within terminal nodes
-to estimate event-specific CIFs $\hat{F}_k^{\text{RSF}}(t \mid
-\mathbf{X})$ \citep{ishwaran2014}.
-
-We tune $m_{\text{try}}$ via 5-fold cross-validation over the
-grid $\{1, 2, \lfloor\sqrt{p}\rfloor\}$, evaluating OOB
-prediction error for settlement at the final tree. The final
-RSF uses $B = 200$ trees on the 70\% training split; this is a
-proof-of-concept implementation. Variable importance (VIMP)
-is computed as the increase in OOB prediction error when a
-covariate's values are randomly permuted.
-
 \section{Model Comparison and Performance Metrics}
 
 \subsection{Concordance Index}
@@ -238,14 +216,14 @@ We partition the analysis sample into a 70\% training set and
 training cases and 3,861 test cases. All models are fit on
 training data. All C-index and AUC values reported in
 Chapter~\ref{ch:results} are computed on the held-out test set.
-RSF hyperparameters are tuned via 5-fold cross-validation
-within the training set only.
-
-Because Fine-Gray models under the \texttt{finegray}
-augmented-data approach share the same linear predictor as the
-corresponding cause-specific Cox models, their C-index values
-are identical by construction. Separate Fine-Gray AUC
-computation is deferred to the final thesis.
+Fine-Gray C-index values reported in Chapter~\ref{ch:results}
+are computed independently using the Fine-Gray model's linear
+predictor (the subdistribution hazard score), which differs from
+the cause-specific Cox linear predictor. Because
+\texttt{survival::concordance()} treats competing events as
+censored rather than maintaining them in the risk set as the
+Fine-Gray model does, the reported Fine-Gray C-index is an
+approximation.
 
 \section{Unobserved Heterogeneity and Limitations}
 
