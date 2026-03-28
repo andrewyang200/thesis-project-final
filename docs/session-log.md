@@ -132,3 +132,40 @@ Read this FIRST at the start of every session (via /project:plan).
 - **Cross-script data derivation duplication**: 03 and 04 both independently construct df_circ/df_ext with identical logic. Reviewers recommend extracting into a `prepare_model_data()` function in utils.R before writing scripts 05-07.
 - **Previous open issues still unresolved**: RISK-C1 (IPTW framing), narrow-window IPTW, Second Circuit anomaly — all deferred to Phase 2.
 ---
+
+## Session: 2026-03-27 (Task 3 — Diagnostics Script)
+### Plan Progress
+- Tasks completed this session: Task 3 (Create Diagnostics Script — Fix Performance Metrics)
+- Current position in plan: Task 3 of 16 COMPLETE — ready for Task 4
+- Plan modifications needed: None. All acceptance criteria met.
+### Completed
+- Created `code/07_diagnostics.R` from InterimScript Sections 18-21, 23
+- Fixed fatal Section 19 bug: `lp_s`/`lp_d` used before definition — now computed before C-index
+- Fixed false Fine-Gray = Cox C-index assumption: Fine-Gray C-index now independently computed via model matrix multiplication
+- Fixed C-index sign convention: negated linear predictors (concordance expects higher = better prognosis, Cox lp has higher = worse)
+- Fixed Cox AUC to use competing-risks delta encoding (multi-level 0/1/2 instead of binary)
+- Fixed Fine-Gray AUC to use competing-risks delta encoding with correct `cause` argument
+- Fixed IBS computation: now reports IBS[0, 5yr) at single horizon, not mean of nested integrals
+- Fixed LaTeX label duplication (`tab:tab:` → `tab:`)
+- Removed all RSF references
+- Added `save_base_plot()` helper for Schoenfeld plots — all figures now output both PDF and PNG
+- Added documentation comment about Fine-Gray concordance approximation (no subdistribution C-index in survival package)
+- Added clarifying comment about PH tests (ext_formula with stat_basis) vs performance metrics (reduced formula without stat_basis)
+- Loaded `include_stat` from saved metadata instead of recomputing
+- Removed orphan `circuit_counts` variable and dead `par()` reset
+- Set `iid=FALSE` in timeROC for speed; added TODO comment to re-enable for final run
+- Passed r-code-reviewer agent review twice (all CRITICALs resolved)
+- Script runs cleanly in ~1 minute, produces all outputs
+### Key Decisions
+- **`iid=FALSE` for development speed**: `timeROC` with `iid=TRUE` on ~3,800 competing-risks observations takes ~10 minutes. Set to FALSE for now; AUC point estimates are identical. Will flip to TRUE before Task 12 (Results diagnostics section) or Task 16 (final verification) to get confidence intervals. Memory note saved.
+- **Fine-Gray concordance is an approximation**: `survival::concordance()` treats competing events as censored, but Fine-Gray keeps them at risk. No clean fix exists in the package. Documented in code comments; limitation will be noted in thesis Discussion chapter.
+- **Performance metrics use reduced formula**: `stat_basis_f` excluded from performance evaluation models due to complete separation producing infinite coefficients. PH tests still use the full extended formula. Both model specifications are documented.
+### Next Steps
+- **Task 4**: Run full pipeline (01 through 08) end-to-end, capture all console output to `output/analysis_log.txt`, then systematically verify every number in `data.tex` and `results.tex` against the log
+- Preparation: ensure all scripts run independently, then run in sequence
+- NOTE: All thesis numbers will change from Code 6 reclassification (Task 1). Task 4 will document all discrepancies.
+### Open Issues
+- **timeROC iid=TRUE needed before final run**: Memory note saved. No cascade risk — point estimates unchanged; only CIs are added.
+- **Cross-script data derivation duplication** (from Task 2): 03, 04, and now 07 all independently construct df_ext. Still recommended to extract into utils.R before scripts 05-07, but not blocking.
+- **Previous open issues still unresolved**: RISK-C1 (IPTW framing), narrow-window IPTW, Second Circuit anomaly — all deferred to Phase 2.
+---

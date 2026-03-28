@@ -263,7 +263,7 @@ Fix ALL known bugs during extraction:
 ---
 
 #### Task 3 [FIX]: Create Diagnostics Script — Fix Performance Metrics
-- [ ] Not started
+- [x] COMPLETE (2026-03-27)
 
 **WHAT**: Create `code/07_diagnostics.R` that correctly computes:
 - Schoenfeld residual plots for the extended Cox models
