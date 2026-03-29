@@ -277,3 +277,57 @@ Read this FIRST at the start of every session (via /project:plan).
 - **Second Circuit anomaly**: Settlement HR is extreme (5-17x lower than other circuits). Not investigated yet. Deferred.
 - **PH violations in weighted models**: Substantially worse than unweighted. Piecewise IPTW not implemented. Thesis should discuss this as a limitation or implement piecewise IPTW as a robustness check (adds complexity to an already complex section).
 ---
+
+## Session: 2026-03-29 (Task 7 + Checkpoint 1 partial — IPTW/Frailty audit)
+### Plan Progress
+- Tasks completed this session: Task 7 (Shared Frailty Models)
+- Current position in plan: Task 7 of 16 COMPLETE. Checkpoint 1 IN PROGRESS (2 of 7 scripts audited).
+- Plan modifications needed: Checkpoint 1 scope change — running per-script adversarial audits instead of a single all-scripts pass. 05 and 06 audited and fixed this session. Scripts 01-04 and 08 must still be audited BEFORE closing Phase 2. Changes to upstream scripts (01-04) during audit could cascade into 05 and 06 (e.g., data pipeline changes, covariate definitions), so 05/06 may need re-verification after the remaining audit completes.
+### Completed
+- **Task 7: Shared Frailty Models** — Created `code/06_frailty.R` with:
+  - Baseline + extended frailty models (settlement and dismissal) via `coxme::coxme()` with `(1 | circuit_f)`
+  - All 4 models converge (11 clusters, 8-20 outer iterations)
+  - Circuit-level BLUPs extracted and tabulated
+  - Cluster-robust SE models as primary robustness check
+  - Comparison table: 7 specifications × 2 outcomes
+  - Results saved to `output/models/frailty_results.rds`
+- **Checkpoint 1 partial: Adversarial audit of 05_causal_iptw.R and 06_frailty.R**
+  - Ran bug-finder agent: found 3 CRITICAL, 6 MEDIUM, 5 LOW across 30+ items
+  - Ran devil's advocate agent: challenged 6 claims (2 survived, 3 weakened, 1 broken)
+  - Synthesized into Challenge Report with combined verdict: NEEDS WORK
+- **Resolved all 9 flagged issues from Challenge Report**:
+  1. Dropped `mdl_flag` from PS formula (perfect separation: zero pre-PSLRA MDL cases)
+  2. Collapsed `origin_cat=="Removed"` into `"Other"` (only 1 pre-PSLRA case)
+  3. Reconstructed `ext_formula_rhs` locally in 06 (was loading from cached object)
+  4. Removed unused `event_label` parameter from `extract_cif()` helper
+  5. Added PH caveat WARNING in IPTW summary ("time-averaged summary measures only")
+  6. Added cluster-robust SE clarification comment (SE-adjustment ≠ confounding adjustment)
+  7. Replaced "FE ≈ RE proves robustness" with correct framing (invariance is expected for national-level treatment; value is in theta and cluster-robust SEs)
+  8. Added post-treatment bias comment blocks to headers of both 05 and 06
+  9. Fixed `results.tex:287` — Fourth Circuit dismissal HR from 0.262 to 0.516
+- Both scripts re-run cleanly after all fixes
+### Key Decisions
+- **mdl_flag excluded from propensity model**: The IDB did not code MDL consolidation pre-PSLRA, producing perfect separation (coef=14.18, SE=182.5). This is a data limitation, not a modeling choice. MDL composition cannot be adjusted for and this must be acknowledged in the thesis.
+- **origin_cat "Removed" collapsed into "Other"**: Only 1 pre-PSLRA "Removed" case — near-complete separation. Collapsing is the conservative choice.
+- **IPTW framed as decomposition, not adjustment-toward-truth**: The devil's advocate identified that IPTW covariates (circuit, origin, MDL, statutory basis) may be post-treatment — consequences of PSLRA, not confounders. The composition-adjusted HR is a lower bound on the total effect if PSLRA changed where/how cases were filed. Both scripts now carry header notes on this.
+- **Frailty FE≈RE comparison reframed**: The near-identical HRs between fixed- and random-effects are mathematical inevitability for a national-level treatment, not evidence of robustness. The model's genuine contribution is: (a) frailty variance theta, and (b) cluster-robust SEs. This is now explicitly stated in the script.
+- **IPTW numbers changed slightly** after mdl_flag removal and origin collapse:
+  - ESS: 593 → 578 (trim cap 48.56 → 43.54)
+  - Settlement Row 4 (MSM): HR 0.565 → 0.561
+  - Dismissal Row 4 (MSM): HR 1.518 → 1.531
+  - Balance: 21 → 19 covariates, all |SMD| < 0.1
+  - These are minor shifts that do not change any qualitative conclusions
+### Next Steps
+- **Complete Checkpoint 1**: Run adversarial audit (`/challenge`) on remaining scripts: `01_clean.R`, `02_descriptives.R`, `03_cox_models.R`, `04_fine_gray.R`, `08_robustness.R`
+- **IMPORTANT**: Changes to upstream scripts (especially 01_clean.R data pipeline or 03_cox_models.R covariate construction) could cascade into 05 and 06. After the full audit, re-run the complete pipeline (01→02→03→04→05→06→07→08) end-to-end to verify consistency.
+- After Checkpoint 1 closes, proceed to Phase 3: Task 8 (Update Literature Review)
+### Open Issues
+- **Checkpoint 1 incomplete**: Only 05 and 06 audited. Scripts 01-04 and 08 still pending. Must complete before Phase 2 closes.
+- **Potential cascade risk**: If the audit of 01-04 reveals data pipeline changes (e.g., covariate definitions, filtering logic), 05 and 06 may need re-verification.
+- **IPTW numbers in thesis**: The numbers in 05's output have changed slightly from the previous session (mdl_flag removal). These are not yet in the thesis text (deferred to Task 11-12), but the saved `iptw_results.rds` is now authoritative.
+- **Stale prose in results.tex**: 7 `% TODO: REWRITE PROSE` markers remain (Tasks 11-12).
+- **Stale thesis chapters**: `discussion.tex:191` says "we cannot implement frailty models" (now false). `methodology.tex` has no IPTW or frailty sections. Both scripts now print REMINDER flags at end of output.
+- **timeROC iid=TRUE**: Still needed before final run (Task 16).
+- **Cross-script data derivation duplication**: 03, 04, 07 independently construct df_ext. Not blocking but could cause inconsistency if one script changes.
+- **Previous deferred issues**: narrow-window IPTW, Second Circuit anomaly (now confirmed by frailty BLUP=-1.70), PH violations in weighted models.
+---

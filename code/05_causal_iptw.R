@@ -6,6 +6,17 @@
 #          observable case composition explains the raw effect.
 #          ATT weights with 99th percentile trimming.
 #          NOT causal — adjusts for observable compositional shifts.
+#
+# CRITICAL FRAMING NOTE (post-treatment bias):
+#   Covariates like circuit filing choice and MDL status may be
+#   consequences of PSLRA, not pre-treatment confounders. If PSLRA
+#   changed WHERE cases were filed (e.g., more SDNY filings) or HOW
+#   they were consolidated (MDL growth), then adjusting for these
+#   removes part of the PSLRA effect pathway. The "composition-adjusted"
+#   estimate is therefore best interpreted as a DECOMPOSITION — isolating
+#   the direct PSLRA association net of compositional shifts — and may
+#   represent a LOWER BOUND on the total PSLRA effect. The unadjusted
+#   HR (Row 1) captures both direct and composition-mediated channels.
 # Input: data/cleaned/securities_cohort_cleaned.rds
 # Output: output/figures/fig_iptw_balance.{pdf,png}
 #         output/figures/fig_cif_weighted_settlement.{pdf,png}
@@ -77,6 +88,13 @@ if (include_stat) {
   df_ext <- df_ext %>%
     mutate(stat_basis_f = forcats::fct_na_value_to_level(stat_basis_f, level = "Missing"))
 }
+
+# Collapse origin_cat == "Removed" into "Other" to resolve near-complete
+# separation in the propensity model (only 1 pre-PSLRA "Removed" case).
+df_ext <- df_ext %>%
+  mutate(origin_cat = forcats::fct_recode(origin_cat, Other = "Removed"))
+cat(sprintf("  Collapsed origin_cat 'Removed' into 'Other' (1 pre-PSLRA case)\n"))
+
 cat(sprintf("  Analysis sample: %s rows (%d pre / %d post PSLRA)\n",
             format(nrow(df_ext), big.mark = ","),
             sum(df_ext$post_pslra == 0), sum(df_ext$post_pslra == 1)))
@@ -90,7 +108,11 @@ cat("-----------------------------------------------------------------\n")
 
 # Same covariates as the Cox extended model, minus post_pslra itself.
 # These are case characteristics that may differ systematically across eras.
-ps_formula <- post_pslra ~ circuit_f + origin_cat + mdl_flag + juris_fq + stat_basis_f
+# NOTE: mdl_flag is excluded because zero pre-PSLRA cases have mdl_flag == 1,
+# producing perfect separation (coef → ±∞). The IDB did not code MDL
+# consolidation in the pre-PSLRA era, so this is a data limitation, not a
+# modeling choice. MDL composition cannot be adjusted for.
+ps_formula <- post_pslra ~ circuit_f + origin_cat + juris_fq + stat_basis_f
 
 ps_model <- glm(ps_formula, data = df_ext, family = binomial(link = "logit"))
 df_ext$ps <- predict(ps_model, type = "response")
@@ -449,7 +471,7 @@ cif_s_post <- survfit(
 
 # Extract CIF data from multi-state survfit objects
 # survfit with multi-state returns cumulative incidence for each state
-extract_cif <- function(sf, event_label, group_label) {
+extract_cif <- function(sf, group_label) {
   # Multi-state survfit stores CIF in $pstate columns
   # Column 1 = P(in state 0) = "event-free", columns 2+ = CIF for each event
   n_states <- ncol(sf$pstate)
@@ -462,8 +484,8 @@ extract_cif <- function(sf, event_label, group_label) {
   )
 }
 
-cif_pre_data  <- extract_cif(cif_s_pre,  "Settlement", "Pre-PSLRA (weighted)")
-cif_post_data <- extract_cif(cif_s_post, "Settlement", "Post-PSLRA")
+cif_pre_data  <- extract_cif(cif_s_pre,  "Pre-PSLRA (weighted)")
+cif_post_data <- extract_cif(cif_s_post, "Post-PSLRA")
 
 cif_data <- bind_rows(cif_pre_data, cif_post_data)
 
@@ -594,7 +616,13 @@ KEY FINDINGS:
 CAVEATS:
   - NOT causal. Unmeasured confounders are NOT controlled.
   - Propensity model has limited discrimination (pseudo-R2 = %.3f).
-  - PH violations are amplified by weighting — treat HRs as averages.
+  - Covariates may be post-treatment (see header note). Adjusted HR
+    is a decomposition, potentially a lower bound on total effect.
+
+WARNING: Weighted PH test rejects catastrophically (p < 2e-16 for
+  dismissal). These single HRs are time-averaged summary measures only.
+  The unweighted piecewise decomposition in 03_cox_models.R is the
+  preferred specification for the time-varying PSLRA effect.
 =================================================================\n",
   format(nrow(df_ext), big.mark = ","),
   sum(df_ext$post_pslra == 0), sum(df_ext$post_pslra == 1),
@@ -615,6 +643,9 @@ CAVEATS:
   # Propensity model pseudo-R2
   1 - ps_model$deviance / ps_model$null.deviance
 ))
+
+cat("\n*** REMINDER: writing/chapters/methodology.tex and discussion.tex do ***\n")
+cat("*** not yet include IPTW sections. Must be added in Task 11.        ***\n")
 
 # --- Session Info ---
 print_session()

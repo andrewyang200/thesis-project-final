@@ -388,7 +388,7 @@ Fix ALL known bugs during extraction:
 ---
 
 #### Task 7 [CREATE]: Implement Shared Frailty Models
-- [ ] Not started
+- [x] COMPLETE (2026-03-29)
 
 **WHAT**: Write `code/06_frailty.R` implementing:
 1. **Circuit-level shared frailty**: use `coxme::coxme()` with `(1 | circuit)` random effect for both settlement and dismissal outcomes
@@ -416,7 +416,7 @@ Fix ALL known bugs during extraction:
 ---
 
 #### CHECKPOINT 1 [REVIEW]: Adversarial Code Review
-- [ ] Not started
+- [ ] IN PROGRESS — 05 and 06 audited; 01-04, 08 still pending
 
 **WHAT**: Run `/project:challenge` targeting ALL code scripts (`code/01_clean.R` through `code/08_robustness.R`). Specifically challenge:
 - Statistical correctness of IPTW implementation (correct weight construction, correct SE estimation)
