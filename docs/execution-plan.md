@@ -416,7 +416,9 @@ Fix ALL known bugs during extraction:
 ---
 
 #### CHECKPOINT 1 [REVIEW]: Adversarial Code Review
-- [ ] RE-AUDIT IN PROGRESS (2026-03-31c) — Code 6 disaggregation fix (JUDGMENT field) changed all downstream results. Scripts 01 and 02 audited and fixed. Scripts 03-08 must be audited, fixed, and re-run with new data. Each script re-runs after its own audit.
+- [ ] RE-AUDIT IN PROGRESS (2026-03-31d) — Scripts 01, 02, 03, 04 audited, fixed, and re-run. Remaining: 05, 06, 07, 08.
+  - 03: Deleted Section 1B (debunked linear time-trend) and Section 6 (algebraically vacuous reference test). Both debunked model objects removed from cox_models.rds.
+  - 04: Deleted Section 5 (debunked linear time-trend). Added M3 stopifnot sync check, M5/L2 NULL-safety, M6 citation fix, L5 p_value column. Debunked models removed from fine_gray_models.rds.
 
 **WHAT**: Run `/project:challenge` targeting ALL code scripts (`code/01_clean.R` through `code/08_robustness.R`). Specifically challenge:
 - Statistical correctness of IPTW implementation (correct weight construction, correct SE estimation)

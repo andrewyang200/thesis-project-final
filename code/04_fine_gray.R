@@ -133,7 +133,14 @@ comparison_tbl_baseline <- tibble(
     exp(confint(fg_base_s)["post_pslra", 2]),
     exp(confint(cox_d_circ)["post_pslra", 2]),
     exp(confint(fg_base_d)["post_pslra", 2])
-  ), 3)
+  ), 3),
+  # L5: Add p_value column for consistency with extended comparison table
+  p_value = round(c(
+    summary(cox_s_circ)$coefficients["post_pslra", "Pr(>|z|)"],
+    summary(fg_base_s)$coefficients["post_pslra", "Pr(>|z|)"],
+    summary(cox_d_circ)$coefficients["post_pslra", "Pr(>|z|)"],
+    summary(fg_base_d)$coefficients["post_pslra", "Pr(>|z|)"]
+  ), 4)
 )
 
 # Keep backward compatibility
@@ -179,22 +186,31 @@ fg_d_ext <- if (!is.null(fg_ext_d_data)) tryCatch(
   error = function(e) { cat("  coxph error (ext D):", e$message, "\n"); NULL }
 )
 
+# L2: NULL-safety before printing — if a model failed, report and skip
 cat("\nExtended Fine-Gray — Settlement:\n")
-print(summary(fg_s_ext))
+if (!is.null(fg_s_ext)) print(summary(fg_s_ext)) else cat("  MODEL FAILED — check error above\n")
 
 cat("\nExtended Fine-Gray — Dismissal:\n")
-print(summary(fg_d_ext))
+if (!is.null(fg_d_ext)) print(summary(fg_d_ext)) else cat("  MODEL FAILED — check error above\n")
 
 # --- Extended Comparison Table: CS Cox vs Fine-Gray (with CIs) ---
 # Load saved Cox extended models for apples-to-apples comparison
+# M3: Verify sample sizes match before comparing — if scripts ran on different data versions
+# this comparison would silently be apples-to-oranges.
 cox_results <- readRDS(here::here("output", "models", "cox_models.rds"))
 cox_s_ext_loaded <- cox_results$cox_s_ext
 cox_d_ext_loaded <- cox_results$cox_d_ext
+stopifnot(
+  "Cox and FG extended models must be fit on same N" =
+    cox_results$df_ext_nrow == nrow(df_ext)
+)
 
 # Key covariates to compare (not cherry-picked — the ones discussed in the thesis)
 key_covars <- c("post_pslra", grep("mdl", names(coef(cox_s_ext_loaded)), value = TRUE))
 
 build_comparison_row <- function(model, covar, model_label, outcome) {
+  # M5: NULL-safety — if model failed to fit, return NULL silently
+  if (is.null(model)) return(NULL)
   coef_name <- covar
   if (!(coef_name %in% names(coef(model)))) return(NULL)
   tibble(
@@ -228,7 +244,7 @@ print(as.data.frame(comparison_tbl_extended), row.names = FALSE)
 # =============================================================================
 # SECTION 4: PROPORTIONAL SUBDISTRIBUTION HAZARDS TEST
 # =============================================================================
-# cox.zph() is valid on finegray-weighted coxph objects (Austin & Fine, 2017).
+# cox.zph() is valid on finegray-weighted coxph objects (Austin & Fine, 2025).
 # This parallels the PH diagnostics in 03_cox_models.R / 07_diagnostics.R.
 cat("\n-----------------------------------------------------------------\n")
 cat("PROPORTIONAL SUBDISTRIBUTION HAZARDS TEST\n")
@@ -264,61 +280,6 @@ if (!is.null(fg_ph_d)) {
 
 
 # =============================================================================
-# SECTION 5: TIME-TREND SENSITIVITY (parallel to 03_cox_models.R Section 1B)
-# =============================================================================
-# The key identification challenge: post_pslra is collinear with calendar time.
-# Does the Fine-Gray PSLRA SHR survive when filing_year is added?
-cat("\n-----------------------------------------------------------------\n")
-cat("FINE-GRAY TIME-TREND SENSITIVITY (+ filing_year)\n")
-cat("-----------------------------------------------------------------\n")
-
-fg_time_cols <- c("duration_years", "event_type", "post_pslra", "filing_year", "circuit_f")
-
-fg_time_s_data <- tryCatch(
-  finegray(
-    Surv(duration_years, factor(event_type, 0:2)) ~ .,
-    data = df_circ %>% select(all_of(fg_time_cols)),
-    etype = 1
-  ), error = function(e) { cat(sprintf("  finegray error (S): %s\n", e$message)); NULL }
-)
-fg_time_d_data <- tryCatch(
-  finegray(
-    Surv(duration_years, factor(event_type, 0:2)) ~ .,
-    data = df_circ %>% select(all_of(fg_time_cols)),
-    etype = 2
-  ), error = function(e) { cat(sprintf("  finegray error (D): %s\n", e$message)); NULL }
-)
-
-fg_time_s <- if (!is.null(fg_time_s_data)) tryCatch(
-  coxph(Surv(fgstart, fgstop, fgstatus) ~ post_pslra + filing_year + circuit_f,
-        data = fg_time_s_data, weights = fgwt),
-  error = function(e) { cat(sprintf("  Cox error (S): %s\n", e$message)); NULL }
-)
-fg_time_d <- if (!is.null(fg_time_d_data)) tryCatch(
-  coxph(Surv(fgstart, fgstop, fgstatus) ~ post_pslra + filing_year + circuit_f,
-        data = fg_time_d_data, weights = fgwt),
-  error = function(e) { cat(sprintf("  Cox error (D): %s\n", e$message)); NULL }
-)
-
-cat("\n  --- Fine-Gray Time-Trend Sensitivity ---\n")
-if (!is.null(fg_time_s)) {
-  cat(sprintf("  Settlement: PSLRA SHR=%.3f (p=%.1e) | filing_year SHR=%.3f (p=%.1e)\n",
-              exp(coef(fg_time_s)["post_pslra"]),
-              summary(fg_time_s)$coefficients["post_pslra", "Pr(>|z|)"],
-              exp(coef(fg_time_s)["filing_year"]),
-              summary(fg_time_s)$coefficients["filing_year", "Pr(>|z|)"]))
-}
-if (!is.null(fg_time_d)) {
-  cat(sprintf("  Dismissal:  PSLRA SHR=%.3f (p=%.1e) | filing_year SHR=%.3f (p=%.1e)\n",
-              exp(coef(fg_time_d)["post_pslra"]),
-              summary(fg_time_d)$coefficients["post_pslra", "Pr(>|z|)"],
-              exp(coef(fg_time_d)["filing_year"]),
-              summary(fg_time_d)$coefficients["filing_year", "Pr(>|z|)"]))
-}
-cat("  Compare with cause-specific Cox time-trend results in 03_cox_models.R\n")
-
-
-# =============================================================================
 # SAVE MODEL OBJECTS (for 07_diagnostics.R)
 # =============================================================================
 cat("\n-----------------------------------------------------------------\n")
@@ -338,9 +299,6 @@ fg_results <- list(
   # PH tests
   fg_ph_s       = fg_ph_s,
   fg_ph_d       = fg_ph_d,
-  # Time-trend sensitivity
-  fg_time_s     = fg_time_s,
-  fg_time_d     = fg_time_d,
   # Comparison tables
   comparison_tbl          = comparison_tbl,           # baseline PSLRA only (backward compat)
   comparison_tbl_extended = comparison_tbl_extended,   # extended with CIs for all key covariates

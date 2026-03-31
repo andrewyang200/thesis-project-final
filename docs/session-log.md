@@ -556,3 +556,51 @@ Read this FIRST at the start of every session (via /project:plan).
 - **7 `% TODO: REWRITE PROSE` markers** in results.tex — Phase 3 Tasks 11-12
 - **Placebo test complicates identification story** — carried forward
 ---
+
+## Session: 2026-03-31d (Checkpoint 1 re-audit — Scripts 03 & 04)
+### Plan Progress
+- Tasks completed this session: Adversarial audit of 03_cox_models.R and 04_fine_gray.R. All critical issues fixed and both scripts re-run cleanly.
+- Current position in plan: Checkpoint 1 RE-AUDIT IN PROGRESS (4 of 8 scripts audited: 01, 02, 03, 04). Remaining: 05, 06, 07, 08.
+- Plan modifications needed: Minor — two sections permanently deleted from the pipeline (see Key Decisions). Thesis prose for time-trend sensitivity now relies exclusively on 08_robustness.R (which uses the correct spline). Reference circuit sensitivity language in any prior thesis draft should be removed.
+### Completed
+- **Ran 4 adversarial agents in parallel** (bug-finder + devil's advocate on each script) plus live script runs against new Code 6-disaggregated data
+- **03_cox_models.R critical pruning**:
+  - Deleted Section 1B (linear filing_year time-trend) — debunked artifact producing Dismissal "flip" HR=0.601
+  - Deleted Section 6 (reference circuit sensitivity) — algebraically vacuous (post_pslra HR is mathematically invariant to reference level in an additive model)
+  - Removed `cox_s_time` and `cox_d_time` from saved `cox_models.rds`
+- **04_fine_gray.R critical pruning**:
+  - Deleted Section 5 (linear filing_year Fine-Gray time-trend) — same artifact; dismissal SHR went to 0.932 (p=0.094), completely null and misleading
+  - Removed `fg_time_s` and `fg_time_d` from saved `fine_gray_models.rds`
+- **04_fine_gray.R hygiene fixes**:
+  - M3: Added `stopifnot(cox_results$df_ext_nrow == nrow(df_ext))` when loading Cox .rds — guards against stale cross-script comparisons
+  - M5/L2: Added NULL-safety to `build_comparison_row()` + NULL guard before extended model summary printing
+  - M6: Fixed citation year `2017` → `2025` (Austin & Fine)
+  - L5: Added `p_value` column to baseline comparison table for consistency with extended table
+- **Both scripts run cleanly** — exit code 0, no errors, no warnings
+- **Both .rds freshly saved** — `cox_models.rds` (15:14), `fine_gray_models.rds` (15:15), neither contains debunked model objects
+- **New model results captured** from Code 6-disaggregated data (see New Results section of session notes)
+### Key Decisions
+- **Section 1B and Section 5 permanently deleted, not replaced with splines**: Time-trend sensitivity is the exclusive domain of `08_robustness.R`, which already uses `ns(filing_year, df=3)`. Duplicating it in 03 and 04 with inferior specifications added no value and created contamination risk.
+- **Section 6 permanently deleted**: The post_pslra HR is algebraically invariant to the reference circuit in an additive Cox model — this was confirmed live in the script output (HR=0.702 vs 0.702 exactly). Keeping the section would invite an ORFE examiner to conclude the author misunderstands dummy-coded linear models.
+- **M1, M2, M4, L1, L3, L4 deferred to thesis prose**: Piecewise model without covariates is a standard marginal specification (unadjusted) — this is defensible and will be noted in Results prose. Interaction model dropping `stat_basis_f` is justified by the thin circuit-x-PSLRA-x-stat_basis cells at the interaction level — will be documented in a code comment and thesis footnote.
+- **New key numbers from Code 6-disaggregated data**:
+  - Baseline: Settlement HR=0.445 [0.401, 0.495]; Dismissal HR=1.468 [1.342, 1.606]
+  - Extended Cox: Settlement HR=0.702; Dismissal HR=1.751
+  - Piecewise dismissal: 0-1yr HR=1.95 (p<0.001), 1-2yr HR=1.05 (p=0.582), 2+yr HR=1.33 (p=0.0001)
+  - FG Extended: Settlement SHR=0.454; Dismissal SHR=1.864
+  - FG PH: dismissal post_pslra p=0.362 (passes at conventional levels — new finding)
+  - MDL in extended FG settlement: SHR=1.167 (p=0.217, NOT significant — opposite direction from CS Cox)
+### Next Steps
+- **Continue Checkpoint 1 re-audit**: Next batch is scripts 05_causal_iptw.R and 06_frailty.R
+- **IMPORTANT**: After each script's audit, fix issues, then re-run. Do NOT batch all fixes before re-running.
+- After all 8 scripts pass audit, run full pipeline (01→08) end-to-end for final consistency check, then close Checkpoint 1
+- **Then**: Restart Phase 3 Tasks 8-10 from scratch with corrected data context
+### Open Issues
+- **Checkpoint 1 incomplete**: Scripts 05, 06, 07, 08 still need adversarial re-audit
+- **All thesis prose numbers still stale**: data.tex, results.tex, discussion.tex all reflect pre-Code-6-disaggregation values. Will be resolved in Tasks 11-12 after audit closes.
+- **FG dismissal PH test passes (p=0.362)**: Interesting new finding — dismissal subdistribution hazard is proportional under the new data. Settlement still violates (p=2.44e-07). This changes the PH discussion in thesis.
+- **MDL FG settlement SHR=1.167 (p=0.217)**: MDL effect on settlement has opposite sign and is non-significant in Fine-Gray vs. highly significant HR=0.284 in CS Cox. This is a substantive finding worth discussing in Results/Discussion.
+- **7 `% TODO: REWRITE PROSE` markers** in results.tex — deferred to Tasks 11-12
+- **Tasks 8-10 remain DRAFT-IN-REVIEW** — must restart from scratch after audit closes
+- **Placebo test identification concern** — carried forward
+---

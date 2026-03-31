@@ -99,43 +99,6 @@ cat("Dismissal:\n");  print(cox.zph(cox_d_base))
 
 
 # =============================================================================
-# SECTION 1B: TIME-TREND SENSITIVITY (filing_year alongside post_pslra)
-# =============================================================================
-cat("\n-----------------------------------------------------------------\n")
-cat("TIME-TREND SENSITIVITY: Does PSLRA survive when linear time is controlled?\n")
-cat("-----------------------------------------------------------------\n")
-
-# The post_pslra indicator is collinear with calendar time: pre = 1990-1995,
-# post = 1996-2024. A skeptic could argue the "PSLRA effect" is merely a
-# secular time trend. This model includes filing_year as a continuous covariate
-# to absorb linear temporal trends, testing whether the PSLRA step-change
-# remains significant beyond any smooth time drift.
-cox_s_time <- coxph(
-  Surv(duration_years, event_type == 1) ~ post_pslra + filing_year,
-  data = df
-)
-cox_d_time <- coxph(
-  Surv(duration_years, event_type == 2) ~ post_pslra + filing_year,
-  data = df
-)
-
-cat("\nTime-Trend Cox — Settlement:\n")
-print(summary(cox_s_time))
-
-cat("\nTime-Trend Cox — Dismissal:\n")
-print(summary(cox_d_time))
-
-# Compare: does adding filing_year change the PSLRA HR materially?
-cat("\n--- PSLRA HR Comparison: Baseline vs Time-Adjusted ---\n")
-cat(sprintf("  Settlement — Baseline HR: %.3f | Time-Adjusted HR: %.3f\n",
-            exp(coef(cox_s_base)["post_pslra"]),
-            exp(coef(cox_s_time)["post_pslra"])))
-cat(sprintf("  Dismissal  — Baseline HR: %.3f | Time-Adjusted HR: %.3f\n",
-            exp(coef(cox_d_base)["post_pslra"]),
-            exp(coef(cox_d_time)["post_pslra"])))
-
-
-# =============================================================================
 # SECTION 2: PIECEWISE TIME-VARYING PSLRA EFFECT
 # =============================================================================
 cat("\n-----------------------------------------------------------------\n")
@@ -319,57 +282,6 @@ print(round(exp(int_coefs_d), 3))
 
 
 # =============================================================================
-# SECTION 6: REFERENCE CIRCUIT SENSITIVITY TEST
-# =============================================================================
-cat("\n-----------------------------------------------------------------\n")
-cat("REFERENCE CIRCUIT SENSITIVITY: Circuit 7 (median volume) vs Circuit 2\n")
-cat("-----------------------------------------------------------------\n")
-
-# The Second Circuit is a settlement outlier (lowest settlement hazard by far).
-# If the choice of reference level is manufacturing the results, switching to a
-# median-volume circuit (Circuit 7, Seventh Circuit, n=535) should change the
-# post_pslra coefficient. If post_pslra is stable, the result is reference-robust.
-
-df_ext_c7 <- df_ext %>%
-  mutate(circuit_f = relevel(factor(circuit), ref = "7"))
-
-cox_s_ext_c7 <- coxph(
-  as.formula(paste("Surv(duration_years, event_type==1) ~", ext_formula_rhs)),
-  data = df_ext_c7
-)
-cox_d_ext_c7 <- coxph(
-  as.formula(paste("Surv(duration_years, event_type==2) ~", ext_formula_rhs)),
-  data = df_ext_c7
-)
-
-cat("\n--- post_pslra HR: Reference Circuit 2 vs Circuit 7 ---\n")
-cat(sprintf("  Settlement — Ref=Cir2: HR=%.3f (p=%.1e) | Ref=Cir7: HR=%.3f (p=%.1e)\n",
-            exp(coef(cox_s_ext)["post_pslra"]),
-            summary(cox_s_ext)$coefficients["post_pslra", "Pr(>|z|)"],
-            exp(coef(cox_s_ext_c7)["post_pslra"]),
-            summary(cox_s_ext_c7)$coefficients["post_pslra", "Pr(>|z|)"]))
-cat(sprintf("  Dismissal  — Ref=Cir2: HR=%.3f (p=%.1e) | Ref=Cir7: HR=%.3f (p=%.1e)\n",
-            exp(coef(cox_d_ext)["post_pslra"]),
-            summary(cox_d_ext)$coefficients["post_pslra", "Pr(>|z|)"],
-            exp(coef(cox_d_ext_c7)["post_pslra"]),
-            summary(cox_d_ext_c7)$coefficients["post_pslra", "Pr(>|z|)"]))
-
-# Compare MDL coefficient (should be identical — it's not circuit-dependent)
-# MDL flag name may vary (mdl_flagTRUE vs mdl_flag1 etc), so grep for it
-cat("\n--- Other key covariates (should be identical across reference levels) ---\n")
-mdl_nm <- grep("mdl", names(coef(cox_s_ext)), value = TRUE)
-if (length(mdl_nm) == 1) {
-  cat(sprintf("  MDL flag — Ref=Cir2: %.3f | Ref=Cir7: %.3f (settlement)\n",
-              exp(coef(cox_s_ext)[mdl_nm]), exp(coef(cox_s_ext_c7)[mdl_nm])))
-  cat(sprintf("  MDL flag — Ref=Cir2: %.3f | Ref=Cir7: %.3f (dismissal)\n",
-              exp(coef(cox_d_ext)[mdl_nm]), exp(coef(cox_d_ext_c7)[mdl_nm])))
-}
-
-cat("\n  VERDICT: If post_pslra HRs match across reference levels,\n")
-cat("  the choice of reference circuit does not manufacture the result.\n")
-
-
-# =============================================================================
 # SAVE MODEL OBJECTS (for 07_diagnostics.R)
 # =============================================================================
 cat("\n-----------------------------------------------------------------\n")
@@ -384,9 +296,6 @@ cox_results <- list(
   # Baseline
   cox_s_base    = cox_s_base,
   cox_d_base    = cox_d_base,
-  # Time-trend sensitivity
-  cox_s_time    = cox_s_time,
-  cox_d_time    = cox_d_time,
   # Piecewise
   cox_piecewise   = cox_piecewise,
   cox_piecewise_s = cox_piecewise_s,
