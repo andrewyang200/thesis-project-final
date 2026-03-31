@@ -107,7 +107,9 @@ cat(sprintf("  Valid duration (>0):     %s\n", format(n_valid, big.mark = ",")))
 # Validate disposition codes before coding events
 stopifnot(
   "Unexpected disposition codes outside 0-20" =
-    all(df_cohort$disp %in% 0:20, na.rm = TRUE)
+    all(df_cohort$disp %in% 0:20, na.rm = TRUE),
+  "All disposition codes are NA -- check data integrity" =
+    any(!is.na(df_cohort$disp))
 )
 cat("  Disposition code validation: PASSED (all codes in 0-20)\n")
 n_na_disp <- sum(is.na(df_cohort$disp))
@@ -124,25 +126,32 @@ if (n_na_disp > 0) {
 # Source: FJC IDB Codebook (docs/fjc_codebook.md)
 #
 # Scheme A (Primary):
-#   Settlement: Code 13
+#   Settlement: Code 13; Code 6 with JUDGMENT=1 (plaintiff victory on motion)
 #   Dismissal:  Codes 2 (want of prosecution), 3 (lack of jurisdiction),
-#               4 (default judgment), 6 (judgment on motion), 12 (voluntary),
+#               4 (default judgment), 12 (voluntary),
 #               14 (other dismissal), 15 (award of arbitrator),
-#               17 (other judgment), 18 (statistical closing), 19 (appeal affirmed, magistrate)
+#               17 (other judgment), 18 (statistical closing),
+#               19 (appeal affirmed, magistrate), 20 (appeal denied, magistrate);
+#               Code 6 with JUDGMENT=2 (defendant victory on motion)
+#   Censored:   Code 6 with JUDGMENT in {3,4,-8,NA} (ambiguous/missing);
+#               Codes 0,1,10,11 (transfers/remands); codes 7-9 (trial outcomes)
 #
 # Scheme B (Liberal):  Reclassify Code 12 (voluntary) -> settlement (hidden settlements)
 # Scheme C (Expanded): Scheme B + Code 5 (consent judgment) -> settlement
 #
-# Codes 0,1,10,11 (transfers/remands) and codes 7-9 are censored in all schemes.
+# CODE 6 DISAGGREGATION NOTE:
+# Code 6 ("Judgment on Motion Before Trial") is disaggregated using the IDB
+# JUDGMENT field, which records the prevailing party:
+#   JUDGMENT = 1 (Plaintiff) -> Settlement (1L): plaintiff-favorable resolution
+#   JUDGMENT = 2 (Defendant) -> Dismissal (2L): defense motion granted (MTD/SJ)
+#   JUDGMENT in {3,4,-8} or NA -> Censored (0L): ambiguous, conservative default
+# This replaces the prior blanket reclassification of all Code 6 as Dismissal,
+# which incorrectly classified ~701 plaintiff victories as dismissals.
 #
-# CODE 6 RECLASSIFICATION NOTE:
-# The InterimScript censored Code 6 alongside trial codes 7-9. We reclassify
-# Code 6 ("Motion Before Trial") as a Dismissal. Per the FJC Codebook, Code 6
-# represents a terminal disposition by final judgment on a pretrial motion. In
-# securities class actions, this functionally maps to a granted Motion to Dismiss
-# (FRCP 12(b)(6)) or Summary Judgment (FRCP 56), making it a competing risk
-# (Dismissal) rather than an administrative/procedural event. This reclassification
-# affects 2,389 cases (18.4% of the cohort).
+# CODE 20 NOTE:
+# Code 20 (appeal denied, magistrate) is classified as Dismissal alongside
+# Code 19 (appeal affirmed, magistrate) -- symmetric treatment of appellate
+# outcomes where the lower court's decision stands.
 # =============================================================================
 cat("\nSECTION 4: Coding three disposition schemes...\n")
 
@@ -150,13 +159,22 @@ code_events <- function(df, scheme = "A") {
   df %>%
     mutate(
       event_type = case_when(
+        # --- Settlements ---
         disp == 13                              ~ 1L,   # Settled
         scheme %in% c("B","C") & disp == 12    ~ 1L,   # Voluntary -> settlement (B,C)
-        scheme == "C"          & disp == 5     ~ 1L,   # Consent judgment -> settlement (C)
-        disp %in% c(2, 3, 6, 14, 15, 17, 18, 19) ~ 2L, # Dismissals (all schemes)
-        scheme == "A"          & disp == 12    ~ 2L,   # Voluntary -> dismissal (A only)
-        disp == 4                              ~ 2L,   # Default judgment -> dismissal
-        TRUE                                   ~ 0L    # Censored
+        scheme == "C"          & disp == 5      ~ 1L,   # Consent judgment -> settlement (C)
+        disp == 6 & judgment == 1               ~ 1L,   # Code 6 plaintiff victory -> settlement
+
+        # --- Dismissals ---
+        disp %in% c(2, 3, 14, 15, 17, 18, 19, 20) ~ 2L, # Dismissals (all schemes)
+        scheme == "A"          & disp == 12     ~ 2L,   # Voluntary -> dismissal (A only)
+        disp == 4                               ~ 2L,   # Default judgment -> dismissal
+        disp == 6 & judgment == 2               ~ 2L,   # Code 6 defendant victory -> dismissal
+
+        # --- Censored ---
+        # Includes: transfers (0,1), remands (10,11), trial outcomes (7-9),
+        # stayed (16), and Code 6 with ambiguous/missing judgment (3,4,-8,NA)
+        TRUE                                    ~ 0L
       ),
       coding_scheme = scheme
     )

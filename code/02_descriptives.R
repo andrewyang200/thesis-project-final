@@ -34,9 +34,13 @@ cat(sprintf("  Event distribution: Settlement=%s, Dismissal=%s, Censored=%s\n",
 extract_cif <- function(cif_obj, group_name, event_code, event_label) {
   key <- paste(group_name, event_code)
   if (!key %in% names(cif_obj)) return(NULL)
+  est <- cif_obj[[key]]$est
+  v   <- cif_obj[[key]]$var
   tibble(
     time    = cif_obj[[key]]$time,
-    prob    = cif_obj[[key]]$est,
+    prob    = est,
+    lower   = pmax(0, est - 1.96 * sqrt(v)),
+    upper   = pmin(1, est + 1.96 * sqrt(v)),
     group   = group_name,
     outcome = event_label
   )
@@ -97,19 +101,26 @@ cif_overall <- cmprsk::cuminc(
 )
 
 cif_overall_df <- bind_rows(
-  tibble(time = cif_overall$`1 1`$time,
-         prob = cif_overall$`1 1`$est,
+  tibble(time    = cif_overall$`1 1`$time,
+         prob    = cif_overall$`1 1`$est,
+         lower   = pmax(0, cif_overall$`1 1`$est - 1.96 * sqrt(cif_overall$`1 1`$var)),
+         upper   = pmin(1, cif_overall$`1 1`$est + 1.96 * sqrt(cif_overall$`1 1`$var)),
          outcome = "Settlement"),
-  tibble(time = cif_overall$`1 2`$time,
-         prob = cif_overall$`1 2`$est,
+  tibble(time    = cif_overall$`1 2`$time,
+         prob    = cif_overall$`1 2`$est,
+         lower   = pmax(0, cif_overall$`1 2`$est - 1.96 * sqrt(cif_overall$`1 2`$var)),
+         upper   = pmin(1, cif_overall$`1 2`$est + 1.96 * sqrt(cif_overall$`1 2`$var)),
          outcome = "Dismissal")
 )
 
 fig_cif <- ggplot(cif_overall_df, aes(x = time, y = prob, color = outcome)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper, fill = outcome),
+              alpha = 0.15, color = NA, show.legend = FALSE) +
   geom_step(linewidth = 1.2) +
   scale_x_continuous(limits = c(0, 8), breaks = seq(0, 8, 2)) +
   scale_y_continuous(limits = c(0, 1), labels = percent_format(accuracy = 1)) +
   scale_color_manual(values = thesis_colors[c("Settlement", "Dismissal")]) +
+  scale_fill_manual(values = thesis_colors[c("Settlement", "Dismissal")]) +
   labs(
     title    = "Cumulative Incidence of Settlement vs. Dismissal",
     subtitle = "Aalen-Johansen estimates under competing-risks framework",
@@ -118,7 +129,9 @@ fig_cif <- ggplot(cif_overall_df, aes(x = time, y = prob, color = outcome)) +
     color    = "Outcome",
     caption  = paste0(
       "Source: FJC Integrated Database. Scheme A coding.\n",
-      "Settlement = code 13; Dismissal = codes 2,3,4,6,12,14,15,17,18,19."
+      "Settlement = code 13 + Code 6 plaintiff victories; ",
+      "Dismissal = codes 2-4,12,14,15,17-20 + Code 6 defendant victories.\n",
+      "Shaded bands = 95% pointwise confidence intervals."
     )
   ) +
   theme(
@@ -149,24 +162,29 @@ cif_pslra_df <- bind_rows(
   extract_cif(cif_pslra, "Post-PSLRA", 1, "Settlement"),
   extract_cif(cif_pslra, "Post-PSLRA", 2, "Dismissal")
 ) %>%
-  mutate(series = paste(group, outcome, sep = " \u2014 "))
+  mutate(series = paste(group, outcome, sep = " - "))
+
+pslra_colors <- c(
+  "Pre-PSLRA - Settlement"  = "#2166AC",
+  "Pre-PSLRA - Dismissal"   = "#B2182B",
+  "Post-PSLRA - Settlement" = "#67A9CF",
+  "Post-PSLRA - Dismissal"  = "#EF8A62"
+)
 
 fig_pslra <- ggplot(cif_pslra_df,
                      aes(x = time, y = prob, color = series, linetype = series)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper, fill = series),
+              alpha = 0.12, color = NA, show.legend = FALSE) +
   geom_step(linewidth = 1) +
   scale_x_continuous(limits = c(0, 8), breaks = seq(0, 8, 2)) +
   scale_y_continuous(limits = c(0, 1), labels = percent_format(accuracy = 1)) +
-  scale_color_manual(values = c(
-    "Pre-PSLRA \u2014 Settlement"  = "#2166AC",
-    "Pre-PSLRA \u2014 Dismissal"   = "#B2182B",
-    "Post-PSLRA \u2014 Settlement" = "#67A9CF",
-    "Post-PSLRA \u2014 Dismissal"  = "#EF8A62"
-  )) +
+  scale_color_manual(values = pslra_colors) +
+  scale_fill_manual(values = pslra_colors) +
   scale_linetype_manual(values = c(
-    "Pre-PSLRA \u2014 Settlement"  = "solid",
-    "Pre-PSLRA \u2014 Dismissal"   = "solid",
-    "Post-PSLRA \u2014 Settlement" = "dashed",
-    "Post-PSLRA \u2014 Dismissal"  = "dashed"
+    "Pre-PSLRA - Settlement"  = "solid",
+    "Pre-PSLRA - Dismissal"   = "solid",
+    "Post-PSLRA - Settlement" = "dashed",
+    "Post-PSLRA - Dismissal"  = "dashed"
   )) +
   guides(
     color    = guide_legend(nrow = 2, byrow = TRUE),
@@ -178,7 +196,10 @@ fig_pslra <- ggplot(cif_pslra_df,
     x        = "Years Since Filing",
     y        = "Cumulative Probability",
     color    = NULL, linetype = NULL,
-    caption  = "Source: FJC Integrated Database. Solid = Pre-PSLRA; dashed = Post-PSLRA."
+    caption  = paste0(
+      "Source: FJC Integrated Database. Solid = Pre-PSLRA; dashed = Post-PSLRA.\n",
+      "Shaded bands = 95% pointwise confidence intervals."
+    )
   ) +
   theme(
     plot.caption     = element_text(size = 9, color = "gray50", hjust = 0),
@@ -217,34 +238,40 @@ print(cif_horizon_tbl)
 
 
 # =============================================================================
-# FIGURES 4-5: CIF BY CIRCUIT (Top 4)
+# FIGURES 4-5: CIF BY CIRCUIT (Top 4 by volume + Sixth Circuit)
 # =============================================================================
-cat("\nFigures 4-5: CIF by circuit (top 4)...\n")
+cat("\nFigures 4-5: CIF by circuit (top 4 + Sixth)...\n")
 
+# Top 4 by case volume + Sixth Circuit (highest settlement rate at ~37%,
+# analytically important for the settlement story despite smaller N=361)
 circuit_counts <- df %>% count(circuit, sort = TRUE)
-top4_circuits  <- circuit_counts %>% head(4) %>% pull(circuit)
+top_circuits   <- unique(c(
+  circuit_counts %>% head(4) %>% pull(circuit),
+  6  # Sixth Circuit
+))
 
-df_top4 <- df %>%
-  filter(circuit %in% top4_circuits) %>%
+df_circ <- df %>%
+  filter(circuit %in% top_circuits) %>%
   mutate(circuit_name = case_when(
     circuit == 2 ~ "Second (NYC)",
     circuit == 9 ~ "Ninth (CA)",
     circuit == 3 ~ "Third (PA/NJ/DE)",
     circuit == 5 ~ "Fifth (TX/LA)",
+    circuit == 6 ~ "Sixth (OH/MI/KY/TN)",
     TRUE         ~ paste("Circuit", circuit)
   ))
 
 cif_circuit <- cmprsk::cuminc(
-  ftime   = df_top4$duration_years,
-  fstatus = df_top4$event_type,
-  group   = df_top4$circuit_name,
+  ftime   = df_circ$duration_years,
+  fstatus = df_circ$event_type,
+  group   = df_circ$circuit_name,
   cencode = 0
 )
 
-cat("\nGray's test for equality of CIF across circuits (top 4):\n")
+cat("\nGray's test for equality of CIF across selected circuits:\n")
 print(cif_circuit$Tests)
 
-circuit_names  <- unique(df_top4$circuit_name)
+circuit_names  <- unique(df_circ$circuit_name)
 cif_circuit_df <- map_dfr(circuit_names, function(cn) {
   bind_rows(
     extract_cif(cif_circuit, cn, 1, "Settlement"),
@@ -256,18 +283,24 @@ cif_circuit_df <- map_dfr(circuit_names, function(cn) {
 fig_circ_d <- cif_circuit_df %>%
   filter(outcome == "Dismissal") %>%
   ggplot(aes(x = time, y = prob, color = group)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper, fill = group),
+              alpha = 0.10, color = NA, show.legend = FALSE) +
   geom_step(linewidth = 1) +
   scale_x_continuous(limits = c(0, 6), breaks = 0:6) +
   scale_y_continuous(limits = c(0, 1), labels = percent_format(accuracy = 1)) +
   scale_color_brewer(palette = "Set1") +
+  scale_fill_brewer(palette = "Set1") +
   guides(color = guide_legend(nrow = 2, byrow = TRUE)) +
   labs(
     title    = "Cumulative Incidence of Dismissal by Circuit",
-    subtitle = "Top 4 circuits by case volume",
+    subtitle = "Top 4 circuits by volume + Sixth Circuit",
     x        = "Years Since Filing",
     y        = "Cumulative Probability of Dismissal",
     color    = "Circuit",
-    caption  = "Source: FJC Integrated Database, 1990-2024."
+    caption  = paste0(
+      "Source: FJC Integrated Database, 1990-2024.\n",
+      "Shaded bands = 95% pointwise confidence intervals."
+    )
   ) +
   theme(
     plot.caption = element_text(size = 9, color = "gray50", hjust = 0)
@@ -279,18 +312,25 @@ save_figure(fig_circ_d, "fig_cif_circuit_dismissal", width = 9)
 fig_circ_s <- cif_circuit_df %>%
   filter(outcome == "Settlement") %>%
   ggplot(aes(x = time, y = prob, color = group)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper, fill = group),
+              alpha = 0.10, color = NA, show.legend = FALSE) +
   geom_step(linewidth = 1) +
   scale_x_continuous(limits = c(0, 6), breaks = 0:6) +
-  scale_y_continuous(limits = c(0, 0.30), labels = percent_format(accuracy = 1)) +
+  scale_y_continuous(limits = c(0, 0.45), breaks = seq(0, 0.45, 0.05),
+                     labels = percent_format(accuracy = 1)) +
   scale_color_brewer(palette = "Set1") +
+  scale_fill_brewer(palette = "Set1") +
   guides(color = guide_legend(nrow = 2, byrow = TRUE)) +
   labs(
     title    = "Cumulative Incidence of Settlement by Circuit",
-    subtitle = "Top 4 circuits by case volume",
+    subtitle = "Top 4 circuits by volume + Sixth Circuit",
     x        = "Years Since Filing",
     y        = "Cumulative Probability of Settlement",
     color    = "Circuit",
-    caption  = "Source: FJC Integrated Database, 1990-2024."
+    caption  = paste0(
+      "Source: FJC Integrated Database, 1990-2024.\n",
+      "Shaded bands = 95% pointwise confidence intervals."
+    )
   ) +
   theme(
     plot.caption = element_text(size = 9, color = "gray50", hjust = 0)

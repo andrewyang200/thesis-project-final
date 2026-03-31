@@ -13,7 +13,7 @@ How do legal regime changes (PSLRA), court geography (federal circuit), and case
 - **Universe**: ~12,968 securities class actions (NOS 850), 1990–2024
 - **Key fields**: filing date, termination date, NOS code, disposition codes, cause-of-action (statutory basis), class-action flag, jurisdiction, circuit, origin, MDL status, monetary demand
 - **Competing risks** (three disposition coding schemes per FJC IDB Codebook):
-  - **Scheme A (Primary)**: Settlement = code 13; Dismissal = codes 2,3,4,6,12,14,15,17,18,19; all else censored
+  - **Scheme A (Primary)**: Settlement = code 13, Code 6 w/ JUDGMENT=1 (plaintiff); Dismissal = codes 2,3,4,12,14,15,17,18,19,20, Code 6 w/ JUDGMENT=2 (defendant); Code 6 w/ ambiguous JUDGMENT censored; all else censored
   - **Scheme B (Liberal)**: Reclassifies code 12 (voluntary dismissal) as settlement (hidden settlements)
   - **Scheme C (Expanded)**: Scheme B + code 5 (consent judgment) reclassified as settlement
   - Codes 0,1,10,11 (transfers/remands) and codes 7-9 (trial outcomes without judgment) are censored in all schemes

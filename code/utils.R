@@ -68,20 +68,20 @@ save_table <- function(tbl, filename, caption = "", label = "") {
 }
 
 # --- Data Helpers ---
-# Standard event coding (Scheme A — primary analysis)
+# Simplified Scheme A event coding (does NOT disaggregate Code 6 by JUDGMENT).
+# The authoritative version is code/01_clean.R::code_events(), which uses the
+# JUDGMENT field to split Code 6 into plaintiff victories (settlement) vs.
+# defendant victories (dismissal). This function is retained as a convenience
+# reference for Scheme A logic without the JUDGMENT-field refinement.
 # Source: FJC IDB Codebook (docs/fjc_codebook.md)
-#   Settlement: Code 13 (settlement)
-#   Dismissal:  Codes 2 (want of prosecution), 3 (lack of jurisdiction),
-#               4 (default judgment), 6 (judgment on motion), 12 (voluntary),
-#               14 (other dismissal), 15 (award of arbitrator),
-#               17 (other judgment), 18 (statistical closing), 19 (appeal affirmed, magistrate)
-#   Censored:   Everything else (transfers, remands, pending)
 # NOTE: Schemes B and C reclassify codes 12 and 5 — see code/01_clean.R::code_events()
-code_event <- function(disposition) {
+code_event <- function(disposition, judgment = NA_integer_) {
   case_when(
-    disposition == 13                                     ~ 1L,  # Settlement
-    disposition %in% c(2, 3, 4, 6, 12, 14, 15, 17, 18, 19) ~ 2L,  # Dismissal
-    TRUE                                                  ~ 0L   # Censored/other
+    disposition == 13                                      ~ 1L,  # Settlement
+    disposition == 6 & judgment == 1                        ~ 1L,  # Code 6 plaintiff victory
+    disposition %in% c(2, 3, 4, 12, 14, 15, 17, 18, 19, 20) ~ 2L, # Dismissal
+    disposition == 6 & judgment == 2                        ~ 2L,  # Code 6 defendant victory
+    TRUE                                                   ~ 0L   # Censored/other
   )
 }
 

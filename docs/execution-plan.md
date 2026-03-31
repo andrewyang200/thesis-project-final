@@ -416,7 +416,7 @@ Fix ALL known bugs during extraction:
 ---
 
 #### CHECKPOINT 1 [REVIEW]: Adversarial Code Review
-- [x] COMPLETE (2026-03-31) — All 8 scripts audited. HOWEVER: "Dismissal Flip" debunked in session 2026-03-31b. A FINAL adversarial re-audit of the full pipeline (01-08) is required before Phase 3 writing resumes.
+- [ ] RE-AUDIT IN PROGRESS (2026-03-31c) — Code 6 disaggregation fix (JUDGMENT field) changed all downstream results. Scripts 01 and 02 audited and fixed. Scripts 03-08 must be audited, fixed, and re-run with new data. Each script re-runs after its own audit.
 
 **WHAT**: Run `/project:challenge` targeting ALL code scripts (`code/01_clean.R` through `code/08_robustness.R`). Specifically challenge:
 - Statistical correctness of IPTW implementation (correct weight construction, correct SE estimation)

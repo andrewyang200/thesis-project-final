@@ -509,3 +509,50 @@ Read this FIRST at the start of every session (via /project:plan).
 - **CIF confidence bands + number-at-risk tables** — Phase 4 polish
 - **timeROC iid=TRUE** — already set, confirmed in previous session
 ---
+
+## Session: 2026-03-31c (Final Adversarial Re-Audit — Scripts 01 & 02 + Code 6 Fix)
+### Plan Progress
+- Tasks completed this session: Partial Checkpoint 1 re-audit (01_clean.R and 02_descriptives.R audited and fixed). No new execution plan tasks completed — this is the required pre-Phase-3 adversarial re-audit.
+- Current position in plan: Checkpoint 1 RE-AUDIT IN PROGRESS (2 of 8 scripts audited: 01, 02). Remaining: 03, 04, 05, 06, 07, 08. Each script will be re-run after its respective adversarial challenge to verify clean execution with the new data.
+- Plan modifications needed: Major — Code 6 disaggregation changes ALL downstream model results. Every script (03-08) must be re-run after its adversarial audit. The outcome distribution shifted from 15.5%/74.8%/9.6% to 20.9%/67.3%/11.7% (settlement/dismissal/censored). All thesis numbers in data.tex, results.tex, and discussion.tex will change. Task 4-equivalent verification must happen again after all scripts are re-run.
+### Completed
+- **Adversarial audit of 01_clean.R**: Bug-finder (0 critical, 2 medium, 5 low) + devil's advocate (1 BROKEN, 5 WEAKENED, 1 SURVIVES)
+  - BROKEN finding: Code 6 blanket reclassification as dismissal misclassified ~701 plaintiff victories. The IDB JUDGMENT field (available but never consulted) shows 29.3% of Code 6 cases were resolved in plaintiff's favor.
+- **Adversarial audit of 02_descriptives.R**: Bug-finder (0 critical, 2 medium, 3 low) + devil's advocate (0 BROKEN, 4 WEAKENED, 4 SURVIVES)
+- **Fixed Code 6 disaggregation in 01_clean.R**: JUDGMENT=1 (plaintiff, 701) → settlement; JUDGMENT=2 (defendant, 1,418) → dismissal; ambiguous/missing (270) → censored
+- **Fixed Code 20 asymmetry**: Added Code 20 (appeal denied, magistrate) to dismissal vector alongside Code 19 (2 cases affected)
+- **Fixed stopifnot vacuous truth**: Added second assertion to catch all-NA disposition codes
+- **Fixed Y-axis clipping in 02_descriptives.R**: Expanded from 0.30 to 0.45 — Third Circuit (37.1%) and Sixth Circuit (~43%) now fully visible
+- **Fixed Unicode em-dash**: Replaced `\u2014` with standard hyphen — no more mbcsToSbcs PDF warnings
+- **Added 95% CI bands to all CIF plots**: Overall, PSLRA-stratified, and circuit-stratified. Uses `cmprsk::cuminc` variance for pointwise 95% Wald intervals. Matches the rigor of the KM plot which already had CI bands.
+- **Added Sixth Circuit to circuit CIF plots**: Highest settlement rate (~43%) of any circuit. Provides critical contrast with Second Circuit (~5%). Now shows 5 circuits instead of 4.
+- **Updated utils.R**: `code_event()` updated to match Code 6 disaggregation logic with optional judgment parameter
+- **Verified 740 dropped cases**: All are zero-duration administrative artifacts (672 with disp=-8). Zero pending cases dropped. All post-PSLRA. No selection bias concern.
+- Both scripts re-run cleanly with zero errors
+### Key Decisions
+- **Code 6 disaggregation is the most important data fix in the project**: Moving 701 plaintiff victories from dismissal to settlement corrects a systematic misclassification that inflated the post-PSLRA dismissal rate. New Scheme A: 20.9% settlement (was 15.5%), 67.3% dismissal (was 74.8%), 11.7% censored (was 9.6%). This will change every model result in the thesis.
+- **Code 6 plaintiff victories coded as Settlement, not Censored**: In the thesis's competing-risks framework, the two outcomes are "plaintiff-favorable resolution" (settlement) and "defendant-favorable resolution" (dismissal). A Code 6 case with JUDGMENT=1 is a plaintiff victory on a pretrial motion — clearly plaintiff-favorable. Coding as settlement is more analytically accurate than censoring.
+- **Code 6 ambiguous/missing JUDGMENT coded as Censored**: Conservative default. 270 cases with JUDGMENT ∈ {3 (both), 4 (unknown), -8 (missing)} could go either way. Censoring avoids forcing a classification.
+- **Sixth Circuit added for analytical importance, not just volume**: With ~43% settlement rate vs. the Second Circuit's ~5%, the Sixth Circuit is the most interesting circuit for the settlement story. Omitting it by selecting only "top 4 by volume" was a defensible but analytically suboptimal choice.
+- **CIF confidence bands added for rigor consistency**: The KM plot already had bands; the CIF plots did not. An ORFE examiner would notice the asymmetry. The pre-PSLRA bands (wider, N=1,032) vs. post-PSLRA bands (narrow, N=11,936) convey important information about estimation uncertainty.
+- **All downstream scripts (03-08) require re-running**: The cleaned .rds has changed. Each script will be re-run AFTER its respective adversarial challenge during the ongoing re-audit. This ensures fixes from audit findings are incorporated before re-running.
+### Next Steps
+- **Continue Checkpoint 1 re-audit**: Run adversarial challenge (bug-finder + devil's advocate) on scripts 03_cox_models.R and 04_fine_gray.R
+- **IMPORTANT**: After each script's audit, fix issues, then re-run the script to verify it works with the new data. Do NOT re-run all scripts at once — audit first, fix, then re-run.
+- **After all 8 scripts pass audit**: Re-run full pipeline (01→02→03→04→05→06→07→08) end-to-end for final consistency check
+- **Then**: Restart Phase 3 Tasks 8-10 from scratch with corrected data context
+### Open Issues
+- **All model results are stale**: Every HR, CI, p-value, C-index, and AUC in the thesis was computed before Code 6 disaggregation. All downstream scripts (03-08) must be re-run. The direction of changes is predictable (settlement rates up, dismissal rates down) but magnitudes unknown until models are re-fit.
+- **data.tex numbers are stale**: Scheme A distribution (15.5%/74.8%/9.6%) must be updated to (20.9%/67.3%/11.7%). All three scheme tables need updating.
+- **CIF horizon numbers changed**: Pre-PSLRA settlement at 5yr: 41.8% (was 36.5%). Post-PSLRA dismissal at 5yr: 68.1% (was 73.0%). The "nearly equal" pre-PSLRA claim is even more wrong now (49.2% vs 41.8% — dismissal still leads but gap narrowed).
+- **Devil's advocate flagged for Phase 3 prose (not fixed now)**:
+  - Gray's test p-values should be accompanied by effect size context (N=12,968 makes everything significant)
+  - Methodology censoring framing: "non-modeled exit pathways" not "snapshot date censoring" — all 1,251 censored cases have termination dates
+  - Results prose overclaim: "permanent reduction" from CIF alone without controlling for confounders
+  - Second Circuit label: "SDNY" in results prose but data is circuit-level (includes EDNY, NDNY, etc.)
+- **03_cox_models.R linear time-trend section (Section 1B)**: Still uses misleading linear filing_year. Will be addressed during 03's audit.
+- **04_fine_gray.R linear time-trend section**: Same issue. Will be addressed during 04's audit.
+- **Tasks 8-10 remain DRAFT-IN-REVIEW**: Must be restarted from scratch after audit completes
+- **7 `% TODO: REWRITE PROSE` markers** in results.tex — Phase 3 Tasks 11-12
+- **Placebo test complicates identification story** — carried forward
+---
