@@ -604,3 +604,53 @@ Read this FIRST at the start of every session (via /project:plan).
 - **Tasks 8-10 remain DRAFT-IN-REVIEW** — must restart from scratch after audit closes
 - **Placebo test identification concern** — carried forward
 ---
+
+## Session: 2026-04-01 (Checkpoint 1 re-audit — Scripts 05 & 06)
+### Plan Progress
+- Tasks completed this session: Adversarial audit of 05_causal_iptw.R and 06_frailty.R. All critical issues fixed and both scripts re-run cleanly against Code 6-disaggregated data.
+- Current position in plan: Checkpoint 1 RE-AUDIT IN PROGRESS (6 of 8 scripts audited: 01, 02, 03, 04, 05, 06). Remaining: 07, 08.
+- Plan modifications needed: Minor — methodology.tex:331 has a % TODO marker for the frailty LaTeX equation fix (u_c ~ N(0,θ), not LogNormal). Must be corrected in Phase 3 Task 9 methodology rewrite. New IPTW and frailty numbers documented below (all changed from Code 6 disaggregation).
+### Completed
+- **Ran 4 adversarial agents in parallel** (bug-finder + devil's advocate on each script) focused on Code 6 disaggregation impact
+- **05_causal_iptw.R — fixes applied**:
+  - Made `ps_formula` and `ext_rhs` conditional on `include_stat` flag (latent fragility, now synced with 03_cox_models.R)
+  - Replaced hardcoded "How to read this table" block (with narrative "big move," "substantial portion") with dynamic print statements computing actual Row 1→2 and Row 1→4 % shifts from model objects
+  - Replaced entire hardcoded summary block (balance claim, "all p < 0.001," "strongly associated," hardcoded PH p-values) with fully dynamic output
+  - Generalized stale PH comment (removed hardcoded `p=0.26 to p<2e-16`)
+  - Re-run cleanly; `iptw_results.rds` refreshed (2026-04-01)
+- **06_frailty.R — fixes applied**:
+  - Fixed frailty distribution label: `log-normal` → `Gaussian random intercepts on the log-hazard scale` (line 122 + metadata). The random effect `u_c ~ N(0, θ)`; only the multiplicative frailty `exp(u_c)` is log-normal.
+  - Replaced entire hardcoded KEY FINDINGS block (stale theta=0.48/0.02, unconditional "All four converge" claim, wrong "2-3x SE widening") with dynamic output computed from model objects at runtime
+  - Removed stale REMINDER about discussion.tex (already fixed in a prior session)
+  - Fixed "HR is identical" comment (samples differ by 16 cases)
+  - Re-run cleanly; `frailty_results.rds` refreshed (2026-04-01)
+- **methodology.tex:331**: Added `% TODO: FIX FRAILTY MATH` marker — the LaTeX equation writes `u_c ~ LogNormal(0, θ)` but coxme uses Gaussian. Must be corrected in Task 9 Phase 3 rewrite.
+- **Confirmed: Code 6 disaggregation did NOT break PS model** — treatment assignment is filing date (pre-treatment), so propensity scores, ESS (578), trim cap (43.54), and balance (all 19 covariates |SMD| < 0.1) are identical to pre-Code-6 values.
+- **Confirmed: All 4 frailty models converge** after Code 6 disaggregation — minimum settlement events per circuit = 59 (Code 6 *added* settlement events, didn't remove them).
+### Key Decisions
+- **Hardcoded narrative prose in R scripts is not acceptable**: Any claim in a `cat()` block that is not computed from the model objects is a liability (it will become stale and silently wrong). All summary blocks now use `sprintf()` from actual extracted values.
+- **Frailty distribution is Gaussian (not LogNormal)**: `coxme` places `u_c ~ N(0, θ)` on the log-hazard scale. The multiplicative frailty `exp(u_c)` is log-normal, but the distribution of `u_c` itself is Normal. The thesis equation in methodology.tex:331 incorrectly states LogNormal. This is a CRITICAL math error to fix in Phase 3.
+- **Code 6 era confound flagged for thesis text (not code)**: 93.4% of reclassified Code 6 plaintiff victories are post-PSLRA. This mechanically inflates post-PSLRA settlement counts. The frailty variance for settlement partially reflects differential Code 6 JUDGMENT availability across circuits (Circuit 4 = 66.6% of its settlements from Code 6). These are data-limitation points to raise in Discussion — not code bugs.
+- **Cluster-robust settlement SE widening is 2.8x (p=0.023)**: Borderline significant. We report it as-is. No model changes to artificially improve this p-value.
+### Next Steps
+- **Complete Checkpoint 1**: Run adversarial audit on `07_diagnostics.R` and `08_robustness.R`, fix issues, re-run.
+- After all 8 scripts pass: run full pipeline (01→08) end-to-end for final consistency check, then formally close Checkpoint 1.
+- **Then**: Restart Phase 3 Tasks 8-10 from scratch with corrected data context.
+### Open Issues
+- **Checkpoint 1 incomplete**: Scripts 07 and 08 still need adversarial re-audit.
+- **methodology.tex:331 frailty equation is wrong**: `u_c ~ LogNormal(0, θ)` must become `u_c ~ N(0, θ)`. % TODO marker placed. Fix in Task 9.
+- **New IPTW numbers (post-Code-6)**:
+  - Row 1 (Unadjusted): Settlement HR=0.439, Dismissal HR=1.466
+  - Row 2 (Regression): Settlement HR=0.701, Dismissal HR=1.746
+  - Row 3 (Doubly Robust): Settlement HR=0.709, Dismissal HR=1.804
+  - Row 4 (MSM): Settlement HR=0.690, Dismissal HR=1.526 — these are the authoritative composition-adjusted estimates
+  - Max p across 8 models = 1.29e-05 (MSM settlement). All remain significant.
+- **New frailty numbers (post-Code-6)**:
+  - Settlement extended: theta=0.4487 (substantial), FE-RE delta=0.001
+  - Dismissal extended: theta=0.0333 (moderate), FE-RE delta=0.001
+  - Cluster-robust widening: 2.8x settlement (p=0.023), 2.0x dismissal (p<0.0001)
+- **All thesis prose numbers still stale**: data.tex, results.tex, discussion.tex reflect pre-Code-6-disaggregation values. Deferred to Phase 3 Tasks 11-12.
+- **7 `% TODO: REWRITE PROSE` markers** in results.tex — Phase 3 Tasks 11-12
+- **Tasks 8-10 remain DRAFT-IN-REVIEW** — must restart from scratch after audit closes
+- **Placebo test identification concern** — carried forward
+---

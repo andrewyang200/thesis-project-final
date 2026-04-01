@@ -328,6 +328,8 @@ induce correlation among cases within the same circuit
 
 A shared frailty model introduces a circuit-level random
 effect. Let $u_c$ denote the frailty for circuit $c$, with
+% TODO: FIX FRAILTY MATH — coxme uses Gaussian random intercepts: u_c ~ N(0, theta).
+% The multiplicative frailty w_c = exp(u_c) is log-normal. Rewrite equation accordingly.
 $u_c \sim \text{LogNormal}(0, \theta)$, where $\theta$ is
 the frailty variance. The cause-specific hazard becomes:
 \begin{equation}

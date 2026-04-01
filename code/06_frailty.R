@@ -118,7 +118,8 @@ cat(sprintf("  Fixed-effect extended dismissal HR:                %.3f\n",
 cat("\n-----------------------------------------------------------------\n")
 cat("BASELINE FRAILTY MODELS: post_pslra + (1 | circuit_f)\n")
 cat("-----------------------------------------------------------------\n")
-cat("Using coxme::coxme() with log-normal random effects.\n")
+cat("Using coxme::coxme() with Gaussian random intercepts on the log-hazard scale.\n")
+cat("(i.e., u_c ~ N(0, theta); the multiplicative frailty exp(u_c) is log-normal.)\n")
 cat("These models include NO fixed-effect circuit terms — circuit\n")
 cat("heterogeneity is captured entirely by the random intercept.\n\n")
 
@@ -262,8 +263,9 @@ cat("but do NOT estimate the magnitude of circuit heterogeneity.\n\n")
 # Baseline: PSLRA only, clustered by circuit.
 # IMPORTANT: cluster = circuit_f adjusts STANDARD ERRORS for within-circuit
 # correlation (sandwich/robust variance), but does NOT include circuit as a
-# covariate in the mean model. The HR is identical to the no-circuit model;
-# only the SE/CI/p-value changes. This is SE-adjustment, NOT confounding
+# covariate in the mean model. The HR is nearly identical to the no-circuit
+# model (differs only by circuit filtering); the primary effect is
+# SE/CI/p-value adjustment. This is SE-adjustment, NOT confounding
 # adjustment. For circuit-level confounding adjustment, see the circuit FE
 # and circuit RE (frailty) models above.
 cox_s_cluster_base <- coxph(
@@ -502,7 +504,7 @@ frailty_results <- list(
     n_ext  = nrow(df_ext),
     n_circuits = length(circuits_incl),
     circuits = circuits_incl,
-    frailty_type = "log-normal (coxme default)",
+    frailty_type = "Gaussian random intercept (coxme); exp(u) is log-normal",
     ext_formula_rhs_no_circuit = ext_no_circuit_rhs,
     framing = sprintf("sensitivity analysis (%d clusters < recommended 20-30)", length(circuits_incl)),
     date = Sys.time()
@@ -554,21 +556,47 @@ for (outcome in c("Settlement", "Dismissal")) {
   }
 }
 
-cat("\nKEY FINDINGS:\n")
-cat("  1. All four frailty models converge despite only 11 clusters.\n")
-cat("  2. The PSLRA HR is invariant between FE and RE specifications.\n")
-cat("     This is EXPECTED — PSLRA is a national-level shock applied\n")
-cat("     uniformly to all circuits, so the coefficient cannot differ.\n")
-cat("     The model's value lies in theta and cluster-robust inference.\n")
-cat("  3. Frailty variance quantifies unobserved circuit heterogeneity:\n")
-cat("     - Settlement: substantial (theta=0.48), driven by 2nd Circuit\n")
-cat("     - Dismissal: near-zero (theta=0.02) after controlling covariates\n")
-cat("  4. Cluster-robust SEs widen CIs by 2-3x, confirming meaningful\n")
-cat("     within-circuit correlation. All results remain significant.\n")
+# --- Dynamic KEY FINDINGS (all values computed from model objects) ---
+n_converged <- sum(!sapply(list(frailty_s_base, frailty_d_base, frailty_s_ext, frailty_d_ext), is.null))
+cat(sprintf("\nKEY FINDINGS (computed from model output):\n"))
+cat(sprintf("  1. %d of 4 frailty models converge with %d clusters.\n", n_converged, length(circuits_incl)))
+
+# FE vs RE comparison (dynamic)
+if (!is.null(frailty_s_ext)) {
+  fe_re_delta_s <- abs(exp(fixef(frailty_s_ext)["post_pslra"]) - exp(coef(cox_results$cox_s_ext)["post_pslra"]))
+  cat(sprintf("  2. PSLRA HR: FE-RE delta = %.4f (settlement)", fe_re_delta_s))
+}
+if (!is.null(frailty_d_ext)) {
+  fe_re_delta_d <- abs(exp(fixef(frailty_d_ext)["post_pslra"]) - exp(coef(cox_results$cox_d_ext)["post_pslra"]))
+  cat(sprintf(", %.4f (dismissal)", fe_re_delta_d))
+}
+cat("\n     (Near-zero expected: PSLRA is a national-level shock.)\n")
+
+# Frailty variance (dynamic)
+cat("  3. Frailty variance (theta):\n")
+for (nm in names(frailty_models)) {
+  m <- frailty_models[[nm]]
+  if (!is.null(m)) {
+    theta <- VarCorr(m)$circuit_f[1]
+    label <- if (theta < 0.01) "minimal" else if (theta < 0.1) "moderate" else "substantial"
+    cat(sprintf("     - %s: theta = %.4f (%s heterogeneity)\n", nm, theta, label))
+  } else {
+    cat(sprintf("     - %s: FAILED\n", nm))
+  }
+}
+
+# Cluster-robust SE widening (dynamic)
+naive_se_s <- summary(cox_results$cox_s_ext)$coefficients["post_pslra", "se(coef)"]
+robust_se_s <- summary(cox_s_cluster_ext)$coefficients["post_pslra", "robust se"]
+naive_se_d <- summary(cox_results$cox_d_ext)$coefficients["post_pslra", "se(coef)"]
+robust_se_d <- summary(cox_d_cluster_ext)$coefficients["post_pslra", "robust se"]
+p_cluster_s <- summary(cox_s_cluster_ext)$coefficients["post_pslra", grep("^Pr\\(", colnames(summary(cox_s_cluster_ext)$coefficients), value = TRUE)[1]]
+p_cluster_d <- summary(cox_d_cluster_ext)$coefficients["post_pslra", grep("^Pr\\(", colnames(summary(cox_d_cluster_ext)$coefficients), value = TRUE)[1]]
+
+cat(sprintf("  4. Cluster-robust SE widening (extended, vs naive):\n"))
+cat(sprintf("     - Settlement: %.1fx (p = %.4f)\n", robust_se_s / naive_se_s, p_cluster_s))
+cat(sprintf("     - Dismissal:  %.1fx (p = %.4f)\n", robust_se_d / naive_se_d, p_cluster_d))
 cat(sprintf("  5. With %d clusters, frailty variance may be biased downward.\n", length(circuits_incl)))
 cat("=================================================================\n")
-
-cat("\n*** REMINDER: discussion.tex:191 says 'we cannot implement frailty ***\n")
-cat("*** models' — this is now STALE and must be corrected in Task 11.  ***\n")
 
 print_session()

@@ -41,8 +41,7 @@
 #   Row 2 ≈ Row 3 ≈ Row 4: Convergence across methods = robust finding.
 #
 # NOTE ON PH VIOLATIONS:
-#   IPTW weighting amplifies PH violations (PSLRA dismissal goes from
-#   p=0.26 unweighted to p<2e-16 weighted). The single-HR summaries
+#   IPTW weighting can amplify PH violations. The single-HR summaries
 #   reported here are time-averaged effects, not constant hazard ratios.
 #   The unweighted piecewise decomposition (03_cox_models.R) remains the
 #   preferred specification for characterizing the time-varying PSLRA effect.
@@ -112,7 +111,11 @@ cat("-----------------------------------------------------------------\n")
 # producing perfect separation (coef → ±∞). The IDB did not code MDL
 # consolidation in the pre-PSLRA era, so this is a data limitation, not a
 # modeling choice. MDL composition cannot be adjusted for.
-ps_formula <- post_pslra ~ circuit_f + origin_cat + juris_fq + stat_basis_f
+if (include_stat) {
+  ps_formula <- post_pslra ~ circuit_f + origin_cat + juris_fq + stat_basis_f
+} else {
+  ps_formula <- post_pslra ~ circuit_f + origin_cat + juris_fq
+}
 
 ps_model <- glm(ps_formula, data = df_ext, family = binomial(link = "logit"))
 df_ext$ps <- predict(ps_model, type = "response")
@@ -254,7 +257,11 @@ cat("\n-----------------------------------------------------------------\n")
 cat("ROW 2 — REGRESSION-ADJUSTED: Cox with full covariate set\n")
 cat("-----------------------------------------------------------------\n")
 
-ext_rhs <- "post_pslra + circuit_f + origin_cat + mdl_flag + juris_fq + stat_basis_f"
+if (include_stat) {
+  ext_rhs <- "post_pslra + circuit_f + origin_cat + mdl_flag + juris_fq + stat_basis_f"
+} else {
+  ext_rhs <- "post_pslra + circuit_f + origin_cat + mdl_flag + juris_fq"
+}
 
 cox_s_reg <- coxph(
   as.formula(paste("Surv(duration_years, event_type == 1) ~", ext_rhs)),
@@ -367,14 +374,11 @@ cat(sprintf("  Dismissal:  HR = %.3f, 95%% CI: %.3f--%.3f, p = %.2e\n",
 cat("\n-----------------------------------------------------------------\n")
 cat("PH TESTS (weighted models)\n")
 cat("-----------------------------------------------------------------\n")
-# NOTE: IPTW weighting amplifies PH violations. The PSLRA dismissal
-# PH test goes from p=0.26 (unweighted) to p<2e-16 (weighted).
-# This means the single-HR summary is a time-averaged effect, not a
+# NOTE: IPTW weighting can amplify PH violations. If the weighted PH
+# test rejects, the single-HR summary is a time-averaged effect, not a
 # constant hazard ratio. The unweighted piecewise decomposition in
 # 03_cox_models.R remains the preferred specification for characterizing
-# the time-varying PSLRA effect. The weighted HRs here should be
-# interpreted as: "on average over follow-up, after composition
-# adjustment, PSLRA is associated with X."
+# the time-varying PSLRA effect.
 cat("Doubly Robust Settlement:\n")
 tryCatch(print(cox.zph(cox_s_dr)), error = function(e) cat("  PH test failed:", e$message, "\n"))
 cat("\nDoubly Robust Dismissal:\n")
@@ -433,16 +437,21 @@ print(as.data.frame(tri_settlement), row.names = FALSE)
 cat("\n=== DISMISSAL ===\n")
 print(as.data.frame(tri_dismissal), row.names = FALSE)
 
-cat("\n--- How to read this table ---\n")
-cat("  Row 1 → Row 2: The big move. Observable covariates (circuit, origin,\n")
-cat("    MDL, statutory basis) explain a substantial portion of the raw PSLRA\n")
-cat("    association. This is the 'composition matters' finding.\n")
-cat("  Row 2 ≈ Row 3 ≈ Row 4: Convergence across regression and weighting\n")
-cat("    confirms the adjusted PSLRA effect is robust to functional form.\n")
-cat("    The Cox regression is not 'forcing' a result through parametric\n")
-cat("    assumptions — weighting recovers essentially the same estimate.\n")
-cat("  Row 1 → Row 4: The MSM gives the full composition-adjusted effect\n")
-cat("    via weighting alone. Compare directly with the unadjusted HR.\n")
+# Dynamic triangulation interpretation
+s_shift_1_to_2 <- 100 * (s_reg_e$hr - s_raw_e$hr) / s_raw_e$hr
+d_shift_1_to_2 <- 100 * (d_reg_e$hr - d_raw_e$hr) / d_raw_e$hr
+s_shift_1_to_4 <- 100 * (s_msm_e$hr - s_raw_e$hr) / s_raw_e$hr
+d_shift_1_to_4 <- 100 * (d_msm_e$hr - d_raw_e$hr) / d_raw_e$hr
+
+cat("\n--- Triangulation Interpretation (computed from actual HRs) ---\n")
+cat(sprintf("  Row 1 → Row 2: Regression adjustment shifts settlement HR %+.1f%% and dismissal HR %+.1f%%.\n",
+            s_shift_1_to_2, d_shift_1_to_2))
+cat(sprintf("  Row 1 → Row 4: MSM (weighting only) shifts settlement HR %+.1f%% and dismissal HR %+.1f%%.\n",
+            s_shift_1_to_4, d_shift_1_to_4))
+cat(sprintf("  Row 2 vs Row 3 vs Row 4 convergence: Settlement HRs = %.3f / %.3f / %.3f\n",
+            s_reg_e$hr, s_dr_e$hr, s_msm_e$hr))
+cat(sprintf("                                        Dismissal HRs  = %.3f / %.3f / %.3f\n",
+            d_reg_e$hr, d_dr_e$hr, d_msm_e$hr))
 
 # =============================================================================
 # SECTION 7: WEIGHTED CIF PLOTS
@@ -585,11 +594,34 @@ cat("  Saved: output/models/iptw_results.rds\n")
 cat("\n=================================================================\n")
 cat(" IPTW TRIANGULATION SUMMARY\n")
 cat("=================================================================\n")
+
+# All summary values computed dynamically from model objects
+pseudo_r2 <- 1 - ps_model$deviance / ps_model$null.deviance
+all_p <- c(s_raw_e$p, s_reg_e$p, s_dr_e$p, s_msm_e$p,
+           d_raw_e$p, d_reg_e$p, d_dr_e$p, d_msm_e$p)
+max_p <- max(all_p)
+
+# Balance summary
+if (length(bad_balance) == 0) {
+  balance_msg <- sprintf("All %d covariates |SMD| < 0.1 after weighting", length(covariate_smd))
+} else {
+  balance_msg <- sprintf("%d of %d covariates FAILED |SMD| < 0.1 threshold: %s",
+                         length(bad_balance), length(covariate_smd),
+                         paste(bad_balance, collapse = ", "))
+}
+
+# PH test results (dynamic)
+ph_d_msm <- tryCatch(cox.zph(cox_d_msm), error = function(e) NULL)
+ph_d_msg <- if (!is.null(ph_d_msm)) {
+  p_ph <- ph_d_msm$table["post_pslra", "p"]
+  if (p_ph < 0.001) sprintf("p = %.2e", p_ph) else sprintf("p = %.3f", p_ph)
+} else { "test failed" }
+
 cat(sprintf("
 Sample: %s cases (%d pre / %d post PSLRA, ratio %.1f:1)
 Weights: ATT with 99th percentile trim (cap = %.2f)
 ESS: %.1f pre-PSLRA (%.1f%% efficiency), %d post-PSLRA
-Balance: All %d covariates |SMD| < 0.1 after weighting (PS distance: %.3f)
+Balance: %s (PS distance: %.3f)
 
 SETTLEMENT — PSLRA Hazard Ratios
   1. Unadjusted:           HR = %.3f  (%s)
@@ -603,33 +635,24 @@ DISMISSAL — PSLRA Hazard Ratios
   3. Doubly Robust:        HR = %.3f  (%s)  [%s vs Row 1]
   4. Marginal Structural:  HR = %.3f  (%s)  [%s vs Row 1]
 
-KEY FINDINGS:
-  1. Observable composition matters: Row 1 → Row 2 shows covariates
-     explain a substantial share of the raw PSLRA association.
-  2. Functional form is robust: Rows 2, 3, and 4 converge — regression
-     and weighting give essentially the same composition-adjusted HR.
-  3. After adjustment, PSLRA remains strongly associated with more
-     dismissals and fewer settlements (all p < 0.001).
-  4. These are time-averaged effects (PH violated). The piecewise
-     decomposition in 03_cox_models.R gives the time-varying picture.
+FINDINGS (computed from model output):
+  1. Row 1 → Row 2 shift: settlement %+.1f%%, dismissal %+.1f%%
+  2. Rows 2/3/4 convergence: settlement %.3f/%.3f/%.3f, dismissal %.3f/%.3f/%.3f
+  3. Max p-value across all 8 models: %.2e
+  4. Weighted PH test (MSM dismissal): %s
 
 CAVEATS:
   - NOT causal. Unmeasured confounders are NOT controlled.
-  - Propensity model has limited discrimination (pseudo-R2 = %.3f).
+  - Propensity model pseudo-R2 = %.3f (limited discrimination).
   - Covariates may be post-treatment (see header note). Adjusted HR
     is a decomposition, potentially a lower bound on total effect.
-
-WARNING: Weighted PH test rejects catastrophically (p < 2e-16 for
-  dismissal). These single HRs are time-averaged summary measures only.
-  The unweighted piecewise decomposition in 03_cox_models.R is the
-  preferred specification for the time-varying PSLRA effect.
 =================================================================\n",
   format(nrow(df_ext), big.mark = ","),
   sum(df_ext$post_pslra == 0), sum(df_ext$post_pslra == 1),
   sum(df_ext$post_pslra == 1) / sum(df_ext$post_pslra == 0),
   trim_cap,
   ess_pre, 100 * ess_pre / length(w_pre), ess_post,
-  length(covariate_smd), ps_smd,
+  balance_msg, ps_smd,
   # Settlement
   s_raw_e$hr, tri_settlement$`95% CI`[1],
   s_reg_e$hr, tri_settlement$`95% CI`[2], tri_settlement$`vs Row 1`[2],
@@ -640,8 +663,14 @@ WARNING: Weighted PH test rejects catastrophically (p < 2e-16 for
   d_reg_e$hr, tri_dismissal$`95% CI`[2], tri_dismissal$`vs Row 1`[2],
   d_dr_e$hr,  tri_dismissal$`95% CI`[3], tri_dismissal$`vs Row 1`[3],
   d_msm_e$hr, tri_dismissal$`95% CI`[4], tri_dismissal$`vs Row 1`[4],
-  # Propensity model pseudo-R2
-  1 - ps_model$deviance / ps_model$null.deviance
+  # Dynamic findings
+  s_shift_1_to_2, d_shift_1_to_2,
+  s_reg_e$hr, s_dr_e$hr, s_msm_e$hr,
+  d_reg_e$hr, d_dr_e$hr, d_msm_e$hr,
+  max_p,
+  ph_d_msg,
+  # Pseudo-R2
+  pseudo_r2
 ))
 
 cat("\n*** REMINDER: writing/chapters/methodology.tex and discussion.tex do ***\n")

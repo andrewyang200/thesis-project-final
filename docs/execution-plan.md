@@ -416,9 +416,11 @@ Fix ALL known bugs during extraction:
 ---
 
 #### CHECKPOINT 1 [REVIEW]: Adversarial Code Review
-- [ ] RE-AUDIT IN PROGRESS (2026-03-31d) — Scripts 01, 02, 03, 04 audited, fixed, and re-run. Remaining: 05, 06, 07, 08.
+- [ ] RE-AUDIT IN PROGRESS (2026-04-01) — Scripts 01, 02, 03, 04, 05, 06 audited, fixed, and re-run. Remaining: 07, 08.
   - 03: Deleted Section 1B (debunked linear time-trend) and Section 6 (algebraically vacuous reference test). Both debunked model objects removed from cox_models.rds.
   - 04: Deleted Section 5 (debunked linear time-trend). Added M3 stopifnot sync check, M5/L2 NULL-safety, M6 citation fix, L5 p_value column. Debunked models removed from fine_gray_models.rds.
+  - 05: Made ps_formula/ext_rhs conditional on include_stat. Replaced all hardcoded narrative (balance claim, "big move", "all p < 0.001", PH p-value) with dynamic output. Re-run and iptw_results.rds refreshed (2026-04-01).
+  - 06: Fixed frailty distribution label (LogNormal→Gaussian). Replaced hardcoded KEY FINDINGS block (stale theta=0.48/0.02, unconditional convergence claim) with dynamic output from model objects. Removed stale discussion.tex reminder. Re-run and frailty_results.rds refreshed (2026-04-01). Added % TODO to methodology.tex:331 for LaTeX equation fix in Phase 3.
 
 **WHAT**: Run `/project:challenge` targeting ALL code scripts (`code/01_clean.R` through `code/08_robustness.R`). Specifically challenge:
 - Statistical correctness of IPTW implementation (correct weight construction, correct SE estimation)
