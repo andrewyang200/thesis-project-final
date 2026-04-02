@@ -15,7 +15,8 @@
 - Task 8 (Lit Review): COMPLETE (2026-04-01) — reviewed, 7 targeted fixes applied, no flip contamination found.
 - Task 9 (Methodology): COMPLETE (2026-04-01) — reviewed, 9 targeted fixes applied (frailty eq, IPTW assumptions, notation, accessibility, cross-refs). Writing reviewer: 0 HIGH remaining.
 - Task 10 (Introduction): COMPLETE (2026-04-02) — 5 contributions, 3 number fixes, CRITICAL significance error corrected, purpose statement + roadmap added.
-- Tasks 11-12 (Results restructure): NOT STARTED.
+- Task 11 (Results 5.1-5.4): COMPLETE (2026-04-02, two sessions). All 4 sections rewritten with Code 6-verified numbers.
+- Task 12 (Results 5.5-5.6): NOT STARTED.
 - Task 13 (Discussion + Future Work): NOT STARTED.
 
 **Phase 4 (Polish): NOT STARTED** — Tasks 14-16 (Abstract, Formatting, Final Verification).
@@ -120,7 +121,7 @@ PSLRA HR is virtually identical between fixed-effect and random-effect models (d
 ### Robustness (7 Specifications)
 All 7 specifications show dismissal HR > 1 and settlement HR < 1. The strongest identification test is the spline time-trend control:
 - **Spline (df=3)**: Settlement HR=0.610 (p=0.001), Dismissal HR=2.449 (p<0.001)
-- **Range across all 7 specs**: Dismissal HR ∈ [1.28, 2.45], Settlement HR ∈ [0.34, 0.61]
+- **Range across all 7 specs**: Dismissal HR ∈ [1.32, 2.45], Settlement HR ∈ [0.44, 0.98]
 
 ### Identification Limits
 - **1992 Placebo test FAILED**: HR=0.710 (p<0.001). The model detects pre-existing trends before PSLRA was enacted. This limits causal interpretability of all estimates.
@@ -167,9 +168,9 @@ Reclassifying Code 18 (statistical closing, 1,198 cases = 9.2%) as censored does
 - The thesis reports both confirming and disconfirming evidence honestly. Null results are results.
 
 ### Known Stale Content in .tex Files
-- **7 `% TODO: REWRITE PROSE` markers** in results.tex — resolve in Tasks 11-12
+- **5 `% TODO` markers** in results.tex Sections 5.5-5.6 only — resolve in Task 12 (all 5.1-5.4 TODOs resolved)
 - **data.tex**: Scheme A distribution, all three scheme tables, duration tables — all reflect pre-Code-6 numbers
-- **results.tex**: All inline HRs, CIs, p-values, CIF horizons, Gray's test stats — stale
+- **results.tex Sections 5.5-5.6**: Performance table numbers, summary section HRs — need update in Task 12
 - **discussion.tex**: Some inline numbers updated, but most prose was written before Code 6 disaggregation
 - **methodology.tex:331**: Frailty equation wrong (`LogNormal` → must be `Gaussian`)
 - **Robustness LaTeX table**: Has 7 rows but may need number updates from latest pipeline run
@@ -370,4 +371,48 @@ Reclassifying Code 18 (statistical closing, 1,198 cases = 9.2%) as censored does
 - **Old content in 5.3-5.4 has stale numbers**: All tables (tab:cox_circuit, tab:cox_ext_settle, tab:cox_ext_dismiss, tab:fg_comparison) need verification. Inline prose numbers also stale.
 - **Gray's test stats in circuit CIF caption are stale** (573.5/15.3): Need recomputation with all 11 circuits.
 - **5 LOW items from Task 9 still deferred**: subscript gap, ratio discrepancy, Gray's test note, train/test count, missing labels.
+---
+
+## Session: 2026-04-02 (Task 11 Part 2: Results Sections 5.3-5.4)
+### Plan Progress
+- Tasks completed this session: Task 11 Part 2 (Results Sections 5.3 and 5.4)
+- Current position in plan: Task 11 of 16 COMPLETE. Next: Task 12 (Diagnostics + Summary).
+- Plan modifications needed: Task 11 marked complete in execution-plan.md. Section 5.6 summary has one stale number fixed (SHR 1.126→1.167) but rest of 5.5-5.6 remains for Task 12.
+### Completed
+- **Section 5.3 (Geographic Disparity) fully rewritten** (~230 lines):
+  - Claim-based opening: "Circuit geography is the dominant predictor..."
+  - Gray's test stats updated: Settlement 573.5→905.2, Dismissal 15.3→112.5 (recomputed from data)
+  - Circuit Cox table (tab:cox_circuit) fully updated: All 10 circuit HRs verified from cox_models.rds. Notable changes: Fourth Circuit settlement HR 1.765→4.066, Fourth Circuit dismissal 0.516→0.300.
+  - **NEW table (tab:interaction)**: PSLRA × Circuit interaction HRs with CIs and p-values for both outcomes. N=10,652, C-index 0.740/0.609.
+  - **NEW subsection 5.3.4 (Shared Frailty Sensitivity Analysis)**: Frailty variance θ (settle=0.449, dismiss=0.033), comparison table (tab:frailty) showing FE/RE/cluster-robust estimation, SE widening (2.8×/2.0×).
+  - DC/Federal Circuit omission noted in table caption (n<50 each).
+- **Section 5.4 (Case Characteristics) fully rewritten** (~180 lines):
+  - Claim-based opening: "Beyond the PSLRA and circuit geography, case-level characteristics..."
+  - Extended Cox tables (tab:cox_ext_settle, tab:cox_ext_dismiss) fully updated: PSLRA settle 0.609→0.702, dismiss 1.736→1.751; MDL 0.261→0.284 / 0.225→0.247; Section 11 1.02→1.167 / 1.137→1.118; all circuit and covariate HRs refreshed.
+  - FG comparison table (tab:fg_comparison) updated with correct CS/FG HRs, **CI column added**, **p-value column added**.
+  - MDL FG settlement SHR=1.167 explicitly flagged as NOT significant (p=0.217, CI: 0.913-1.492).
+  - Plain-English subdistribution HR gloss added before FG discussion.
+  - PH test stats verified unchanged: Settlement χ²=301.1, Dismissal χ²=471.2 (both p<2e-16).
+- **Writing-reviewer agent run**: 0 CRITICAL, 3 HIGH, 3 MEDIUM, 2 LOW. All fixed:
+  1. HIGH: 6 three-tier language violations ("effect"→"association") — fixed
+  2. HIGH: Broken cross-ref `\ref{sec:iptw_settlement}` → `\ref{sec:results_iptw}` — fixed
+  3. HIGH: Missing FG CIs in tab:fg_comparison — added CI column
+  4. MEDIUM: "26-fold range" claim incorrect (actual: nearly 18-fold) — fixed
+  5. MEDIUM: Concordance values awkwardly placed — moved to standalone sentence
+  6. MEDIUM: SHR=1.126 stale in Section 5.6 — updated to 1.167 with p=0.217
+  7. LOW: Dense opening paragraph — kept as-is (previews section structure)
+- **Zero TODO markers remain in Sections 5.1-5.4**. All 5 remaining TODOs are in 5.5-5.6 (Task 12).
+### Key Decisions
+- **Frailty framed as sensitivity analysis, not primary model**: 11 circuits < 20-30 recommended for reliable variance estimation. Presented in a dedicated subsection with explicit caveat.
+- **Interaction model restricted to 5 largest circuits + reference**: Matches the fitted model (which omits stat_basis_f due to thin cells). N=10,652 vs N=12,866 for extended model — documented.
+- **MDL FG settlement is NOT significant**: Old text implied a significant positive effect (SHR=1.126). New text explicitly states p=0.217 and reframes as "not detectably different from non-MDL cases" rather than the old "slightly higher."
+- **Fourth Circuit settlement HR changed dramatically**: 1.765→4.066. This is because Code 6 disaggregation reclassified many Fourth Circuit Code 6 cases, changing the reference comparison. The new number is correct per verified R output.
+### Next Steps
+- **Task 12**: Write Sections 5.5 (Model Diagnostics and Validation) and 5.6 (Summary of Findings). Key content: Schoenfeld residual plots, IPTW balance/Love plot, C-index/AUC table verification, frailty diagnostic discussion (11-cluster caveat), numbered summary of 6-7 key findings with three-tier language.
+- **Task 13**: Discussion & Conclusion/Future Work.
+- **Deadline awareness**: April 9 is 7 days away. Tasks 12-16 remain (Diagnostics/Summary, Discussion, Abstract, Formatting, Final Verification).
+### Open Issues
+- **5 LOW items from Task 9 still deferred**: subscript gap, ratio discrepancy, Gray's test note, train/test count, missing labels. Address in Phase 4 (Task 15).
+- **Section 5.6 Summary needs full rewrite in Task 12**: Only one stale number (SHR) was fixed as a downstream fix. The rest of 5.6 still has stale HRs and old framing.
+- **IPTW table in 5.2.4 still lacks CIs**: Flagged in prior session, still LOW priority (all p<0.001).
 ---

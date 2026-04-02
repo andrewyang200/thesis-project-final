@@ -530,7 +530,7 @@ Fix ALL known bugs during extraction:
 ---
 
 #### Task 11 [CREATE]: Restructure Results Chapter — Part 1 (Claims 1-4)
-- [ ] Not started
+- [x] COMPLETE (2026-04-02, two sessions: Part 1 = 5.1-5.2, Part 2 = 5.3-5.4)
 
 **WHAT**: Completely restructure Results chapter. Write Sections 5.1-5.4:
 
