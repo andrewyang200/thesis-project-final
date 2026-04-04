@@ -1,0 +1,271 @@
+% ============================================================
+% conclusion.tex — Conclusion and Future Directions
+% Rebuilt as Task 13 Pass 2 (2026-04-04)
+% ============================================================
+
+This chapter synthesizes the central findings of the thesis,
+identifies the most productive avenues for extending this
+work, and reflects on the broader implications of the
+competing-risks approach for empirical legal scholarship.
+Section~7.1 summarizes the five core contributions,
+Section~7.2 proposes specific research directions motivated
+by the limitations identified in
+Chapter~\ref{ch:discussion}, and Section~7.3 offers a
+closing reflection.
+
+\section{Summary of Contributions}
+
+This thesis asked what determines the timing and type of
+resolution in federal securities class actions. The answer,
+it turns out, depends
+critically on the statistical lens through which the question
+is examined. By applying a full competing-risks survival
+framework to 12,968 cases from the FJC Integrated Database
+spanning 1990--2024, we have shown that the standard
+single-outcome approach systematically distorts the picture
+of securities litigation dynamics.
+
+Building on the methodological framework developed in
+Chapters~\ref{ch:methodology}--\ref{ch:data} and the
+analytical results presented in
+Chapters~\ref{ch:results}--\ref{ch:discussion}, five
+substantive contributions emerge.
+
+First, the PSLRA's association with case outcomes is not a
+uniform shift but a temporally structured phenomenon. The
+piecewise Cox decomposition
+(Section~\ref{sec:piecewise}) reveals that the reform is
+associated with a sharp elevation in dismissal hazard during
+the first year of litigation---consistent with the heightened
+pleading standard operating at the motion-to-dismiss
+stage---followed by a null middle period and a modest late
+re-emergence. This three-phase pattern has not been
+previously documented in the securities litigation literature
+and provides a more nuanced characterization than the single
+time-averaged hazard ratio offered by prior work.
+
+Second, the IPTW composition-adjusted decomposition
+(Section~\ref{sec:results_iptw}) separates
+the raw PSLRA association into a component explained by
+observable shifts in the case mix and a residual component
+that persists after adjustment. For dismissal, the
+composition-adjusted estimate is slightly amplified relative
+to the raw association, indicating that concurrent
+compositional shifts worked against the dismissal pattern
+rather than inflating it. For settlement, approximately half
+the raw suppression is explained by observable case-mix
+changes. These estimates are not causal---the 1992 placebo
+test and the post-treatment bias concern preclude that
+interpretation---but they provide a principled decomposition
+unavailable in prior work.
+
+Third, circuit geography emerges as the dominant structural
+predictor of case trajectories, with settlement hazard ratios
+spanning a 17-fold range across circuits
+(Table~\ref{tab:cox_ext_settle}). The shared frailty
+models reveal that substantial unobserved heterogeneity
+underlies settlement outcomes even after controlling for
+observable covariates, while dismissal heterogeneity is
+largely captured by the fixed-effect circuit indicators. This
+asymmetry suggests that settlement outcomes are more
+sensitive to local judicial culture and bar practices than
+dismissal outcomes, which are more tightly governed by
+federal procedural standards.
+
+Fourth, the MDL sign-reversal finding
+(Section~\ref{sec:results_characteristics}) illustrates why
+competing-risks analysis is indispensable. Despite
+dramatically lower instantaneous settlement rates, MDL cases
+do not have detectably lower cumulative settlement
+probability---a finding visible only when the competing
+dismissal pathway is properly accounted for.
+
+Fifth, we have been transparent about what the data cannot
+tell us. The 1992 placebo test failure, the post-treatment
+bias concern in the IPTW covariates, and the settlement
+association's fragility under circuit-specific decomposition
+collectively establish the boundaries of what these
+administrative data can credibly identify. A null result, a
+fragile result, and a failed placebo test are all findings.
+The thesis reports them as such.
+
+\section{Future Directions}
+
+\subsection{Unmeasured Confounders and Data Enrichment}
+
+The most binding limitation of this thesis is the absence of
+case-specific merit signals from the FJC's administrative
+data. Three categories of unmeasured confounders warrant
+investigation in future work.
+
+\paragraph{Judicial ideology and case-management norms.}
+The frailty models (Section~\ref{sec:frailty}) detect
+substantial unobserved settlement heterogeneity at the
+circuit level ($\hat{\theta} = 0.449$, indicating
+meaningful variation beyond what observable covariates
+capture), but cannot identify its source.
+Judicial ideology scores---such as the Judicial Common Space
+measures \citep{epstein2007}---combined with judge
+identifiers recoverable from CourtListener docket records,
+would allow extension of the current circuit-level frailty
+to judge-level random effects. This would permit direct
+estimation of whether individual judicial approaches to case
+management, discovery scheduling, and motion practice drive
+the geographic patterns we observe.
+
+\paragraph{Plaintiff firm sophistication.}
+\citet{wang2022} documents that law firm identity is a
+strong predictor of litigation outcomes, yet the IDB lacks
+attorney identifiers. CourtListener integration would
+provide title-based class-action validation, lead-counsel
+identification, and docket-activity proxies for litigation
+complexity. These variables could be incorporated as
+additional covariates or as stratification factors in the
+competing-risks models, sharpening interpretation of the
+PSLRA's filtering association.
+
+\paragraph{Economic conditions and market context.}
+Securities fraud allegations are often triggered by sharp
+stock-price declines, and the business cycle may influence
+both the volume and the composition of filings. Merging with
+CRSP market data would enable examination of whether
+economic conditions at the time of filing moderate the PSLRA
+association, and whether the post-PSLRA compositional shift
+that our IPTW analysis adjusts for is partly driven by
+market-cycle effects not captured by the current covariates.
+
+\paragraph{The Code~6 era confound.}
+A data anomaly uncovered during this thesis warrants
+dedicated investigation. Of the 701 Code~6 cases
+reclassified as settlements (plaintiff-victory dispositions
+identified via the IDB JUDGMENT field), 93.4\% are
+post-PSLRA cases. This striking temporal asymmetry has two
+possible explanations. First, it may reflect a genuine
+post-PSLRA behavioral shift: courts and parties may have
+increasingly used stipulated judgments and consent decrees
+as vehicles for recording negotiated resolutions---a
+phenomenon sometimes called ``hidden settlements,'' in which
+cases that functionally settled are recorded under a motion
+disposition code rather than as an explicit settlement.
+If so, the true post-PSLRA settlement rate is understated
+by Scheme~A, and the reclassifications under Scheme~B
+(Code~12 as settlement) capture only part of the
+hidden-settlement population; the Code~6 JUDGMENT-field
+reclassification captures another. Second, the asymmetry
+may reflect a recording artifact: IDB data quality for the
+JUDGMENT field may differ systematically across eras, with
+post-PSLRA records more reliably capturing the direction
+of court judgments. Distinguishing these explanations
+requires merging IDB records with CourtListener docket
+text---which encodes actual case outcomes in human-readable
+form---and comparing the match rate between JUDGMENT-coded
+dispositions and docket entries across the pre- and
+post-PSLRA periods. The answer has direct implications for
+the credibility of all three coding schemes used in this
+thesis and for interpreting the magnitude of the PSLRA
+settlement association across specifications.
+
+\subsection{The Second Circuit Anomaly}
+
+The most striking empirical finding in our geographic
+analysis is the Second Circuit's extreme position: every
+other circuit's settlement hazard is 4 to 18 times that of
+the Second Circuit, yet the Second Circuit has the highest
+cumulative dismissal incidence. We
+have offered potential mechanisms---elite defense counsel,
+judicial expertise, demanding class-certification
+standards---but cannot disentangle them with the current
+data.
+
+A dedicated investigation of this anomaly would be valuable.
+First, disaggregating the Second Circuit into its
+constituent districts (SDNY, EDNY, NDNY, WDNY, and the
+District of Vermont) would reveal whether the pattern is
+driven primarily by the Southern District of New York or is
+circuit-wide. Second, comparing pre- and post-PSLRA trends
+within the Second Circuit alone could clarify whether the
+circuit's distinctive environment amplified or moderated the
+reform's association with outcomes. Third, merging with the
+Stanford Securities Class Action Clearinghouse would provide
+settlement amount data that could test whether the Second
+Circuit's low settlement hazard reflects not fewer
+settlements but slower ones---cases that take longer to
+settle but ultimately resolve for larger amounts.
+
+\subsection{Methodological Extensions}
+
+Several methodological extensions would address limitations
+identified in this thesis. Full time-varying coefficient
+models for circuit, origin, MDL, and statutory basis are
+needed to address the documented proportional hazards
+assumption violations that affect all constant hazard-ratio
+estimates. A piecewise IPTW model---decomposing the
+composition-adjusted PSLRA association across the same three
+time periods used in the unweighted analysis---would test
+whether the time-varying signature survives composition
+adjustment. A narrow-window IPTW analysis restricted to
+cases filed 1993--1998 would provide the strongest
+quasi-experimental test of the PSLRA's association, though
+the smaller sample may limit statistical power.
+
+Settlement amount analysis, made possible by merging with the
+Stanford Securities Class Action Clearinghouse, would extend
+the competing-risks duration framework into a joint model of
+timing, outcome type, and economic magnitude---providing a
+more complete picture of the PSLRA's full association with
+the securities litigation system.
+
+\subsection{Structural Breaks and Emerging Dynamics}
+
+Testing for post-2018 structural breaks---particularly the
+Supreme Court's 2018 decision in \textit{Cyan, Inc.\ v.\
+Beaver County Employees Retirement Fund}, which expanded
+state
+court jurisdiction over Securities Act claims---is a natural
+extension of the piecewise hazard approach developed here.
+If \textit{Cyan} redirected Section~11 claims from federal
+to state courts, the composition of the federal securities
+docket may have shifted in ways that the competing-risks
+framework is well positioned to detect. Similarly, the rapid
+growth of SPAC- and cryptocurrency-related litigation since
+2020 may introduce a new class of cases with distinctive
+duration and outcome patterns that warrant separate
+analysis within the competing-risks framework.
+
+\section{Closing Reflection}
+
+The central methodological lesson of this thesis is that
+the lens matters. A standard single-outcome survival analysis
+of the same data would have found a significant PSLRA
+association with dismissal timing, a significant settlement
+suppression, and meaningful circuit variation---but it would
+have missed the sign reversal in MDL settlement, overstated
+the PSLRA's settlement association by ignoring the competing
+dismissal pathway, and provided no tools for separating the
+reform's association from concurrent compositional shifts.
+The competing-risks framework does not merely refine the
+estimates; it reveals structural features of the litigation
+landscape that are invisible to the standard approach.
+
+More broadly, this thesis demonstrates that empirical legal
+scholarship benefits from the same methodological rigor that
+has transformed biomedical and actuarial research. The
+Federal Judicial Center's Integrated Database represents one
+of the most comprehensive longitudinal records of federal
+civil litigation ever assembled, yet it has been
+underutilized by researchers with formal training in survival
+analysis and competing-risks methods. We hope that the
+framework developed here---nonparametric CIF estimation,
+cause-specific and subdistribution models, IPTW composition
+adjustment, and frailty sensitivity analysis---serves as a
+template for future empirical work on federal litigation, in
+securities law and beyond.
+
+The federal securities docket does not resolve neatly. Cases
+settle, are dismissed, linger in MDL consolidation, or exit
+for reasons the data cannot explain. Any framework that
+pretends otherwise---by treating one outcome as the only
+outcome, or by averaging over a time-varying process---will
+mischaracterize the system it purports to study. A
+competing-risks approach takes that complexity seriously, and
+in doing so, comes closer to the truth.

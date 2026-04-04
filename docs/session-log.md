@@ -1,6 +1,6 @@
 # Thesis State — Phase 3 Ready
 
-> Last updated: 2026-04-01. This document is the single source of truth for Phase 3 (Writing).
+> Last updated: 2026-04-04. This document is the single source of truth for Phase 3 (Writing).
 > It replaces the chronological session log. All analysis code is locked.
 
 ---
@@ -16,8 +16,8 @@
 - Task 9 (Methodology): COMPLETE (2026-04-01) — reviewed, 9 targeted fixes applied (frailty eq, IPTW assumptions, notation, accessibility, cross-refs). Writing reviewer: 0 HIGH remaining.
 - Task 10 (Introduction): COMPLETE (2026-04-02) — 5 contributions, 3 number fixes, CRITICAL significance error corrected, purpose statement + roadmap added.
 - Task 11 (Results 5.1-5.4): COMPLETE (2026-04-02, two sessions). All 4 sections rewritten with Code 6-verified numbers.
-- Task 12 (Results 5.5-5.6): NOT STARTED.
-- Task 13 (Discussion + Future Work): NOT STARTED.
+- Task 12 (Results 5.5-5.6): COMPLETE (2026-04-03) — rebuilt with verified numbers per execution-plan.
+- Task 13 (Discussion + Future Work): COMPLETE (2026-04-04) — two passes; see session log entry below.
 
 **Phase 4 (Polish): NOT STARTED** — Tasks 14-16 (Abstract, Formatting, Final Verification).
 
@@ -170,7 +170,8 @@ Reclassifying Code 18 (statistical closing, 1,198 cases = 9.2%) as censored does
 ### Known Stale Content in .tex Files
 - **data.tex**: CLEAN — all tables and prose updated with Code 6-disaggregated numbers (2026-04-03)
 - **results.tex Sections 5.5-5.6**: CLEAN — rebuilt with verified numbers (2026-04-03)
-- **discussion.tex**: Most prose written before Code 6 disaggregation — needs update in Task 13
+- **discussion.tex**: CLEAN — fully updated in Task 13 Pass 1 (2026-04-04). All numbers verified against results.tex; IPTW + frailty sections added; Limitations rewritten.
+- **conclusion.tex**: CLEAN — written from scratch in Task 13 Pass 2 (2026-04-04). Replaces future.tex.
 - **methodology.tex:331**: Frailty equation FIXED (LogNormal → Gaussian, per Task 9)
 
 ### Prose Warnings from Devil's Advocate (Fix in Phase 3)
@@ -466,4 +467,64 @@ Reclassifying Code 18 (statistical closing, 1,198 cases = 9.2%) as censored does
 - **discussion.tex numbers/prose stale**: Most prose was written before Code 6 disaggregation. Task 13 must update all inline numbers.
 - **IPTW table CIs still absent** in Section 5.2.4: LOW priority (all p<0.001, table note says so).
 - **5 LOW items from Task 9 deferred**: subscript gap, ratio discrepancy, Gray's test note, train/test count, missing labels — Task 15 polish.
+---
+
+## Session: 2026-04-04 (Task 13: Discussion + Conclusion & Future Directions)
+### Plan Progress
+- Tasks completed this session: Task 13 (Pass 1: discussion.tex; Pass 2: conclusion.tex / future.tex → conclusion.tex)
+- Current position in plan: Task 13 of 16 COMPLETE. Checkpoint 2 and Tasks 14-16 remain.
+- Plan modifications needed:
+  - `future.tex` renamed to `conclusion.tex` (user updated thesis.tex label from `ch:future` to `ch:conclusion`). Execution plan Task 13 acceptance criteria met. Chapter title: "Conclusion and Future Directions."
+  - Task 13 in execution-plan.md should be marked COMPLETE.
+  - All subsequent chapter cross-refs in intro.tex now point to `ch:conclusion` (user updated).
+### Completed
+**Pass 1 — discussion.tex complete rewrite:**
+- Removed all RSF mentions (none found after cleanup)
+- Updated all stale numbers — 13 number corrections including: piecewise 1.859→1.948/1.044→1.050/1.293→1.329; baseline settlement 0.378→0.445; Scheme B 0.696→0.722; spline 0.748/p=0.076→0.610/p=0.001; Eleventh interaction 0.376→0.441; MDL SHR 1.126/p=0.503→1.167/p=0.217; narrow-window 1.378→1.394; MDL CS HRs and CIs added; Section 11 1.121→1.118; Origin Removed 0.783→0.791
+- **NEW Section: Composition-Adjusted Decomposition** — interprets IPTW triangulation (dismissal amplified 1.466→1.526; settlement attenuates 0.439→0.690); explains post-treatment bias; restates placebo limit
+- **Updated Section: Circuit Heterogeneity** — added full frailty interpretation (θ=0.449 vs 0.033, 2.8×/2.0× SE widening); corrected circuit range 5-17×→4.1-17.6×; fixed interaction HRs
+- **Rewrote Limitations** — reorganized into 5 paragraphs by severity: identification limits (placebo test is #1), post-treatment bias, unobserved heterogeneity, small-cluster frailty caveat, Code 6 era confound
+- Removed Future Research Directions and Conclusion sections (migrated to conclusion.tex)
+- Added bridge sentence pointing to Chapter 7 (conclusion)
+- Writing-reviewer agent: 2 HIGH + 5 MEDIUM fixed (including narrow-window HR discrepancy 1.378→1.394, "PSLRA Effect"→"PSLRA Association" in section title, 6 cross-refs added)
+- Three-tier language audit: PASS. Zero "causally attributable" (one correct negation), zero RSF
+- discussion.tex: 466 lines (up from 261)
+
+**Pass 2 — conclusion.tex (new chapter):**
+- Created from scratch: 241 lines. Replaced 4-line placeholder.
+- Title changed in thesis.tex: "Future Work" → "Conclusion and Future Directions"
+- intro.tex roadmap updated to reference `ch:conclusion`
+- Added `epstein2007` (Judicial Common Space) to refs.bib
+- **Section 7.1 Summary of Contributions** — 5 substantive findings in narrative prose (minimal numbers): PSLRA three-phase structure, IPTW decomposition, circuit dominance, MDL sign-reversal, transparent identification limits
+- **Section 7.2 Future Directions** — 4 subsections:
+  - Unmeasured Confounders: judicial ideology (JCS scores), plaintiff firm sophistication (CourtListener), economic cycles (CRSP), Code 6 era confound (hidden settlements)
+  - **NEW: The Second Circuit Anomaly** — calls for district-level disaggregation (SDNY vs full circuit), pre/post PSLRA within-circuit trends, settlement amount data
+  - Methodological Extensions: time-varying coefficients, piecewise IPTW, narrow-window IPTW
+  - Structural Breaks: Cyan (2018), SPAC/crypto wave
+- **NEW paragraph: Code 6 era confound** — 93.4% of Code 6 reclassifications post-PSLRA; two explanations (hidden-settlement behavioral shift vs. recording artifact); proposes CourtListener matching as resolution; stakes: affects all coding schemes and PSLRA magnitude
+- **Section 7.3 Closing Reflection** — 3 paragraphs: (1) the lens matters; (2) IDB is underutilized by survival-analysis-trained researchers; (3) the docket does not resolve neatly — closes the thesis
+- Writing-reviewer agent: 2 HIGH + 4 MEDIUM fixed (cross-refs, section preview, contribution mapping, ambiguous phrasing)
+- Three-tier language audit: PASS. Zero RSF. Zero "causally attributable" except one correct negation.
+
+### Key Decisions
+- **Discussion.tex no longer has its own Conclusion or Future Work sections.** These were extracted and replaced with a bridge sentence. Discussion now ends at Limitations (Section 6.6), which is a natural stopping point for a Discussion chapter.
+- **Spline HR narrative completely changed.** Old text said settlement HR=0.748, p=0.076 (non-significant). Correct: HR=0.610, p=0.001 (still significant). The settlement fragility comes from circuit-specific sub-samples losing significance, not from the spline specification. This was a major factual error in the pre-existing text.
+- **"PSLRA Effect" → "PSLRA Association" in section title.** The word "effect" implies causation in econometrics contexts; reviewer flagged it correctly. Applied throughout discussion.tex.
+- **Code 6 era confound paragraph added to conclusion.tex.** This anomaly (93.4% post-PSLRA among 701 plaintiff-victory reclassifications) was previously noted in data.tex as a limitation but never fully explored as a research direction. Now elevated to its own paragraph calling for CourtListener validation.
+- **conclusion.tex keeps numbers sparse.** Summary of Contributions uses narrative language with only essential statistics (17-fold range, θ=0.449 once with context). Per user instruction: "synthesize without getting bogged down in numbers."
+- **epstein2007 added to refs.bib.** New citation for Judicial Common Space scores, required by the judicial ideology paragraph.
+
+### Next Steps
+- **Checkpoint 2 (Adversarial Review)**: Run `/challenge` on the full thesis. Focus areas: (1) do Intro promises match Results delivery? (2) three-tier language everywhere? (3) every number traces to R output? (4) does discussion.tex flow naturally to conclusion.tex?
+- **Task 14 (Abstract)**: Write 200-300 word abstract covering: research question, data, methods, key findings, implications, novelty. Can do after Checkpoint 2.
+- **Task 15 (Formatting + References)**: hyperref, duplicate Wang citation, uncited bib entries, figure paths, cross-ref integrity. Check if `epstein2007` is cited correctly after rebuild.
+- **Task 16 (Final Number Verification)**: Full cross-check of all numbers against R output.
+- **Deadline**: April 9, 2026 — 5 days. Tasks 14-16 + Checkpoint 2 + 3 remain.
+
+### Open Issues
+- **Checkpoint 2 not yet run.** Discussion + Conclusion chapters have not been adversarially reviewed.
+- **Abstract (`abstract.tex`) is still a placeholder.** Task 14.
+- **IPTW table CIs still absent** in 5.2.4: LOW priority — all p<0.001.
+- **5 LOW items from Task 9 deferred**: subscript gap, ratio discrepancy, Gray's test note, train/test count, missing labels — Task 15 polish.
+- **conclusion.tex has `\ref{sec:temporal_id}` and other cross-refs** — must verify these labels exist in methodology.tex / results.tex (likely fine but check during Task 15).
 ---

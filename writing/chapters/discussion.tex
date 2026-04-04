@@ -3,9 +3,10 @@
 % ============================================================
 
 This chapter synthesizes our empirical results, connects them
-to the broader literature and policy landscape, and identifies
-the most important directions for extending this work. We
-organize the discussion around five substantive themes: the
+to the broader literature and policy landscape, and
+establishes the identification limits that constrain
+interpretation. We organize the discussion around five
+substantive themes: the
 PSLRA as a time-varying procedural filter, the decomposition
 of the raw PSLRA association via composition adjustment, judicial
 geography as a structural determinant of outcomes, the role
@@ -374,93 +375,10 @@ instantaneous risks. The piecewise Cox model partially
 addresses this for the PSLRA covariate, but other
 covariates' time-varying effects remain unmodeled.
 
-\section{Future Research Directions}
-
-Several extensions would substantially strengthen the
-analysis developed here.
-
-\paragraph{Data enrichment.}
-CourtListener integration would provide title-based class
-action validation, docket activity complexity proxies, and
-attorney identifiers, enabling examination of law firm
-quality effects in a competing-risks duration framework
-\citep{wang2022}. If consistent judge identifiers can be
-recovered, extending the current circuit-level shared frailty
-models to judge-level random effects would capture
-within-circuit heterogeneity in judicial behavior. Merging
-with the Stanford Securities Class Action Clearinghouse would
-provide merit proxies---stock price drop magnitudes,
-accounting restatement indicators, parallel SEC action
-flags---that would sharpen interpretation of PSLRA filtering
-effects. Settlement amount analysis combined with the
-competing-risks duration framework would provide a more
-complete picture of the economic consequences of PSLRA and
-circuit effects.
-
-\paragraph{Methodological extensions.}
-Full time-varying coefficient models for circuit, origin,
-MDL, and statutory basis are needed to address the documented
-proportional hazards assumption violations. A piecewise
-IPTW model decomposing the composition-adjusted PSLRA effect
-across the same three time periods used in the unweighted
-analysis would test whether the time-varying signature
-survives composition adjustment. A narrow-window IPTW
-analysis restricted to cases filed 1993--1998 would provide
-the strongest quasi-experimental test of the PSLRA's
-association, though the smaller sample may limit statistical
-power.
-
-\paragraph{Structural breaks.}
-Testing for post-2018 structural breaks---including the
-Supreme Court's decision in \textit{Cyan, Inc.\ v.\ Beaver
-County Employees Retirement Fund}, which expanded state
-court jurisdiction over Securities Act claims---is a natural
-extension of the piecewise hazard approach developed here.
-If the post-\textit{Cyan} period features a shift in filing
-patterns or resolution dynamics, the competing-risks
-framework is well positioned to detect and characterize it.
-
-\section{Conclusion}
-
-Federal securities class actions are among the most
-economically consequential civil cases litigated in the
-United States, yet their duration and outcome dynamics have
-historically been evaluated through incomplete statistical
-lenses that ignore the fundamentally competing nature of
-case resolution. By applying a full competing-risks survival
-framework---incorporating cause-specific and subdistribution
-models, composition adjustment via IPTW, and shared frailty
-sensitivity analysis---to the universe of federal securities
-class actions recorded in the IDB, this thesis addresses
-that methodological gap and
-reveals a litigation landscape defined by profound structural
-asymmetries.
-
-We have shown that the PSLRA is associated with a
-time-varying reshaping of securities litigation, acting not
-as a uniform shift in outcomes but as a highly concentrated
-first-year procedural filter (piecewise dismissal
-HR $= 1.948$, $p < 0.001$) that largely dissipates
-thereafter. This association survives composition
-adjustment (MSM HR $= 1.526$) and is robust across all
-seven robustness specifications, though the 1992 placebo
-test precludes strict causal attribution. We have shown
-that multidistrict litigation consolidation is associated
-with dramatically lower instantaneous resolution rates
-without detectably altering cumulative settlement
-probability---a finding visible only through
-competing-risks analysis. Most strikingly, circuit geography
-emerges as the dominant predictor of case trajectories, with
-settlement hazard ratios spanning a 17-fold range across
-circuits and substantial unobserved heterogeneity
-($\hat{\theta} = 0.449$) remaining even after accounting for
-observable case characteristics.
-
-As policymakers continue to debate the balance between
-deterring corporate fraud and curbing frivolous litigation,
-the findings presented here provide a rigorous empirical
-foundation. Evaluating the health of the securities
-litigation system requires looking beyond simple settlement
-averages; it demands an accounting of the competing risks,
-procedural delays, and geographic disparities that define
-the modern federal docket.
+The limitations discussed above---particularly the
+identification constraints from the placebo test and the
+unobserved heterogeneity that our administrative data cannot
+capture---motivate the research extensions proposed in
+Chapter~\ref{ch:conclusion}, which also synthesizes the thesis's
+central contributions and their implications for empirical
+legal scholarship.

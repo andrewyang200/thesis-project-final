@@ -612,7 +612,7 @@ Fix ALL known bugs during extraction:
 ---
 
 #### Task 13 [EXTEND]: Rewrite Discussion & Conclusion/Future Work
-- [ ] Not started
+- [x] COMPLETE (2026-04-04) — Pass 1: discussion.tex (13 number fixes, new IPTW + Limitations sections, RSF eradicated). Pass 2: future.tex → conclusion.tex (new chapter: summary, future directions including Code 6 anomaly + Second Circuit anomaly, closing reflection). thesis.tex chapter title updated.
 
 **WHAT**:
 1. **Update Discussion** (`discussions.tex`):
