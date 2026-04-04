@@ -168,12 +168,10 @@ Reclassifying Code 18 (statistical closing, 1,198 cases = 9.2%) as censored does
 - The thesis reports both confirming and disconfirming evidence honestly. Null results are results.
 
 ### Known Stale Content in .tex Files
-- **5 `% TODO` markers** in results.tex Sections 5.5-5.6 only — resolve in Task 12 (all 5.1-5.4 TODOs resolved)
-- **data.tex**: Scheme A distribution, all three scheme tables, duration tables — all reflect pre-Code-6 numbers
-- **results.tex Sections 5.5-5.6**: Performance table numbers, summary section HRs — need update in Task 12
-- **discussion.tex**: Some inline numbers updated, but most prose was written before Code 6 disaggregation
-- **methodology.tex:331**: Frailty equation wrong (`LogNormal` → must be `Gaussian`)
-- **Robustness LaTeX table**: Has 7 rows but may need number updates from latest pipeline run
+- **data.tex**: CLEAN — all tables and prose updated with Code 6-disaggregated numbers (2026-04-03)
+- **results.tex Sections 5.5-5.6**: CLEAN — rebuilt with verified numbers (2026-04-03)
+- **discussion.tex**: Most prose written before Code 6 disaggregation — needs update in Task 13
+- **methodology.tex:331**: Frailty equation FIXED (LogNormal → Gaussian, per Task 9)
 
 ### Prose Warnings from Devil's Advocate (Fix in Phase 3)
 - Gray's test p-values: accompany with effect size context (N=12,968 makes everything significant)
@@ -188,14 +186,13 @@ Reclassifying Code 18 (statistical closing, 1,198 cases = 9.2%) as censored does
 
 | Issue | Priority | Where to Address |
 |---|---|---|
-| Tasks 8-10 must restart from scratch (debunked flip context) | HIGH | Phase 3 start |
-| All thesis numbers stale (pre-Code-6-disaggregation) | HIGH | Tasks 11-12 |
-| methodology.tex frailty equation wrong | HIGH | Task 9 |
-| 7 `% TODO: REWRITE PROSE` markers in results.tex | HIGH | Tasks 11-12 |
-| Narrow-window IPTW (1993-1998) not implemented | LOW | Future work or robustness footnote |
-| Piecewise IPTW not implemented | LOW | Discuss as limitation |
+| discussion.tex numbers/prose pre-Code-6-disaggregation | HIGH | Task 13 |
+| IPTW table in 5.2.4 lacks CIs (all p<0.001, low urgency) | LOW | Task 15 polish |
+| Narrow-window IPTW (1993-1998) not implemented | LOW | Future work footnote |
+| Piecewise IPTW not implemented | LOW | Discussion limitation |
 | Second Circuit anomaly not formally investigated | LOW | Note in Discussion |
 | Cross-script df_ext construction duplication (03, 04, 07) | LOW | Not blocking; cosmetic |
+| 5 LOW items from Task 9 (subscript gap, ratio, Gray's note, train/test count, missing labels) | LOW | Task 15 polish |
 
 ---
 
@@ -415,4 +412,58 @@ Reclassifying Code 18 (statistical closing, 1,198 cases = 9.2%) as censored does
 - **5 LOW items from Task 9 still deferred**: subscript gap, ratio discrepancy, Gray's test note, train/test count, missing labels. Address in Phase 4 (Task 15).
 - **Section 5.6 Summary needs full rewrite in Task 12**: Only one stale number (SHR) was fixed as a downstream fix. The rest of 5.6 still has stale HRs and old framing.
 - **IPTW table in 5.2.4 still lacks CIs**: Flagged in prior session, still LOW priority (all p<0.001).
+---
+
+## Session: 2026-04-03 (Task 12: Results 5.5-5.6 + data.tex Update)
+### Plan Progress
+- Tasks completed this session: Task 12 (Results Sections 5.5-5.6) + unplanned data.tex update
+- Current position in plan: Task 12 of 16 COMPLETE. Next: Task 13 (Discussion + Future Work).
+- Plan modifications needed: Added data.tex update as a necessary step between Tasks 12 and 13. Execution plan updated to reflect Task 12 COMPLETE. data.tex update is not a formal task in the plan but is now DONE — no separate task needed.
+### Completed
+- **Confirmed `\ref{sec:temporal_id}` is NOT broken** — it correctly references methodology.tex:201. No change needed.
+- **Section 5.5 (Model Diagnostics and Validation) rebuilt from scratch** (~200 lines, 4 subsections):
+  - 5.5.1 PH Assessment: Full Grambsch-Therneau table (global: Settlement χ²=301.1, Dismissal χ²=471.2); Schoenfeld residual figures; PSLRA violates PH in settlement (χ²=50.4, p<0.001) but not dismissal (χ²=2.42, p=0.12)
+  - 5.5.2 IPTW Balance: Love plot figure, 19 covariates all |SMD|<0.10 (max 0.035), ESS=578 (57.5%), ATT weights, 99th-pctile trim cap≈43.5; two caveats (unmeasured confounders, post-treatment covariate bias)
+  - 5.5.3 Frailty Variance: θ_settle=0.449, θ_dismiss=0.033; 11-cluster limitation explicit; value lies in SE widening, not PSLRA HR (Δ<0.002)
+  - 5.5.4 Predictive Discrimination: Updated performance table (C-index, AUC@1/3/5yr, IBS); Cox-S: 0.727 / 0.750 / 0.737 / 0.835 / IBS=0.100; Cox-D: 0.597 / 0.595 / 0.635 / 0.781 / IBS=0.181; FG-S: 0.662 / FG-D: 0.578; no RSF; IBS intuition sentence added
+- **Section 5.6 (Summary of Findings) rebuilt from scratch** (~100 lines, 7 numbered findings):
+  - Finding 1: Dismissal HR robust (Tier 1 + Tier 2: HR range 1.32-2.45, IPTW MSM 1.526)
+  - Finding 2: Three-phase temporal pattern (Tier 1: 1.948 / 1.050 / 1.329)
+  - Finding 3: Settlement suppression fragile — full hedge (Tier 1+2: baseline 0.445, IPTW 0.690, spline 0.610, circuit sub-samples non-significant, placebo fails)
+  - Finding 4: Circuit dominance + frailty contrast (Tier 1+2: θ=0.449 settle vs 0.033 dismiss)
+  - Finding 5: PSLRA associations heterogeneous across circuits (Tier 1: 4th and 11th attenuation)
+  - Finding 6: MDL sign reversal (Tier 1: CS Cox suppresses, FG SHR=1.167 p=0.217)
+  - Finding 7: Moderate settlement discrimination, weak dismissal discrimination (C-index 0.727 vs 0.597)
+- **All 6 TODO/REWRITE markers in 5.5-5.6 eradicated**
+- **Writing-reviewer agent run on full results.tex**: NEEDS REVISION → all issues fixed:
+  - C1 CRITICAL: Placebo HR 0.710→0.719, outcome clarified as dismissal, settlement-context note added
+  - C2 CRITICAL: Covariate count 20→19 (3 locations; prop.score is diagnostic, not covariate)
+  - H1 HIGH: "effect"→"association" in 3 new-content locations + summary finding #5 header
+  - H2 HIGH: Figure paths standardized to `./Figures/` convention (3 figures)
+  - H3 HIGH: Fourth Circuit added to Summary Finding #5 (most extreme dismissal attenuation)
+  - H4 HIGH: p-values to full precision (0.953, 0.129)
+  - W2 WARNING: "Recall that HR>1" → self-contained HR definition
+  - S3 SUGGESTION: IBS intuition sentence added
+- **data.tex updated** (unplanned but necessary):
+  - Scheme A definition updated: Code 6 now disaggregated via JUDGMENT field; Code 20 added to dismissal list
+  - New `\paragraph{Code~6 Disaggregation.}` added: explains 2,389 cases → 701 settlements, 1,418 dismissals, 270 censored; 93.4% of plaintiff victories are post-PSLRA; framed as measurement error correction not contribution
+  - Table 4.2 (Schemes): all 3 rows updated (A: 15.5%/74.8%→20.9%/67.3%; B: 29.4%/60.9%→34.9%/53.4%; C: 31.9%/60.9%→37.3%/53.4%)
+  - Table 4.4 (Duration): Settlement N=2,015→2,716, Median=2.53→2.81; Dismissal N=9,702→8,733, Median=1.53→1.40
+  - Table 4.5 (PSLRA Regime): Pre-PSLRA 35.6%/55.8%→40.0%/49.4%; Post-PSLRA 13.8%/76.5%→19.3%/68.9%; all totals updated
+  - Table 4.5 caption: "Sample Characteristics"→"Outcome Distribution"
+  - Two stale "deferred to the final thesis" → "deferred to future work (Chapter 7)"
+  - writing-reviewer agent: **READY** (0 CRITICAL, 0 HIGH)
+### Key Decisions
+- **Performance table uses verified numbers from fresh R run**: Old results.tex had stale C-indices (0.735/0.593) and IBS (0.088/0.177). New values: C-index 0.727/0.597; IBS 0.100/0.181. Differences due to Code 6 disaggregation changing the dataset.
+- **Covariate count is 19, not 20**: `cobalt::bal.tab()` reports 20 rows because it includes `prop.score` (propensity score distance) as a diagnostic row; the actual covariates are 19.
+- **Placebo HR in Summary is dismissal, not settlement**: The 1992 placebo tests the pre-PSLRA period and produces a dismissal HR=0.719. This is correctly placed under the settlement finding because it limits causal attribution broadly, but the HR is labeled as dismissal in the revised text.
+- **data.tex update framing**: Code 6 disaggregation described as "resolving measurement error" and "refinement" — not a contribution claim. The 93.4% post-PSLRA concentration is flagged and deferred to Discussion to avoid overclaiming.
+### Next Steps
+- **Task 13**: Rewrite Discussion (`discussions.tex`) and Future Work (`future.tex`). Key additions: IPTW interpretation section, frailty findings section, update limitations (remove "cannot implement frailty"), Code 6 post-PSLRA concentration note, remove RSF discussion. Future Work to read as a proper academic chapter. Three-tier language throughout.
+- **Checkpoint 2**: Adversarial review of full thesis after Task 13.
+- **Deadline**: April 9. Tasks 13-16 + Checkpoint 2 + 3 remain (6 days).
+### Open Issues
+- **discussion.tex numbers/prose stale**: Most prose was written before Code 6 disaggregation. Task 13 must update all inline numbers.
+- **IPTW table CIs still absent** in Section 5.2.4: LOW priority (all p<0.001, table note says so).
+- **5 LOW items from Task 9 deferred**: subscript gap, ratio discrepancy, Gray's test note, train/test count, missing labels — Task 15 polish.
 ---
