@@ -10,11 +10,7 @@ resolve, whether they resolve via settlement or dismissal, and
 how observable case characteristics alter those probabilities.
 Because settlement and dismissal are mutually exclusive terminal
 events, standard single-event survival methods are insufficient,
-requiring a competing-risks framework throughout. Before detailing 
-the models, we note a convention used throughout this thesis: to 
-avoid ambiguity in a legal context, any reference to a ``violation'' 
-denotes a statistical failure of the proportional hazards assumption, 
-not a legal or regulatory infraction.
+requiring a competing-risks framework throughout.
 
 \section{Notation and Data Structure}
 
@@ -79,7 +75,7 @@ The \emph{overall survival function} $S(t) = P(T > t)$ estimates the probability
 \end{equation}
 where $t_j$ are the distinct observed event times, $d_j$ is the total number of events at $t_j$, and $n_j$ is the number of cases at risk just before $t_j$ \citep{kaplan1958}.
 
-The \emph{cumulative incidence function} (CIF) for event type $k \in \{1,2\}$ is:
+The CIF for event type $k \in \{1,2\}$ is:
 \begin{equation}
 F_k(t) = P(T \leq t, \delta = k)
 \end{equation}
@@ -112,7 +108,7 @@ Under the Cox proportional hazards model:
 \begin{equation}
 \lambda_k(t \mid \mathbf{X}) = \lambda_{0k}(t) \exp(\boldsymbol{\beta}_k^\top \mathbf{X})
 \end{equation}
-where $\lambda_{0k}(t)$ is the unspecified baseline hazard for event type $k$ and $\boldsymbol{\beta}_k$ is the vector of log-hazard ratios \citep{cox1972}. We estimate separate cause-specific Cox models for settlement ($k = 1$) and dismissal ($k = 2$); in each model, cases experiencing the competing event are treated as censored. The partial likelihood is:
+where $\lambda_{0k}(t)$ is the unspecified baseline hazard for event type $k$ and $\boldsymbol{\beta}_k$ is the vector of log-hazard ratios \citep{cox1972}. We estimate separate cause-specific Cox models for settlement ($k = 1$) and dismissal ($k = 2$); in each model, cases experiencing the competing event are treated as \emph{statistically censored}---meaning they are removed from the risk set at the time of the competing event and treated as unobserved for the event of interest thereafter, not that their outcome is literally unknown. The partial likelihood is:
 \begin{equation}
 L_k(\boldsymbol{\beta}_k) = \prod_{i:\delta_i = k} \frac{\exp(\boldsymbol{\beta}_k^\top \mathbf{X}_i)}{\sum_{j \in \mathcal{R}(T_i)} \exp(\boldsymbol{\beta}_k^\top \mathbf{X}_j)}
 \end{equation}
@@ -172,7 +168,7 @@ where $g$ indexes strata and $\boldsymbol{\beta}_k$ is estimated jointly across 
 \begin{equation}
 \lambda_2(t \mid \text{PSLRA}, \mathbf{X}) = \lambda_{02}(t) \exp \left( \sum_{m=1}^{3} \beta_{2m} \left( \text{PSLRA} \cdot \mathbf{1}_{I_m}(t) \right) + \boldsymbol{\beta}_{\text{other}}^\top \mathbf{X} \right)
 \end{equation}
-where $I_1 = [0,1)$, $I_2 = [1,2)$, and $I_3 = [2,\infty)$. Proportional hazards assumption violations in circuit, origin, MDL, and statutory basis in the extended models are documented in the diagnostics section of Chapter~\ref{ch:results} and addressed via stratification where feasible; full time-varying coefficient models for these covariates are a natural extension of this framework.
+where $I_1 = [0,1)$, $I_2 = [1,2)$, and $I_3 = [2,\infty)$. The cutpoints at $t = 1$ and $t = 2$ years were chosen heuristically to align with the typical procedural timeline of a motion to dismiss in securities class actions: the first year captures the pleading-stage gauntlet; the second year spans the interlocutory period before full discovery. These cutpoints are not data-derived and do not represent formal structural break estimates. The piecewise specification is applied symmetrically to both the settlement and dismissal models to allow direct comparison of temporal patterns across outcomes. Note that the Grambsch-Therneau test does not reject proportional hazards for the PSLRA indicator in the dismissal model ($p = 0.120$; see Section~\ref{sec:results_diagnostics}); the piecewise decomposition is motivated primarily by the settlement model's significant violation ($p < 0.001$, denoting a statistical failure of the proportional hazards assumption) and by the substantive interest in comparing temporal dynamics across both outcomes. Proportional hazards assumption violations (i.e., statistical failures of the constant-HR assumption, not legal infractions) in circuit, origin, MDL, and statutory basis in the extended models are documented in the diagnostics section of Chapter~\ref{ch:results} and addressed via stratification where feasible.
 
 \section{Robustness and Sensitivity Analyses}
 
@@ -248,7 +244,7 @@ example, in the distribution of filing circuits, statutory
 bases, or case origins---and these compositional shifts could
 confound the estimated PSLRA effect. To isolate the PSLRA
 component from concurrent changes in the observable case mix,
-we employ inverse probability of treatment weighting (IPTW)
+we employ IPTW
 \citep{xieliu2005, austinfine2025}.
 
 \subsection{Propensity Score Estimation}
@@ -301,7 +297,7 @@ four-strategy triangulation:
     \item \textbf{Unadjusted}: PSLRA only, no covariates, no weights.
     \item \textbf{Regression-adjusted}: Extended Cox (PSLRA + all
     covariates), no weights.
-    \item \textbf{Doubly robust}: Extended Cox with IPTW weights.
+    \item \textbf{Covariate-adjusted IPTW (weighted regression)}: Extended Cox with IPTW weights.
     \item \textbf{Marginal structural}: PSLRA only, with IPTW weights.
 \end{enumerate}
 Convergence of results across strategies provides evidence of

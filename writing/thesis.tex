@@ -5,6 +5,7 @@
 \usepackage{amsthm}
 \usepackage{latexsym}
 \usepackage{graphicx}
+\graphicspath{{../output/figures/}}
 \usepackage{url}
 \usepackage{booktabs} % Added for professional-looking tables in data.tex
 \usepackage{natbib}
@@ -22,35 +23,35 @@
 \dedication{} % Placeholder, as discussed
 
 \abstract{
-\input{./Chapters/abstract}
+\input{./chapters/abstract}
 }
 
 \acknowledgements{
-\input{./Chapters/acknow}
+\input{./chapters/acknow}
 }
 
 \begin{document}
 
 \chapter{Introduction}\label{ch:intro}
-\input{./Chapters/intro}
+\input{./chapters/intro}
 
 \chapter{Literature Review}\label{ch:litreview}
-\input{./Chapters/litreview}
+\input{./chapters/litreview}
 
 \chapter{Methodology}\label{ch:methodology}
-\input{./Chapters/methodology}
+\input{./chapters/methodology}
 
 \chapter{Data}\label{ch:data}
-\input{./Chapters/data}
+\input{./chapters/data}
 
 \chapter{Results}\label{ch:results}
-\input{./Chapters/results}
+\input{./chapters/results}
 
 \chapter{Discussion}\label{ch:discussion}
-\input{./Chapters/discussion}
+\input{./chapters/discussion}
 
 \chapter{Conclusion and Future Directions}\label{ch:conclusion}
-\input{./Chapters/conclusion}
+\input{./chapters/conclusion}
 
 \bibliographystyle{abbrv}
 \bibliography{refs}

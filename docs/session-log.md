@@ -528,3 +528,66 @@ Reclassifying Code 18 (statistical closing, 1,198 cases = 9.2%) as censored does
 - **5 LOW items from Task 9 deferred**: subscript gap, ratio discrepancy, Gray's test note, train/test count, missing labels — Task 15 polish.
 - **conclusion.tex has `\ref{sec:temporal_id}` and other cross-refs** — must verify these labels exist in methodology.tex / results.tex (likely fine but check during Task 15).
 ---
+
+## Session: 2026-04-05
+### Plan Progress
+- Tasks completed this session: **Checkpoint 2** (adversarial full-thesis review) + **Phase 4 Polish begins** (compilation fix, language discipline, abbreviation cleanup)
+- Current position in plan: Task 14 of 16 (Abstract next)
+- Plan modifications needed: None — Checkpoint 2 is now complete; Task 15 (formatting) is partially complete (figure paths fixed, hyperref still missing)
+
+### Completed
+- **Ran `/challenge`** on all 7 core chapters simultaneously (bug-finder + devils-advocate agents in parallel). Full Challenge Report produced.
+- **Challenge verdict: NEEDS WORK** — core dismissal finding sound and robust; methodological caveats, language discipline, and structural issues identified and fixed. Not UNRELIABLE.
+- **Pass 1 — Compilation & Math fixes (9 files):**
+  - Fixed LaTeX compilation: `./Chapters/` → `./chapters/` (case-sensitive fix for Overleaf/Linux), added `\graphicspath{{../output/figures/}}` to thesis.tex
+  - Fixed all 11 figure paths in results.tex (wrong `./Figures/figure1_` prefix → correct `fig_` filenames)
+  - Fixed robustness range: "1.28 to 2.45" → "1.32 to 2.45" in intro.tex
+  - Fixed "17-fold range" → "ranging from 4.1 to 17.6 times the Second Circuit baseline" in conclusion.tex
+  - Removed 2 causal leakage phrases in discussion.tex: "attributable to...the PSLRA itself" and "operating as designed"
+  - Removed "doubly robust" label from all files (methodology, results, discussion) → "covariate-adjusted IPTW (weighted regression)"
+  - Added `\emph{statistically censored}` clarification in methodology.tex Cox section
+  - Added piecewise cutpoint justification (heuristic MTD timeline, symmetry with settlement, PH test non-rejection for dismissal at p=0.120) in methodology.tex and results.tex
+- **Pass 2 — Narrative/tonal fixes:**
+  - Rewrote intro.tex contributions: 5 bolded numbered items → 3 flowing prose paragraphs; removed "persistently elevated"; reframed placebo as secular headwind
+  - Removed standalone PH-vs-legal-violation warning box from methodology.tex opening; integrated naturally into piecewise justification
+  - Converted data.tex Stage 1/2/3 bold headers → flowing narrative paragraph
+  - Rewrote discussion.tex Section 6.1: removed defensive "Answering it correctly requires confronting…" + methods recap → 4 compact sentences
+  - Rewrote placebo limitation paragraph in discussion.tex with directional contrast (HR=0.719 opposite to HR≈1.47–1.75; pre-trend is a headwind, not an upward confounder)
+  - Rewrote generic unobserved-heterogeneity limitations paragraph → thesis-specific (IDB merit signals, 11-cluster judge-level problem, PSLRA calendar-time collinearity)
+- **Pass 3 — Technical examination fixes:**
+  - Added third IPTW caveat in discussion.tex: ESS=578 vs ~12,000 treated cases; framed as "heavily trimmed sensitivity check"
+  - Changed frailty "substantial" → "suggestive" with 11-cluster precision warning in results.tex (2 locations), discussion.tex, conclusion.tex
+  - Added triangulation SE caveat in results.tex (MSM amplification 1.466→1.526 is point-estimate only, no formal test)
+  - Added interaction table reading instruction in results.tex (multiply main PSLRA HR by interaction HR for circuit-specific estimate)
+  - Fixed "13 federal circuits" → "11 circuit clusters" in litreview.tex
+- **Pass 4 — Final surgical fixes:**
+  - Fixed competing-risks HR directionality in results.tex (HR>1 = faster rate of that specific outcome, not shorter overall duration)
+  - Changed "statutory basis coverage is 99.0%" → "near-universal coverage" (number unverifiable on df_ext)
+  - Trimmed Discussion opening redundancy
+  - Softened conclusion.tex IPTW contribution summary with ESS=578 caveat and "re-weighted" qualifier
+- **Rubric & advisor feedback review** — found abstract is placeholder (CRITICAL), hyperref missing, FJC undefined
+- **Fixed FJC abbreviation**: Introduced `Federal Judicial Center's (FJC) Integrated Database (IDB)` in intro.tex on first use
+- **Removed 11 redundant parenthetical abbreviation definitions** across litreview, methodology, data, results (CIF×2, IPTW×2, IDB×2, NOS, PSLRA, SMD, IBS)
+- **Replaced 13 post-definition full spellings with abbreviations** across all chapters (PSLRA×3, IDB/FJC×6, CIF×2, IPTW×2)
+
+### Key Decisions
+- **"Doubly robust" label dropped.** The DR property requires consistency when either the outcome model OR propensity model is correct. In a competing-risks survival setting with 11.6:1 imbalance and structural positivity violations, this property does not hold. "Covariate-adjusted IPTW (weighted regression)" is accurate; "doubly robust" was borrowed incorrectly from cross-sectional causal inference literature.
+- **Placebo test reframed as headwind, not pure limitation.** The 1992 pre-trend HR=0.719 runs OPPOSITE to the PSLRA's main estimate HR≈1.47–1.75. A downward secular pre-trend cannot be an upward confounder. The correct interpretation is that the PSLRA overcame a headwind, which if anything means the true association may be understated. The thesis now makes this directional argument explicitly while still maintaining that strict causality is impossible.
+- **Frailty language downgraded from "substantial" to "suggestive."** With only 11 clusters, ML variance estimation is unreliable. Cannot simultaneously warn about imprecision and assert "substantial" heterogeneity with a specific number. "Suggestive" is accurate; "substantial" was an overreach.
+- **IPTW repositioned as sensitivity check, not identification strategy.** The ESS=578 vs. ~12,000 treated framing makes the fundamental overlap problem explicit. The IPTW estimates still survive (all p<0.001), but readers now understand the scale mismatch.
+- **Piecewise cutpoints disclosed as heuristic.** The 1-year and 2-year splits are not data-derived. The dismissal PH test does not reject (p=0.120). The symmetry rationale (comparing temporal patterns across outcomes) is disclosed. An examiner who asks "why those cutpoints?" now has a prepared answer.
+- **Abbreviation rule enforced.** Once introduced, abbreviations are used exclusively. 11 redundant definitions removed; 13 full-term repetitions replaced. This tightens the prose throughout.
+
+### Next Steps
+- **Task 14 (Abstract — CRITICAL):** Write `abstract.tex`. Target 200-300 words. Must cover: research question, data (12,968 IDB cases, 1990-2024), methods (CIF, Cox, IPTW, Frailty), key findings (PSLRA three-phase dismissal, geographic disparity, MDL sign-reversal), novelty (first competing-risks framework at population scale), limitations (associational framing). This is BLOCKING — the abstract is currently a placeholder.
+- **Task 15 (Formatting):** Add `\usepackage{hyperref}` to thesis.tex; update submission date from "March 1, 2026"; check for orphan headings and bleeding tables after compile; verify all cross-refs compile cleanly.
+- **Task 16 (Final Number Verification):** Spot-check all cited statistics against R output one final time. Focus on any numbers touched during this session's edits.
+- **Figure readability check:** Advisor flagged Figure 5.1 text as illegible. Check `ggsave()` DPI/font-size settings in `02_descriptives.R` for the KM curve panel.
+
+### Open Issues
+- **Abstract (`abstract.tex`) is a placeholder.** CRITICAL blocker for submission. Write in next session.
+- **`\usepackage{hyperref}` missing** from thesis.tex — rubric requires clickable references. Add in Task 15.
+- **Submission date** in thesis.tex is "March 1, 2026" — update to actual submission date.
+- **Figure readability** — R/ggsave output issue, cannot fix in LaTeX. Check DPI settings for KM panel figures.
+- **IPTW table CIs still absent** in 5.2.4 (MSM and covariate-adjusted IPTW rows have no CIs). LOW priority; the triangulation SE caveat now explicitly acknowledges this.
+---

@@ -4,16 +4,14 @@
 
 This chapter describes the data sources, sample construction
 procedure, and variable definitions underlying our analysis.
-We document known data quality challenges in the Federal
-Judicial Center's Integrated Database, explain how we address
+We document known data quality challenges in the IDB, explain how we address
 them through composite identification strategies and
 alternative coding schemes, and report the final sample
 characteristics used in all subsequent analyses.
 
 \section{Primary Data Source: FJC Integrated Database}
 
-The Federal Judicial Center's Integrated Database (IDB)
-aggregates case-level records from all 94 federal district
+The IDB aggregates case-level records from all 94 federal district
 courts, reported by the Administrative Office of the
 U.S.\ Courts \citep{fjc_idb_portal, fjc_idb_guide}. Civil
 case records span from approximately 1970 to the present,
@@ -30,7 +28,7 @@ cases with publicly disclosed outcomes \citep{cornerstone2024}.
 
 For each civil case, the IDB provides: filing date;
 termination date (missing for pending cases, treated as
-right-censored); nature-of-suit (NOS) code; disposition code;
+right-censored); NOS code; disposition code;
 district and circuit identifiers; origin code; class action
 flag; procedural progress code; jurisdiction code; jury demand
 indicator; monetary demand amount; and the \texttt{section}
@@ -73,23 +71,7 @@ issues directly relevant to our analysis
 
 \section{Sample Construction}
 
-We construct the analysis sample through three stages.
-
-\textbf{Stage 1: NOS~850 Cases.} We begin with all civil
-cases coded as NOS~850 filed from 1990 onward, yielding
-65,899 cases. The 1990 start date balances sample size
-against data quality and provides a meaningful pre-PSLRA
-comparison period.
-
-\textbf{Stage 2: Class Action Identification.} We retain
-cases with IDB class action flag equal to 1, yielding
-13,708 cases (20.8\% of NOS~850).
-
-\textbf{Stage 3: Valid Duration.} We exclude cases with
-non-positive computed durations (740 zero-duration
-administrative artifacts, not substantive resolutions),
-yielding a final sample of \textbf{12,968} federal securities
-class actions filed between 1990 and 2024.
+We begin with all civil cases coded as NOS~850 (``Securities, Commodities, and Exchange'') filed from 1990 onward, yielding 65,899 cases. The 1990 start date balances sample size against data quality and provides a meaningful pre-PSLRA comparison period. We then retain cases with the IDB class action flag equal to~1, reducing the sample to 13,708 cases (20.8\% of NOS~850). Finally, we exclude cases with non-positive computed durations---740 zero-duration administrative artifacts that represent same-day processing entries rather than substantive resolutions---yielding a final analysis sample of \textbf{12,968} federal securities class actions filed between 1990 and 2024.
 
 \begin{table}[htbp]
 \centering
@@ -334,7 +316,7 @@ Post-PSLRA  & 11,936 & 2,303 & 8,223 & 1,410 & 19.3 & 68.9 \\
 
 \section{Data Access and Replication}
 
-The IDB is publicly available from the Federal Judicial Center
+The IDB is publicly available from the FJC
 upon request at no cost. All data cleaning, variable
 construction, and coding scheme implementation are documented
 in the R analysis script and will be released as a public

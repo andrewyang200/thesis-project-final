@@ -49,23 +49,25 @@ Second, the IPTW composition-adjusted decomposition
 the raw PSLRA association into a component explained by
 observable shifts in the case mix and a residual component
 that persists after adjustment. For dismissal, the
-composition-adjusted estimate is slightly amplified relative
-to the raw association, indicating that concurrent
+re-weighted composition-adjusted estimate is slightly amplified relative
+to the raw association---though this comparison rests on point estimates without formal standard errors for the MSM specification---indicating that concurrent
 compositional shifts worked against the dismissal pattern
 rather than inflating it. For settlement, approximately half
-the raw suppression is explained by observable case-mix
+the raw suppression is associated with observable case-mix
 changes. These estimates are not causal---the 1992 placebo
-test and the post-treatment bias concern preclude that
-interpretation---but they provide a principled decomposition
-unavailable in prior work.
+test, the post-treatment bias concern, and the fundamental
+overlap problem (ESS = 578 pre-PSLRA controls versus
+$\sim$12,000 post-PSLRA cases) preclude that
+interpretation---but they provide a principled sensitivity
+check unavailable in prior work.
 
 Third, circuit geography emerges as the dominant structural
 predictor of case trajectories, with settlement hazard ratios
-spanning a 17-fold range across circuits
-(Table~\ref{tab:cox_ext_settle}). The shared frailty
-models reveal that substantial unobserved heterogeneity
-underlies settlement outcomes even after controlling for
-observable covariates, while dismissal heterogeneity is
+ranging from 4.1 to 17.6 times the Second Circuit baseline
+across circuits (Table~\ref{tab:cox_ext_settle}). The shared frailty
+models are suggestive of meaningful unobserved heterogeneity
+in settlement outcomes even after controlling for
+observable covariates---though the 11-cluster constraint limits precision---while dismissal heterogeneity is
 largely captured by the fixed-effect circuit indicators. This
 asymmetry suggests that settlement outcomes are more
 sensitive to local judicial culture and bar practices than
@@ -100,10 +102,8 @@ investigation in future work.
 
 \paragraph{Judicial ideology and case-management norms.}
 The frailty models (Section~\ref{sec:frailty}) detect
-substantial unobserved settlement heterogeneity at the
-circuit level ($\hat{\theta} = 0.449$, indicating
-meaningful variation beyond what observable covariates
-capture), but cannot identify its source.
+suggestive unobserved settlement heterogeneity at the
+circuit level ($\hat{\theta} = 0.449$; note this estimate carries substantial imprecision given only 11 clustering units), but cannot identify its source.
 Judicial ideology scores---such as the Judicial Common Space
 measures \citep{epstein2007}---combined with judge
 identifiers recoverable from CourtListener docket records,
@@ -250,7 +250,7 @@ landscape that are invisible to the standard approach.
 More broadly, this thesis demonstrates that empirical legal
 scholarship benefits from the same methodological rigor that
 has transformed biomedical and actuarial research. The
-Federal Judicial Center's Integrated Database represents one
+IDB represents one
 of the most comprehensive longitudinal records of federal
 civil litigation ever assembled, yet it has been
 underutilized by researchers with formal training in survival

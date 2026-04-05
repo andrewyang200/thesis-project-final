@@ -7,8 +7,7 @@ motivate and situate our empirical strategy: the statistical
 foundations of survival analysis and competing-risks methods;
 the empirical record on securities class action outcomes,
 duration, and procedural reform; and the structure and known
-limitations of the Federal Judicial Center's Integrated
-Database. We conclude by articulating the specific gap that
+limitations of the FJC IDB. We conclude by articulating the specific gap that
 this thesis fills.
 
 \section{Survival Analysis and Competing Risks:
@@ -40,7 +39,7 @@ censored at the time of the competing event; this yields a
 clean conditional interpretation of instantaneous risk among cases still at risk but does not
 directly estimate absolute outcome probabilities. Fine-Gray
 subdistribution hazard models directly parameterize the
-cumulative incidence function (CIF) for each outcome, allowing
+CIF for each outcome, allowing
 marginal probability estimation in the presence of competing
 risks \citep{fine1999}. The Aalen-Johansen estimator provides
 nonparametric CIF estimation \citep{aalen1978}, and Gray's test
@@ -68,7 +67,7 @@ framework in this thesis: propensity-score re-weighting for
 composition adjustment, and shared frailty models for
 unobserved clustering.
 
-Inverse probability of treatment weighting (IPTW) uses a
+Inverse probability of treatment weighting uses a
 propensity score---the estimated probability of receiving
 treatment given observed covariates---to re-weight
 observations so that the treated and control groups are
@@ -120,9 +119,10 @@ circuits. \citet{frevent2024} extend this framework to
 spatially correlated frailties, treating geographic units
 as clusters with shared latent risk factors.
 
-With only 13 federal circuits (some containing very few
-securities cases), frailty variance estimates carry
-substantial uncertainty. We therefore present frailty
+With only 11 circuit clusters (after restricting to circuits with $\geq 50$ securities cases), frailty variance estimates carry
+substantial uncertainty---well below the 20--30 clusters
+typically recommended for reliable variance component
+estimation. We therefore present frailty
 results as a sensitivity analysis alongside cluster-robust
 standard errors, rather than as a standalone modeling
 framework.
@@ -148,7 +148,7 @@ at population scale.
 
 \subsection{The PSLRA and Procedural Reform}
 
-The Private Securities Litigation Reform Act of 1995 represents
+The PSLRA represents
 the most significant structural break in the history of
 securities class action litigation. The Act introduced
 heightened pleading standards requiring plaintiffs to plead
@@ -220,8 +220,7 @@ the competing-risks framework developed in this thesis.
 
 \section{Federal Court Administrative Data}
 
-Our analysis relies on the Federal Judicial Center's Integrated
-Database (IDB), which aggregates civil case data reported by
+Our analysis relies on the IDB, which aggregates civil case data reported by
 the Administrative Office of the U.S.\ Courts from all 94
 federal district courts \citep{fjc_idb_portal, fjc_idb_guide}.
 The IDB contains longitudinal records from approximately 1970

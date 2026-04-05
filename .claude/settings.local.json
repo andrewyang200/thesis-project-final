@@ -12,7 +12,8 @@
       "Bash(until grep:*)",
       "Bash(echo \"Exit: $?\")",
       "Bash(for script:*)",
-      "Bash(do echo:*)"
+      "Bash(do echo:*)",
+      "Bash(python3:*)"
     ]
   }
 }

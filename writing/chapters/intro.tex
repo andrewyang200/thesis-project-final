@@ -57,70 +57,11 @@ court records only a dismissal---masking these ``hidden
 settlements'' and distorting true resolution probabilities
 \citep{scales2024}.
 
-This thesis addresses these gaps through five core contributions.
-\textbf{First, in methods:} this is, to our knowledge, the first
-application of a full competing-risks survival framework to federal
-securities class actions, drawing on 12,968 cases from the Federal
-Judicial Center's Integrated Database spanning 1990--2024.
-We characterize litigation duration nonparametrically using
-Aalen-Johansen cumulative incidence functions (CIFs), estimate
-both cause-specific Cox proportional hazards and Fine-Gray
-subdistribution models, and move beyond purely associational
-estimates by examining how much of the raw PSLRA association
-survives adjustment for concurrent changes in case composition.
+This thesis addresses these gaps along two dimensions. Methodologically, it applies the first full competing-risks survival framework to federal securities class actions at population scale, drawing on 12,968 cases from the Federal Judicial Center's (FJC) Integrated Database (IDB) spanning 1990--2024. We characterize litigation duration nonparametrically using Aalen-Johansen cumulative incidence functions (CIFs), estimate both cause-specific Cox proportional hazards and Fine-Gray subdistribution models, and deploy inverse probability of treatment weighting (IPTW) to adjust for compositional differences between the pre- and post-PSLRA case populations---the first propensity-score application in this litigation domain. Because the PSLRA is a legislative date cutoff rather than a treatment influenced by case characteristics, we interpret the weighted estimates as composition-adjusted rather than causally identified. Circuit-level shared frailty models, using 11 circuits as clustering units after excluding circuits with fewer than 50 cases, complement these estimates as a sensitivity analysis quantifying unobserved jurisdictional heterogeneity.
 
-\textbf{Second, in identification:} we apply inverse probability
-of treatment weighting (IPTW) to adjust for compositional
-confounding in securities litigation outcomes---the first such
-application of propensity-score re-weighting in this domain.
-Because the PSLRA is a legislative date cutoff rather than a
-treatment influenced by case characteristics, we interpret
-the weighted estimates as composition-adjusted rather than
-causally identified.
+Substantively, examining more than 30~years of federal securities litigation dynamics, we find that the PSLRA's association with case outcomes is not a uniform shift but a temporally structured phenomenon. A piecewise Cox decomposition reveals a sharp dismissal hazard elevation in the first year of litigation---consistent with the heightened pleading standard operating at the motion-to-dismiss stage---followed by a null middle period and a modest late re-emergence. Across seven robustness specifications---including alternative disposition coding schemes, temporal restrictions, circuit sub-samples, and flexible spline time-trend controls---the PSLRA dismissal hazard ratio ranges from 1.32 to 2.45, with the composition-adjusted IPTW estimate at approximately 1.53 (a 53\% increase in the instantaneous rate of dismissal). The PSLRA is also associated with settlement suppression in the baseline specification (HR $= 0.445$), though this association attenuates substantially under flexible time-trend controls (HR $= 0.610$) and loses statistical significance entirely in circuit-specific sub-samples, suggesting that part of the raw settlement association reflects secular changes in litigation patterns. We further quantify how the PSLRA's association varies over litigation duration and across circuits, and how MDL consolidation bilaterally suppresses both competing hazards.
 
-\textbf{Third, in sensitivity:} we complement the
-composition-adjusted estimates with circuit-level shared
-frailty models that quantify unobserved jurisdictional
-heterogeneity as a sensitivity analysis. With 11~federal
-circuits as clustering units (after excluding circuits with
-fewer than 50~cases), the frailty variance captures
-circuit-level variation in case outcomes beyond what
-observable covariates explain.
-
-\textbf{Fourth, in findings:} we examine the PSLRA's
-association with case outcomes across over 30~years of
-non-linear judicial drift, finding that the Act is associated
-with persistently elevated dismissal hazard. Across seven
-robustness specifications---including alternative disposition
-coding schemes, temporal restrictions, circuit sub-samples,
-and flexible spline time-trend controls---the PSLRA dismissal
-hazard ratio ranges from 1.28 to 2.45, with the
-composition-adjusted IPTW estimate at approximately 1.53
-(a 53\% increase in the instantaneous rate of dismissal).
-The PSLRA is also associated with settlement suppression in
-the baseline specification (HR $= 0.445$), though this
-association attenuates substantially under flexible
-time-trend controls (HR $= 0.610$) and loses statistical
-significance entirely in circuit-specific sub-samples,
-suggesting that part of the raw settlement association
-reflects secular changes in litigation patterns.
-We further quantify how the PSLRA's association
-varies over litigation duration and across circuits, and how
-MDL consolidation bilaterally suppresses both competing
-hazards. A 1992 placebo cutoff test detects statistically
-significant pre-existing trends before the PSLRA's enactment,
-prohibiting pure causal claims and reinforcing our decision
-to frame all estimates as associational or
-composition-adjusted.
-
-\textbf{Fifth, in data:} we confront and mitigate the
-well-documented challenges inherent to the Federal Judicial
-Center's Integrated Database (IDB) \citep{clermont2002,
-alexander1991}. We address the ambiguity of disposition codes
-through rigorous sensitivity analyses under three alternative
-outcome coding schemes and demonstrate that the structural
-patterns identified in our survival models are robust to
-these underlying administrative measurement uncertainties.
+On the data side, we address the well-documented challenges of the FJC Integrated Database \citep{clermont2002, alexander1991}, most notably the ambiguity of disposition Code~6, which we disaggregate using the IDB's JUDGMENT field to recover 701 plaintiff-victory settlements previously hidden in the dismissal category. A 1992 placebo cutoff test reveals a significant pre-existing downward trend in dismissal rates---opposite in direction to the PSLRA's subsequent upward association---suggesting the reform overcame a secular headwind. This finding reinforces our decision to frame all estimates as associational or composition-adjusted rather than causally identified.
 
 The remainder of this thesis is organized as follows.
 Chapter~\ref{ch:litreview} reviews the empirical securities
