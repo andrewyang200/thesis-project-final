@@ -127,7 +127,6 @@ save_base_plot("fig_schoenfeld_settlement_pslra", 8, 6, function() {
        main = "Schoenfeld Residuals: PSLRA (Settlement Model)",
        xlab = "Time (years)", ylab = "Beta(t) for post_pslra")
   abline(h = coef(cox_s_ext)["post_pslra"], col = "red", lty = 2)
-  legend("topright", "Overall coefficient", col = "red", lty = 2, bty = "n")
 })
 
 # Dismissal: post_pslra
@@ -136,7 +135,6 @@ save_base_plot("fig_schoenfeld_dismissal_pslra", 8, 6, function() {
        main = "Schoenfeld Residuals: PSLRA (Dismissal Model)",
        xlab = "Time (years)", ylab = "Beta(t) for post_pslra")
   abline(h = coef(cox_d_ext)["post_pslra"], col = "red", lty = 2)
-  legend("topright", "Overall coefficient", col = "red", lty = 2, bty = "n")
 })
 
 # Full Schoenfeld panel for dismissal (all covariates)
@@ -608,12 +606,10 @@ if (auc_available) {
     scale_x_continuous(breaks = time_points) +
     labs(
       title    = "Time-Dependent AUC: Cox vs. Fine-Gray",
-      subtitle = "Discrimination at 1, 2, 3, and 5-year prediction horizons (held-out test set)",
       x        = "Prediction Horizon (Years)",
       y        = "Area Under the ROC Curve (AUC)",
       color    = "Outcome",
-      linetype = "Model",
-      caption  = "AUC > 0.5 = better than random. Dotted line = no-skill classifier."
+      linetype = "Model"
     )
 
   save_figure(fig_auc, "fig_auc_over_time", width = 9, height = 6)

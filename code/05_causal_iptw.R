@@ -196,7 +196,7 @@ p_love <- love.plot(
   colors = c("#B2182B", "#2166AC"),
   shapes = c(17, 16),
   sample.names = c("Unadjusted", "IPTW-Adjusted"),
-  title = "Covariate Balance: Before vs. After IPTW (ATT, 99th pctl trimmed)",
+  title = "Covariate Balance: IPTW Weighting",
   position = "bottom"
 ) +
   theme_thesis +
@@ -506,9 +506,8 @@ p_cif_s <- ggplot(cif_data, aes(x = time, y = cif_settlement, color = group, lin
   coord_cartesian(xlim = c(0, 15)) +
   labs(
     title = "Composition-Adjusted CIF: Settlement",
-    subtitle = "IPTW-weighted pre-PSLRA vs. unweighted post-PSLRA (ATT, 99th pctl trimmed)",
-    x = "Years from Filing",
-    y = "Cumulative Incidence of Settlement",
+    x     = "Years from Filing",
+    y     = "Cumulative Incidence of Settlement",
     color = NULL, linetype = NULL
   ) +
   theme(legend.position = "bottom")
@@ -523,9 +522,8 @@ p_cif_d <- ggplot(cif_data, aes(x = time, y = cif_dismissal, color = group, line
   coord_cartesian(xlim = c(0, 15)) +
   labs(
     title = "Composition-Adjusted CIF: Dismissal",
-    subtitle = "IPTW-weighted pre-PSLRA vs. unweighted post-PSLRA (ATT, 99th pctl trimmed)",
-    x = "Years from Filing",
-    y = "Cumulative Incidence of Dismissal",
+    x     = "Years from Filing",
+    y     = "Cumulative Incidence of Dismissal",
     color = NULL, linetype = NULL
   ) +
   theme(legend.position = "bottom")

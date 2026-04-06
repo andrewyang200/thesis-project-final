@@ -1116,6 +1116,26 @@ effective sample size = 578.}
 \label{fig:iptw_balance}
 \end{figure}
 
+Figure~\ref{fig:ps_overlap} illustrates the positivity challenge underlying
+this analysis. The propensity score distributions for pre- and post-PSLRA
+cases overlap only in a narrow central range, reflecting the 11.6:1
+post-to-pre imbalance inherent to the legislative date cutoff. Cases in
+regions of near-zero overlap receive extreme ATT weights; trimming at the
+99th percentile (cap $\approx 43.5$) discards the most extreme pre-PSLRA
+reweightings at the cost of 11 observations and reduces the ESS from
+approximately 600 to 578.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\linewidth]{fig_ps_overlap.pdf}
+\caption{Mirror density plot of estimated propensity scores for pre-PSLRA
+(lower panel, reflected) and post-PSLRA (upper panel) cases. Overlap is
+concentrated in a narrow central range, reflecting the 11.6:1 post-to-pre
+sample imbalance. ATT weights reweight pre-PSLRA cases toward the post-PSLRA
+covariate distribution; extreme weights are trimmed at the 99th percentile.}
+\label{fig:ps_overlap}
+\end{figure}
+
 Two caveats apply. First, balance on observed covariates
 does not guarantee balance on unobserved confounders. The
 IPTW estimates adjust for observable compositional shifts
@@ -1256,6 +1276,26 @@ but leave substantial residual uncertainty---consistent
 with the moderate C-indices and the expectation that
 administrative data cannot capture case-specific legal
 merit.
+
+Figure~\ref{fig:auc_over_time} visualizes the AUC trajectories across
+prediction horizons. The Cox settlement model's AUC rises steadily from
+0.750 at one year to 0.835 at five years, reflecting the accumulating
+influence of circuit and PSLRA regime on long-horizon outcomes. The
+Fine-Gray models show comparatively lower and flatter discrimination,
+consistent with the methodological limitations of the approximated C-index
+noted above.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{fig_auc_over_time.pdf}
+\caption{Time-dependent AUC at 1, 2, 3, and 5-year prediction horizons for
+cause-specific Cox and Fine-Gray models on the held-out 30\% test set
+($n = 3{,}861$). The Cox settlement model improves markedly at longer
+horizons (AUC: 0.750 $\to$ 0.835); Fine-Gray models show comparatively
+lower discrimination. Dotted line marks the no-skill classifier
+(AUC $= 0.5$). Computed via \texttt{timeROC} with IPCW weights.}
+\label{fig:auc_over_time}
+\end{figure}
 
 %% ============================================================
 %% SECTION 5.6 — SUMMARY (Task 12, rebuilt 2026-04-03)

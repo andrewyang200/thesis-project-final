@@ -19,7 +19,7 @@
 - Task 13 (Discussion + Future Work): COMPLETE (2026-04-04) — two passes.
 **Checkpoint 2: CLOSED** — Full adversarial review (/challenge) run on all 7 chapters (2026-04-05). Four passes of surgical fixes applied. Verdict: NEEDS WORK → fixed. Core findings sound.
 
-**Phase 4 (Polish): IN PROGRESS** — Tasks 14-16 (Abstract, Formatting, Final Verification).
+**Phase 4 (Polish): IN PROGRESS** — Tasks 14-15 COMPLETE. Task 16 (Final Verification) remaining.
 
 **Deadline: April 9, 2026.**
 
@@ -187,29 +187,71 @@ Reclassifying Code 18 (statistical closing, 1,198 cases = 9.2%) as censored does
 
 ### A. Critical Blockers
 
-**Task 14: Abstract** ← DO THIS FIRST
-- Target: 200–300 words
-- Must cover: research question, data (12,968 IDB cases, 1990–2024), methods (CIF, Cox, IPTW, Frailty), key findings (PSLRA three-phase dismissal pattern, geographic disparity, MDL sign-reversal), novelty (first competing-risks framework at population scale on IDB data), limitations (associational framing, ESS=578, 11-cluster constraint)
-- File: `writing/chapters/abstract.tex` — currently a placeholder
+**Task 14: Abstract** ✅ COMPLETE (2026-04-05)
+- ~215 words. Research question → methods → PSLRA 3-phase → IPTW decomposition → circuit range → MDL sign-reversal. No causal language. Closing sentence handles limitations + contribution.
+- File: `writing/chapters/abstract.tex`
 
-**Figure readability**
-- Advisor flagged Figure 5.1 (KM panel) as illegible at print size
-- Fix in R: check `ggsave()` DPI and font scaling in `code/02_descriptives.R`
+**Figure readability** ✅ COMPLETE (2026-04-05)
+- `base_size` 12→14 globally in `utils.R`; all font sizes scaled proportionally
+- Removed all embedded `caption=` and `subtitle=` from every ggplot figure across all scripts
+- Side-by-side figure save dimensions reduced (8×6→4.5×4 for KM/CIF pairs; 9×6→5×5 for circuit pairs; Schoenfeld 8×6→5×4) — effective print text ~10pt vs prior ~5pt
+- `fig_ps_overlap` and `fig_auc_over_time` added to results.tex (were generated but unused)
+- Duplicate `\label{sec:frailty}` resolved: methodology.tex renamed to `\label{sec:frailty_method}`
+- All scripts re-run: 02, 05_causal_iptw, 05_propensity_scores, 07, 08
 
 ### B. Required Before Submission
 
-**Task 15: Formatting**
-- Add `\usepackage{hyperref}` to `writing/thesis.tex` (rubric requirement: clickable references)
-- Update submission date from `March 1, 2026` to actual submission date
-- Verify all `\ref{}` and `\label{}` cross-references compile cleanly
-- Check for orphan/widow headings and bleeding tables after full compile
+**Task 15: Formatting** ✅ COMPLETE (2026-04-05)
+- `\usepackage{hyperref}` added to `writing/thesis.tex` (last package, colorlinks)
+- Submission date updated: `March 1, 2026` → `April 9, 2026`
+- Cross-reference audit: all refs have matching labels; one duplicate fixed (sec:frailty)
 
-**Task 16: Final Number Verification**
+**Task 16: Final Number Verification** ← NEXT SESSION
 - Spot-check all cited statistics in prose against R output (focus on any numbers touched during Phase 4 edits)
 - Confirm robustness range "1.32 to 2.45" in intro.tex matches Table tab:robustness minimum (Scheme B/C HR=1.321)
+- Also verify: n=11,835 post-IPTW count in results.tex:1086 against R output (unverified, flagged during abstract writing)
 
 ### C. Low-Priority / Known Non-Blockers
 
 - IPTW triangulation table (Tab. 5.2) lacks CIs for rows 3–4 — acknowledged in text via SE caveat; non-blocking
 - 5 deferred LOW items from Task 9: subscript gap, ratio discrepancy, Gray's test note, train/test count, missing figure labels
 - Cross-script `df_ext` construction duplication in `03`, `04`, `07` — cosmetic; does not affect results
+- intro.tex Code 6 language: "novel disaggregation" softened to "correctly classify" (2026-04-06)
+- `writing/chapters/acknow.tex` still a placeholder — requires Andrew's personal content
+
+## Session: 2026-04-06 02:00
+### Plan Progress
+- Tasks completed this session: Task 14 (Abstract), Task 15 (Formatting), Figure Polish (unlisted sub-task)
+- Current position in plan: Task 16 of 16 remaining
+- Plan modifications needed: Task 16 expanded to include verification of n=11,835 post-IPTW count in results.tex:1086
+
+### Completed
+- **Abstract** (`writing/chapters/abstract.tex`): Written from scratch (~215 words). Research question → methods (CIF, Cox, FG, IPTW, frailty) → PSLRA three-phase finding → IPTW decomposition → circuit range → MDL sign-reversal. No causal language. Closing sentence handles limitations + contribution in one line. Iterated with Andrew on framing; Andrew's final version used with two edits (drop "Finally,", sharpen closing clause).
+- **Formatting** (`writing/thesis.tex`): Added `\usepackage[colorlinks]{hyperref}` (last package), updated `\submitted{}` from March 1 → April 9, 2026. Full cross-reference audit: all `\ref{}` have matching `\label{}`; fixed one duplicate `\label{sec:frailty}` (methodology.tex renamed to `\label{sec:frailty_method}`).
+- **Figure polish** (all R scripts + results.tex):
+  - Removed all embedded `caption=` and `subtitle=` from every ggplot across all scripts (thesis figures are not standalone)
+  - Added two unused figures to results.tex: `fig_ps_overlap` (after Love plot, with bridging prose) and `fig_auc_over_time` (after IBS discussion, with bridging prose)
+  - Final font sizes: base 14, title 16, axis.title 14, axis.text 12, legend 12, strip 13 (uniform +2 from original across all elements)
+  - Shortened titles for love plot ("Covariate Balance: IPTW Weighting") and robustness ("PSLRA Hazard Ratios: Robustness Check") to fit panel widths
+  - Removed Schoenfeld legends (LaTeX caption already explains red dashed line)
+  - All 14 figures regenerated: 02, 05_causal_iptw, 05_propensity_scores, 07, 08
+- **intro.tex**: Softened Code 6 language from "novel disaggregation" to "correctly classify"
+
+### Key Decisions
+- **Abstract structure**: Andrew's version of P2 used over Claude's (better language discipline: "exhibits an association" vs "exerts an influence"; "emerges as" vs "is"; cleaner closing sentence). Two edits applied: drop "Finally,", tighten "structural asymmetries" → "structural features of securities litigation dynamics previously invisible to single-outcome approaches."
+- **Code 6 sentence removed from abstract**: The thesis itself treats Code 6 disaggregation as a data cleaning step and flags it as a limitation/confound. Calling it "novel" in the abstract was inconsistent with the body. Removed.
+- **Third paragraph of abstract removed**: Listing ESS=578, 11 clusters, and future directions in the abstract was over-explaining. The second paragraph's closing sentence ("While secular pre-trends limit strict causal attribution...") handles the limitations concisely.
+- **Figure dimensions kept at original (8×6, 9×6)**: Attempted to shrink side-by-side figure canvases for better print readability, but this caused title clipping and visual inconsistency. Original dimensions restored; font sizes bumped instead.
+- **Schoenfeld legend removed**: Base R legend with `bg="white"` covered plot elements and thinned the plot border. Since LaTeX caption already explains the red dashed line, legend is redundant. Removed.
+- **`plot.title.position = "plot"` rejected**: Made love plot and robustness figures look inconsistent with CIF plots due to wide y-axis labels. Reverted to default. Title clipping fixed by shortening titles instead.
+
+### Next Steps
+- **Task 16**: Final number verification — run `/verify-numbers` to spot-check all cited statistics in prose against R output. Key targets: robustness range "1.32 to 2.45", n=11,835 post-IPTW in results.tex:1086 (unverified), any numbers touched during Phase 4 edits.
+- **Acknowledgements**: `writing/chapters/acknow.tex` is still a placeholder. Requires Andrew's personal content (advisor, department, etc.) — 15-minute task.
+- After Task 16 + acknowledgements: thesis is submission-ready.
+
+### Open Issues
+- `n=11,835` post-PSLRA IPTW count at results.tex:1086 is unverified against R output. It doesn't reconcile with 12,968 − 1,031 = 11,937. Needs checking in Task 16.
+- Diagnostics background run (byw676svj) for Schoenfeld/AUC at final font sizes was still running at session end. Figures should update automatically; verify timestamps before submission.
+- `writing/chapters/acknow.tex` is a placeholder — Andrew must fill in personally.
+---

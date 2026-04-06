@@ -20,17 +20,17 @@ for (pkg in required_packages) {
 }
 
 # --- Consistent Theme ---
-theme_thesis <- theme_minimal(base_size = 12) +
+theme_thesis <- theme_minimal(base_size = 14) +
   theme(
-    plot.title = element_text(face = "bold", size = 14),
-    plot.subtitle = element_text(size = 11, color = "grey40"),
-    axis.title = element_text(size = 12),
-    axis.text = element_text(size = 10),
+    plot.title = element_text(face = "bold", size = 16),
+    plot.subtitle = element_text(size = 13, color = "grey40"),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12),
     legend.position = "bottom",
-    legend.title = element_text(size = 11),
-    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 13),
+    legend.text = element_text(size = 12),
     panel.grid.minor = element_blank(),
-    strip.text = element_text(face = "bold", size = 11)
+    strip.text = element_text(face = "bold", size = 13)
   )
 theme_set(theme_thesis)
 

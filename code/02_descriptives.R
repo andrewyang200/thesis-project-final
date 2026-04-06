@@ -68,18 +68,9 @@ fig_km <- ggplot(km_df, aes(x = time, y = surv)) +
   scale_x_continuous(limits = c(0, 10), breaks = seq(0, 10, 2)) +
   scale_y_continuous(limits = c(0, 1), labels = percent_format(accuracy = 1)) +
   labs(
-    title    = "Duration of Federal Securities Class Actions",
-    subtitle = paste0("Kaplan-Meier estimate (n = ",
-                      format(nrow(df), big.mark = ","), ")"),
-    x        = "Years Since Filing",
-    y        = "Proportion Pending (Unresolved)",
-    caption  = paste0(
-      "Source: FJC Integrated Database, NOS 850 with class action flag, 1990-2024.\n",
-      "Shaded band = 95% pointwise confidence interval."
-    )
-  ) +
-  theme(
-    plot.caption = element_text(size = 9, color = "gray50", hjust = 0)
+    title = "Duration of Federal Securities Class Actions",
+    x     = "Years Since Filing",
+    y     = "Proportion Pending (Unresolved)"
   )
 
 save_figure(fig_km, "fig_km_overall")
@@ -122,20 +113,10 @@ fig_cif <- ggplot(cif_overall_df, aes(x = time, y = prob, color = outcome)) +
   scale_color_manual(values = thesis_colors[c("Settlement", "Dismissal")]) +
   scale_fill_manual(values = thesis_colors[c("Settlement", "Dismissal")]) +
   labs(
-    title    = "Cumulative Incidence of Settlement vs. Dismissal",
-    subtitle = "Aalen-Johansen estimates under competing-risks framework",
-    x        = "Years Since Filing",
-    y        = "Cumulative Probability",
-    color    = "Outcome",
-    caption  = paste0(
-      "Source: FJC Integrated Database. Scheme A coding.\n",
-      "Settlement = code 13 + Code 6 plaintiff victories; ",
-      "Dismissal = codes 2-4,12,14,15,17-20 + Code 6 defendant victories.\n",
-      "Shaded bands = 95% pointwise confidence intervals."
-    )
-  ) +
-  theme(
-    plot.caption = element_text(size = 9, color = "gray50", hjust = 0)
+    title = "Cumulative Incidence of Settlement vs. Dismissal",
+    x     = "Years Since Filing",
+    y     = "Cumulative Probability",
+    color = "Outcome"
   )
 
 save_figure(fig_cif, "fig_cif_overall")
@@ -192,17 +173,11 @@ fig_pslra <- ggplot(cif_pslra_df,
   ) +
   labs(
     title    = "Cumulative Incidence by PSLRA Regime",
-    subtitle = "Private Securities Litigation Reform Act (effective December 22, 1995)",
     x        = "Years Since Filing",
     y        = "Cumulative Probability",
-    color    = NULL, linetype = NULL,
-    caption  = paste0(
-      "Source: FJC Integrated Database. Solid = Pre-PSLRA; dashed = Post-PSLRA.\n",
-      "Shaded bands = 95% pointwise confidence intervals."
-    )
+    color    = NULL, linetype = NULL
   ) +
   theme(
-    plot.caption     = element_text(size = 9, color = "gray50", hjust = 0),
     legend.key.width = unit(1.8, "lines")
   )
 
@@ -292,18 +267,10 @@ fig_circ_d <- cif_circuit_df %>%
   scale_fill_brewer(palette = "Set1") +
   guides(color = guide_legend(nrow = 2, byrow = TRUE)) +
   labs(
-    title    = "Cumulative Incidence of Dismissal by Circuit",
-    subtitle = "Top 4 circuits by volume + Sixth Circuit",
-    x        = "Years Since Filing",
-    y        = "Cumulative Probability of Dismissal",
-    color    = "Circuit",
-    caption  = paste0(
-      "Source: FJC Integrated Database, 1990-2024.\n",
-      "Shaded bands = 95% pointwise confidence intervals."
-    )
-  ) +
-  theme(
-    plot.caption = element_text(size = 9, color = "gray50", hjust = 0)
+    title = "Cumulative Incidence of Dismissal by Circuit",
+    x     = "Years Since Filing",
+    y     = "Cumulative Probability of Dismissal",
+    color = "Circuit"
   )
 
 save_figure(fig_circ_d, "fig_cif_circuit_dismissal", width = 9)
@@ -322,18 +289,10 @@ fig_circ_s <- cif_circuit_df %>%
   scale_fill_brewer(palette = "Set1") +
   guides(color = guide_legend(nrow = 2, byrow = TRUE)) +
   labs(
-    title    = "Cumulative Incidence of Settlement by Circuit",
-    subtitle = "Top 4 circuits by volume + Sixth Circuit",
-    x        = "Years Since Filing",
-    y        = "Cumulative Probability of Settlement",
-    color    = "Circuit",
-    caption  = paste0(
-      "Source: FJC Integrated Database, 1990-2024.\n",
-      "Shaded bands = 95% pointwise confidence intervals."
-    )
-  ) +
-  theme(
-    plot.caption = element_text(size = 9, color = "gray50", hjust = 0)
+    title = "Cumulative Incidence of Settlement by Circuit",
+    x     = "Years Since Filing",
+    y     = "Cumulative Probability of Settlement",
+    color = "Circuit"
   )
 
 save_figure(fig_circ_s, "fig_cif_circuit_settlement", width = 9)

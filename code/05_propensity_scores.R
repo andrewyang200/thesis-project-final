@@ -125,10 +125,9 @@ p_overlap <- ggplot(dens_df, aes(x = ps, y = density, fill = group)) +
   ) +
   labs(
     title = "Propensity Score Overlap: Pre- vs. Post-PSLRA Cases",
-    subtitle = "Mirror density plot | Good overlap requires substantial distribution overlap",
-    x = "Estimated Propensity Score P(Post-PSLRA | X)",
-    y = "Density",
-    fill = NULL
+    x     = "Estimated Propensity Score P(Post-PSLRA | X)",
+    y     = "Density",
+    fill  = NULL
   ) +
   theme(legend.position = "bottom")
 

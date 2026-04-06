@@ -186,15 +186,10 @@ fig_rob <- robustness_all %>%
   scale_x_log10(breaks = c(0.1, 0.3, 0.5, 1, 1.5, 2, 3),
                 labels = c("0.1", "0.3", "0.5", "1", "1.5", "2", "3")) +
   labs(
-    title    = "PSLRA Hazard Ratios Across Robustness Specifications",
-    subtitle = "Hazard Ratios across Alternative Specifications and Subsets",
-    x        = "Hazard Ratio (log scale) -- Post-PSLRA vs. Pre-PSLRA",
-    y        = NULL,
-    color    = "Outcome", shape = "Outcome",
-    caption  = "Each row = separate Cox model. Dashed line at HR = 1 (null effect). Bars = 95% CI."
-  ) +
-  theme(
-    plot.caption = element_text(size = 9, color = "gray50", hjust = 0)
+    title = "PSLRA Hazard Ratios: Robustness Check",
+    x     = "Hazard Ratio (log scale) -- Post-PSLRA vs. Pre-PSLRA",
+    y     = NULL,
+    color = "Outcome", shape = "Outcome"
   )
 
 save_figure(fig_rob, "fig_robustness_hr", width = 10)
