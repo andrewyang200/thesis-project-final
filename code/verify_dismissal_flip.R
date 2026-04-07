@@ -232,21 +232,28 @@ cat("\n\n=================================================================\n")
 cat(" STEP 4: IPTW TRIMMING SENSITIVITY (95th vs 99th percentile)\n")
 cat("=================================================================\n\n")
 
-# Prepare data (mirrors 05_causal_iptw.R exactly)
+# Prepare data (mirrors the current 05_causal_iptw.R pipeline)
 circuit_counts <- df %>% count(circuit, sort = TRUE)
 circuits_incl  <- circuit_counts %>% filter(n >= 50) %>% pull(circuit)
+stat_coverage  <- 100 * mean(!is.na(df$stat_basis_f))
+include_stat   <- stat_coverage >= 15
 
 df_ext <- df %>%
   filter(circuit %in% circuits_incl) %>%
   mutate(circuit_f = relevel(factor(circuit), ref = "2")) %>%
-  filter(!is.na(origin_cat), !is.na(mdl_flag), !is.na(juris_fq)) %>%
-  mutate(
-    stat_basis_f = forcats::fct_na_value_to_level(stat_basis_f, level = "Missing"),
-    origin_cat = forcats::fct_recode(origin_cat, Other = "Removed")
-  )
+  filter(!is.na(origin_cat), !is.na(mdl_flag), !is.na(juris_fq))
+
+if (include_stat) {
+  df_ext <- df_ext %>%
+    mutate(stat_basis_f = forcats::fct_na_value_to_level(stat_basis_f, level = "Missing"))
+}
 
 # Propensity score model (same as 05)
-ps_formula <- post_pslra ~ circuit_f + origin_cat + juris_fq + stat_basis_f
+if (include_stat) {
+  ps_formula <- post_pslra ~ circuit_f + origin_cat + juris_fq + stat_basis_f
+} else {
+  ps_formula <- post_pslra ~ circuit_f + origin_cat + juris_fq
+}
 ps_model <- glm(ps_formula, data = df_ext, family = binomial(link = "logit"))
 df_ext$ps <- predict(ps_model, type = "response")
 
@@ -266,6 +273,9 @@ run_iptw_at_trim <- function(df, pctl, label) {
 
   cat(sprintf("\n--- %s (trim cap = %.2f, %d cases trimmed, ESS = %.1f) ---\n",
       label, cap, n_trimmed, ess))
+  if (pctl < 0.99 && identical(unname(cap), unname(quantile(w_pre_raw, 0.99)))) {
+    cat("  Note: trim cap equals the 99th-percentile cap because the weight distribution is discrete in this upper tail.\n")
+  }
 
   # MSM (Row 4 equivalent)
   s_msm <- coxph(Surv(duration_years, event_type == 1) ~ post_pslra,

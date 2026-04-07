@@ -31,6 +31,7 @@ Every R script follows this template:
 - Wrap model fits in `tryCatch()` — if a model fails, log the error and continue
 - Check convergence explicitly: `model$convergence`, `summary(model)$convergence`
 - Validate data before modeling: check for NAs, impossible durations, category counts
+- For FJC disposition coding, do not hard-code judgment-bearing outcomes as defendant-favorable without checking `JUDGMENT`; map `1=plaintiff`, `2=defendant`, and censor ambiguous or missing judgment values
 
 ## Data File Handling (CRITICAL)
 - **NEVER read raw data files directly into the Claude Code context** (no `cat data/raw/*.csv`)

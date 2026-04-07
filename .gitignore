@@ -15,6 +15,9 @@ data/cleaned/*
 !data/raw/.gitkeep
 !data/cleaned/.gitkeep
 
+# Large model objects (RDS files can easily exceed 100MB GitHub limit)
+output/models/*.rds
+
 # OS files
 .DS_Store
 Thumbs.db

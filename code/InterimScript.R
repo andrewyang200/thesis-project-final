@@ -18,6 +18,14 @@
 #   securities_cohort_cleaned.rds
 #   results_fall.rds
 #   results_spring.rds
+
+stop(
+  paste(
+    "Historical script only. Do not run or cite code/InterimScript.R.",
+    "The authoritative modular analysis is code/01_clean.R through code/08_robustness.R,",
+    "and the current thesis-state source of truth is docs/session-log.md."
+  )
+)
 #
 # =============================================================================
 

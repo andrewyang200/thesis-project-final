@@ -37,6 +37,7 @@ cat("=================================================================\n\n")
 cat("Loading cleaned data and saved model objects...\n")
 df <- readRDS(here::here("data", "cleaned", "securities_cohort_cleaned.rds"))
 cat(sprintf("  Data: %s rows\n", format(nrow(df), big.mark = ",")))
+stopifnot("case_id column required for Fine-Gray clustering" = "case_id" %in% names(df))
 
 cox_results <- readRDS(here::here("output", "models", "cox_models.rds"))
 fg_results  <- readRDS(here::here("output", "models", "fine_gray_models.rds"))
@@ -211,7 +212,7 @@ cox_d_train <- coxph(
 cat("  Cox models refit on training data.\n")
 
 # --- Fine-Gray models (training set, reduced formula) ---
-fg_cols <- c("duration_years", "event_type", "post_pslra", "circuit_f",
+fg_cols <- c("duration_years", "event_type", "post_pslra", "circuit_f", "case_id",
              "origin_cat", "mdl_flag", "juris_fq")
 
 fg_tr_s_data <- finegray(
@@ -221,7 +222,7 @@ fg_tr_s_data <- finegray(
 )
 fg_s_train <- coxph(
   as.formula(paste("Surv(fgstart, fgstop, fgstatus) ~", perf_formula_rhs)),
-  data = fg_tr_s_data, weights = fgwt, x = TRUE
+  data = fg_tr_s_data, weights = fgwt, cluster = case_id, x = TRUE
 )
 
 fg_tr_d_data <- finegray(
@@ -231,7 +232,7 @@ fg_tr_d_data <- finegray(
 )
 fg_d_train <- coxph(
   as.formula(paste("Surv(fgstart, fgstop, fgstatus) ~", perf_formula_rhs)),
-  data = fg_tr_d_data, weights = fgwt, x = TRUE
+  data = fg_tr_d_data, weights = fgwt, cluster = case_id, x = TRUE
 )
 cat("  Fine-Gray models refit on training data.\n")
 
@@ -593,6 +594,8 @@ if (auc_available) {
     Outcome = rep(c("Settlement", "Dismissal", "Settlement", "Dismissal"),
                   each = length(time_points))
   )
+  # Lower the y-axis only when needed so legitimately low AUC values remain visible.
+  auc_y_min <- max(0, min(0.4, floor(min(auc_plot_data$AUC, na.rm = TRUE) * 20) / 20))
 
   fig_auc <- ggplot(auc_plot_data,
                     aes(x = Time, y = AUC, color = Outcome, linetype = Model)) +
@@ -601,7 +604,7 @@ if (auc_available) {
     geom_hline(yintercept = 0.5, linetype = "dotted", color = "gray60") +
     scale_color_manual(values = c("Settlement" = "#2166AC",
                                   "Dismissal"  = "#B2182B")) +
-    scale_y_continuous(limits = c(0.4, 1.0),
+    scale_y_continuous(limits = c(auc_y_min, 1.0),
                        labels = scales::percent_format(accuracy = 1)) +
     scale_x_continuous(breaks = time_points) +
     labs(

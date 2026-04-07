@@ -97,7 +97,8 @@ n_nos850   <- nrow(df_sec)
 n_classact <- sum(df_sec$classact == 1, na.rm = TRUE)
 
 df_cohort <- df_sec %>%
-  filter(classact == 1, duration_years > 0)
+  filter(classact == 1, duration_years > 0) %>%
+  mutate(case_id = row_number())
 n_valid <- nrow(df_cohort)
 
 cat(sprintf("  All NOS 850 (post-1990): %s\n", format(n_nos850, big.mark = ",")))
@@ -109,7 +110,9 @@ stopifnot(
   "Unexpected disposition codes outside 0-20" =
     all(df_cohort$disp %in% 0:20, na.rm = TRUE),
   "All disposition codes are NA -- check data integrity" =
-    any(!is.na(df_cohort$disp))
+    any(!is.na(df_cohort$disp)),
+  "Expected JUDGMENT column not found after clean_names()" =
+    "judgment" %in% names(df_cohort)
 )
 cat("  Disposition code validation: PASSED (all codes in 0-20)\n")
 n_na_disp <- sum(is.na(df_cohort$disp))
@@ -126,32 +129,32 @@ if (n_na_disp > 0) {
 # Source: FJC IDB Codebook (docs/fjc_codebook.md)
 #
 # Scheme A (Primary):
-#   Settlement: Code 13; Code 6 with JUDGMENT=1 (plaintiff victory on motion)
+#   Settlement: Code 13; judgment-bearing codes {4,15,17,19,20} with
+#               JUDGMENT=1; Code 6 with JUDGMENT=1
 #   Dismissal:  Codes 2 (want of prosecution), 3 (lack of jurisdiction),
-#               4 (default judgment), 12 (voluntary),
-#               14 (other dismissal), 15 (award of arbitrator),
-#               17 (other judgment), 18 (statistical closing),
-#               19 (appeal affirmed, magistrate), 20 (appeal denied, magistrate);
-#               Code 6 with JUDGMENT=2 (defendant victory on motion)
-#   Censored:   Code 6 with JUDGMENT in {3,4,-8,NA} (ambiguous/missing);
-#               Codes 0,1,10,11 (transfers/remands); codes 7-9 (trial outcomes)
+#               12 (voluntary), 14 (other dismissal);
+#               judgment-bearing codes {4,15,17,19,20} with JUDGMENT=2;
+#               Code 6 with JUDGMENT=2
+#   Censored:   Codes 0,1,10,11 (transfers/remands); code 18
+#               (statistical closing); codes 7-9 (trial outcomes);
+#               judgment-bearing codes with JUDGMENT in {0,3,4,-8,NA}
 #
 # Scheme B (Liberal):  Reclassify Code 12 (voluntary) -> settlement (hidden settlements)
 # Scheme C (Expanded): Scheme B + Code 5 (consent judgment) -> settlement
 #
-# CODE 6 DISAGGREGATION NOTE:
-# Code 6 ("Judgment on Motion Before Trial") is disaggregated using the IDB
-# JUDGMENT field, which records the prevailing party:
+# JUDGMENT DISAGGREGATION NOTE:
+# For FJC "Judgment On" dispositions, the IDB JUDGMENT field records the
+# prevailing party:
 #   JUDGMENT = 1 (Plaintiff) -> Settlement (1L): plaintiff-favorable resolution
 #   JUDGMENT = 2 (Defendant) -> Dismissal (2L): defense motion granted (MTD/SJ)
-#   JUDGMENT in {3,4,-8} or NA -> Censored (0L): ambiguous, conservative default
-# This replaces the prior blanket reclassification of all Code 6 as Dismissal,
-# which incorrectly classified ~701 plaintiff victories as dismissals.
+#   JUDGMENT in {0,3,4,-8} or NA -> Censored (0L): ambiguous, conservative default
+# This applies to Code 6 and the other judgment-bearing dispositions used in
+# the thesis coding scheme: 4 (default), 15 (arbitrator), 17 (other judgment),
+# 19 (appeal affirmed, magistrate), and 20 (appeal denied, magistrate).
 #
-# CODE 20 NOTE:
-# Code 20 (appeal denied, magistrate) is classified as Dismissal alongside
-# Code 19 (appeal affirmed, magistrate) -- symmetric treatment of appellate
-# outcomes where the lower court's decision stands.
+# CODE 18 NOTE:
+# Code 18 (statistical closing) is an administrative closure without substantive
+# adjudication and is treated as right-censoring in all schemes.
 # =============================================================================
 cat("\nSECTION 4: Coding three disposition schemes...\n")
 
@@ -160,21 +163,25 @@ code_events <- function(df, scheme = "A") {
     mutate(
       event_type = case_when(
         # --- Settlements ---
-        disp == 13                              ~ 1L,   # Settled
-        scheme %in% c("B","C") & disp == 12    ~ 1L,   # Voluntary -> settlement (B,C)
-        scheme == "C"          & disp == 5      ~ 1L,   # Consent judgment -> settlement (C)
-        disp == 6 & judgment == 1               ~ 1L,   # Code 6 plaintiff victory -> settlement
+        disp == 13                                ~ 1L, # Settled
+        scheme %in% c("B","C") & disp == 12      ~ 1L, # Voluntary -> settlement (B,C)
+        scheme == "C"          & disp == 5       ~ 1L, # Consent judgment -> settlement (C)
+        disp %in% c(4, 15, 17, 19, 20) &
+          judgment == 1                           ~ 1L, # Plaintiff judgment -> settlement
+        disp == 6 & judgment == 1                 ~ 1L, # Code 6 plaintiff victory -> settlement
 
         # --- Dismissals ---
-        disp %in% c(2, 3, 14, 15, 17, 18, 19, 20) ~ 2L, # Dismissals (all schemes)
-        scheme == "A"          & disp == 12     ~ 2L,   # Voluntary -> dismissal (A only)
-        disp == 4                               ~ 2L,   # Default judgment -> dismissal
-        disp == 6 & judgment == 2               ~ 2L,   # Code 6 defendant victory -> dismissal
+        disp %in% c(2, 3, 14)                    ~ 2L, # Dismissals (all schemes)
+        scheme == "A"          & disp == 12      ~ 2L, # Voluntary -> dismissal (A only)
+        disp %in% c(4, 15, 17, 19, 20) &
+          judgment == 2                           ~ 2L, # Defendant judgment -> dismissal
+        disp == 6 & judgment == 2                 ~ 2L, # Code 6 defendant victory -> dismissal
 
         # --- Censored ---
-        # Includes: transfers (0,1), remands (10,11), trial outcomes (7-9),
-        # stayed (16), and Code 6 with ambiguous/missing judgment (3,4,-8,NA)
-        TRUE                                    ~ 0L
+        # Includes: transfers (0,1), remands (10,11), consent judgments in
+        # Schemes A/B, trial outcomes (7-9), stayed (16), statistical closing
+        # (18), and judgment-bearing codes with ambiguous/missing JUDGMENT.
+        TRUE                                      ~ 0L
       ),
       coding_scheme = scheme
     )
@@ -201,14 +208,17 @@ add_covariates <- function(df) {
       #            4=reinstated, 5=transfer 1404, 6=MDL transfer, 13=MDL originating
       # Codes 7-12 (magistrate appeals, reopens) are procedurally distinct and
       # rare in NOS 850; treated as NA per FJC documentation.
+      # "Removed" is collapsed into "Other" globally so all downstream models
+      # share the same factor structure; the standalone "Removed" cell is too
+      # sparse pre-PSLRA to support stable cross-script comparisons.
       origin_cat = case_when(
         origin == 1          ~ "Original",
-        origin == 2          ~ "Removed",
+        origin == 2          ~ "Other",
         origin %in% c(6, 13) ~ "MDL",
         origin %in% c(3,4,5) ~ "Other",
         TRUE                 ~ NA_character_
       ),
-      origin_cat = factor(origin_cat, levels = c("Original","Removed","MDL","Other")),
+      origin_cat = factor(origin_cat, levels = c("Original", "MDL", "Other")),
 
       # ---- MDL FLAG ----
       mdl_flag = as.integer(!is.na(mdldock) &

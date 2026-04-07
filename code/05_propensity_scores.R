@@ -47,13 +47,6 @@ if (include_stat) {
     mutate(stat_basis_f = forcats::fct_na_value_to_level(stat_basis_f, level = "Missing"))
 }
 
-# --- Hardened logic (synced with 05_causal_iptw.R) ---
-# Collapse origin_cat == "Removed" into "Other": only 1 pre-PSLRA "Removed"
-# case causes near-complete separation in the propensity model.
-df_ext <- df_ext %>%
-  mutate(origin_cat = forcats::fct_recode(origin_cat, Other = "Removed"))
-cat(sprintf("  Collapsed origin_cat 'Removed' into 'Other' (1 pre-PSLRA case)\n"))
-
 cat(sprintf("  Analysis sample (df_ext): %s rows\n", format(nrow(df_ext), big.mark = ",")))
 cat(sprintf("  Pre-PSLRA: %d  |  Post-PSLRA: %d  |  Ratio: %.1f:1\n",
             sum(df_ext$post_pslra == 0), sum(df_ext$post_pslra == 1),
@@ -70,7 +63,11 @@ cat("-----------------------------------------------------------------\n")
 # mdl_flag excluded: zero pre-PSLRA cases have mdl_flag == 1, producing
 # perfect separation (coef → ±∞). This is a data limitation (IDB did not
 # code MDL consolidation pre-PSLRA), not a modeling choice.
-ps_formula <- post_pslra ~ circuit_f + origin_cat + juris_fq + stat_basis_f
+if (include_stat) {
+  ps_formula <- post_pslra ~ circuit_f + origin_cat + juris_fq + stat_basis_f
+} else {
+  ps_formula <- post_pslra ~ circuit_f + origin_cat + juris_fq
+}
 
 ps_model <- glm(ps_formula, data = df_ext, family = binomial(link = "logit"))
 

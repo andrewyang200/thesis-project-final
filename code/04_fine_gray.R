@@ -22,6 +22,7 @@ cat("Loading cleaned data...\n")
 df <- readRDS(here::here("data", "cleaned", "securities_cohort_cleaned.rds"))
 cat(sprintf("  Loaded: %s rows\n", format(nrow(df), big.mark = ",")))
 stopifnot("event_type must be in {0, 1, 2}" = all(df$event_type %in% 0:2))
+stopifnot("case_id column required for Fine-Gray clustering" = "case_id" %in% names(df))
 
 # --- Derived datasets (same construction as 03_cox_models.R) ---
 circuit_counts <- df %>% count(circuit, sort = TRUE)
@@ -64,26 +65,26 @@ cat("-----------------------------------------------------------------\n")
 # --- Settlement subdistribution ---
 fg_base_s_data <- tryCatch(
   finegray(Surv(duration_years, factor(event_type, 0:2)) ~ .,
-           data = df_circ %>% select(duration_years, event_type, post_pslra, circuit_f),
+           data = df_circ %>% select(duration_years, event_type, post_pslra, circuit_f, case_id),
            etype = 1),
   error = function(e) { cat("  finegray error (base S):", e$message, "\n"); NULL }
 )
 fg_base_s <- if (!is.null(fg_base_s_data)) tryCatch(
   coxph(Surv(fgstart, fgstop, fgstatus) ~ post_pslra + circuit_f,
-        data = fg_base_s_data, weights = fgwt),
+        data = fg_base_s_data, weights = fgwt, cluster = case_id),
   error = function(e) { cat("  coxph error (base S):", e$message, "\n"); NULL }
 )
 
 # --- Dismissal subdistribution ---
 fg_base_d_data <- tryCatch(
   finegray(Surv(duration_years, factor(event_type, 0:2)) ~ .,
-           data = df_circ %>% select(duration_years, event_type, post_pslra, circuit_f),
+           data = df_circ %>% select(duration_years, event_type, post_pslra, circuit_f, case_id),
            etype = 2),
   error = function(e) { cat("  finegray error (base D):", e$message, "\n"); NULL }
 )
 fg_base_d <- if (!is.null(fg_base_d_data)) tryCatch(
   coxph(Surv(fgstart, fgstop, fgstatus) ~ post_pslra + circuit_f,
-        data = fg_base_d_data, weights = fgwt),
+        data = fg_base_d_data, weights = fgwt, cluster = case_id),
   error = function(e) { cat("  coxph error (base D):", e$message, "\n"); NULL }
 )
 
@@ -158,7 +159,7 @@ cat("EXTENDED FINE-GRAY WITH ALL COVARIATES\n")
 cat("-----------------------------------------------------------------\n")
 
 # Select columns for finegray (it needs a clean dataset)
-fg_cols <- c("duration_years", "event_type", "post_pslra", "circuit_f",
+fg_cols <- c("duration_years", "event_type", "post_pslra", "circuit_f", "case_id",
              "origin_cat", "mdl_flag", "juris_fq")
 if (include_stat) fg_cols <- c(fg_cols, "stat_basis_f")
 
@@ -170,7 +171,7 @@ fg_ext_s_data <- tryCatch(
 )
 fg_s_ext <- if (!is.null(fg_ext_s_data)) tryCatch(
   coxph(as.formula(paste("Surv(fgstart, fgstop, fgstatus) ~", ext_formula_rhs)),
-        data = fg_ext_s_data, weights = fgwt),
+        data = fg_ext_s_data, weights = fgwt, cluster = case_id),
   error = function(e) { cat("  coxph error (ext S):", e$message, "\n"); NULL }
 )
 
@@ -182,7 +183,7 @@ fg_ext_d_data <- tryCatch(
 )
 fg_d_ext <- if (!is.null(fg_ext_d_data)) tryCatch(
   coxph(as.formula(paste("Surv(fgstart, fgstop, fgstatus) ~", ext_formula_rhs)),
-        data = fg_ext_d_data, weights = fgwt),
+        data = fg_ext_d_data, weights = fgwt, cluster = case_id),
   error = function(e) { cat("  coxph error (ext D):", e$message, "\n"); NULL }
 )
 

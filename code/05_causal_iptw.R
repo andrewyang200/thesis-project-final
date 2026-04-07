@@ -88,12 +88,6 @@ if (include_stat) {
     mutate(stat_basis_f = forcats::fct_na_value_to_level(stat_basis_f, level = "Missing"))
 }
 
-# Collapse origin_cat == "Removed" into "Other" to resolve near-complete
-# separation in the propensity model (only 1 pre-PSLRA "Removed" case).
-df_ext <- df_ext %>%
-  mutate(origin_cat = forcats::fct_recode(origin_cat, Other = "Removed"))
-cat(sprintf("  Collapsed origin_cat 'Removed' into 'Other' (1 pre-PSLRA case)\n"))
-
 cat(sprintf("  Analysis sample: %s rows (%d pre / %d post PSLRA)\n",
             format(nrow(df_ext), big.mark = ","),
             sum(df_ext$post_pslra == 0), sum(df_ext$post_pslra == 1)))
@@ -180,6 +174,10 @@ w_out$weights[df_ext$post_pslra == 0] <- pmin(
   w_out$weights[df_ext$post_pslra == 0],
   trim_cap
 )
+if (!isTRUE(all.equal(unname(df_ext$att_weight), unname(w_out$weights), tolerance = 1e-10))) {
+  stop("Manual ATT weights do not match trimmed WeightIt weights.")
+}
+cat("  Verified: manual ATT weights match trimmed WeightIt weights.\n")
 
 # Balance table
 bt <- bal.tab(w_out, stats = c("m", "v"), thresholds = c(m = 0.1), un = TRUE)
@@ -670,9 +668,6 @@ CAVEATS:
   # Pseudo-R2
   pseudo_r2
 ))
-
-cat("\n*** REMINDER: writing/chapters/methodology.tex and discussion.tex do ***\n")
-cat("*** not yet include IPTW sections. Must be added in Task 11.        ***\n")
 
 # --- Session Info ---
 print_session()

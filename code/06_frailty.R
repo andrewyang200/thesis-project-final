@@ -92,6 +92,7 @@ cat("-----------------------------------------------------------------\n")
 
 cox_results <- readRDS(here::here("output", "models", "cox_models.rds"))
 cat("  Loaded: output/models/cox_models.rds\n")
+ext_formula_rhs <- cox_results$ext_formula_rhs
 
 # Extract fixed-effect PSLRA HRs for comparison table
 fe_s_base <- summary(cox_results$cox_s_base)
@@ -144,7 +145,7 @@ if (!is.null(frailty_s_base)) {
   cat(sprintf("  PSLRA HR (no circuit, for ref):     %.3f\n", exp(coef(cox_results$cox_s_base)["post_pslra"])))
   cat(sprintf("  Frailty variance (circuit): %.4f\n", VarCorr(frailty_s_base)$circuit_f[1]))
   cat(sprintf("  Frailty SD (circuit):       %.4f\n", sqrt(VarCorr(frailty_s_base)$circuit_f[1])))
-  if (VarCorr(frailty_s_base)$circuit_f[1] == 0) {
+  if (VarCorr(frailty_s_base)$circuit_f[1] < 1e-10) {
     cat("  *** WARNING: Frailty variance is exactly zero (boundary). ***\n")
     cat("  *** The random effect is degenerate — interpret with caution. ***\n")
   }
@@ -174,7 +175,7 @@ if (!is.null(frailty_d_base)) {
   cat(sprintf("  PSLRA HR (no circuit, for ref):     %.3f\n", exp(coef(cox_results$cox_d_base)["post_pslra"])))
   cat(sprintf("  Frailty variance (circuit): %.4f\n", VarCorr(frailty_d_base)$circuit_f[1]))
   cat(sprintf("  Frailty SD (circuit):       %.4f\n", sqrt(VarCorr(frailty_d_base)$circuit_f[1])))
-  if (VarCorr(frailty_d_base)$circuit_f[1] == 0) {
+  if (VarCorr(frailty_d_base)$circuit_f[1] < 1e-10) {
     cat("  *** WARNING: Frailty variance is exactly zero (boundary). ***\n")
     cat("  *** The random effect is degenerate — interpret with caution. ***\n")
   }
@@ -195,11 +196,11 @@ cat("EXCEPT circuit_f which moves from fixed to random.\n")
 cat("This tests whether unobserved circuit heterogeneity persists\n")
 cat("after controlling for observable case characteristics.\n\n")
 
-# Formula: everything from ext_formula_rhs EXCEPT circuit_f (now random)
-ext_no_circuit_rhs <- "post_pslra + origin_cat + mdl_flag + juris_fq"
-if (include_stat) {
-  ext_no_circuit_rhs <- paste(ext_no_circuit_rhs, "+ stat_basis_f")
-}
+# Formula: everything from the saved extended Cox specification EXCEPT circuit_f
+# (which moves from fixed to random here).
+ext_no_circuit_rhs <- ext_formula_rhs %>%
+  stringr::str_replace("\\s*\\+\\s*circuit_f\\b", "") %>%
+  stringr::str_squish()
 cat(sprintf("  Fixed effects: %s\n", ext_no_circuit_rhs))
 cat("  Random effect: (1 | circuit_f)\n\n")
 
@@ -288,11 +289,6 @@ cat(sprintf("  Dismissal:  HR = %.3f, robust SE = %.4f\n",
             summary(cox_d_cluster_base)$coefficients["post_pslra", "robust se"]))
 
 # Extended: full covariates (with circuit fixed effects), clustered by circuit
-# Reconstruct locally rather than loading from cached cox_models.rds
-ext_formula_rhs <- "post_pslra + circuit_f + origin_cat + mdl_flag + juris_fq"
-if (include_stat) {
-  ext_formula_rhs <- paste(ext_formula_rhs, "+ stat_basis_f")
-}
 cox_s_cluster_ext <- coxph(
   as.formula(paste("Surv(duration_years, event_type == 1) ~", ext_formula_rhs)),
   data = df_ext,
@@ -381,8 +377,9 @@ extract_comparison <- function(model, model_type) {
     se_col <- if ("robust se" %in% colnames(s$coefficients)) "robust se" else "se(coef)"
     se <- s$coefficients["post_pslra", se_col]
     hr <- exp(beta)
-    ci_lo <- exp(beta - 1.96 * se)
-    ci_hi <- exp(beta + 1.96 * se)
+    ci <- exp(confint(model)["post_pslra", ])
+    ci_lo <- ci[1]
+    ci_hi <- ci[2]
   }
   tibble(
     Model = model_type,
@@ -500,7 +497,8 @@ frailty_results <- list(
 
   # Metadata
   metadata = list(
-    n_circ = nrow(df_circ),
+    n_circ = length(circuits_incl),
+    n_rows_circ = nrow(df_circ),
     n_ext  = nrow(df_ext),
     n_circuits = length(circuits_incl),
     circuits = circuits_incl,

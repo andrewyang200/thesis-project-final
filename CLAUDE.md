@@ -13,10 +13,10 @@ How do legal regime changes (PSLRA), court geography (federal circuit), and case
 - **Universe**: ~12,968 securities class actions (NOS 850), 1990–2024
 - **Key fields**: filing date, termination date, NOS code, disposition codes, cause-of-action (statutory basis), class-action flag, jurisdiction, circuit, origin, MDL status, monetary demand
 - **Competing risks** (three disposition coding schemes per FJC IDB Codebook):
-  - **Scheme A (Primary)**: Settlement = code 13, Code 6 w/ JUDGMENT=1 (plaintiff); Dismissal = codes 2,3,4,12,14,15,17,18,19,20, Code 6 w/ JUDGMENT=2 (defendant); Code 6 w/ ambiguous JUDGMENT censored; all else censored
-  - **Scheme B (Liberal)**: Reclassifies code 12 (voluntary dismissal) as settlement (hidden settlements)
-  - **Scheme C (Expanded)**: Scheme B + code 5 (consent judgment) reclassified as settlement
-  - Codes 0,1,10,11 (transfers/remands) and codes 7-9 (trial outcomes without judgment) are censored in all schemes
+  - **Scheme A (Primary)**: Settlement = code 13 plus judgment-bearing codes `{4,6,15,17,19,20}` with `JUDGMENT=1`; Dismissal = codes `2,3,12,14` plus judgment-bearing codes `{4,6,15,17,19,20}` with `JUDGMENT=2`; `JUDGMENT` ambiguous/missing cases and code `18` (statistical closing) are censored
+  - **Scheme B (Liberal)**: Scheme A + code `12` (voluntary dismissal) reclassified as settlement
+  - **Scheme C (Expanded)**: Scheme B + code `5` (consent judgment) reclassified as settlement
+  - Codes `0,1,10,11` (transfers/remands), code `18`, and codes `7-9` (trial outcomes without usable judgment coding) are censored in all schemes
 - Data lives in `data/` directory. Raw IDB extract is `data/raw/`. Cleaned analysis-ready data is `data/cleaned/`.
 
 ## Methods (in order of complexity)
@@ -28,11 +28,21 @@ How do legal regime changes (PSLRA), court geography (federal circuit), and case
 6. Shared Frailty Models (Mixed Effects) — to account for unobserved heterogeneity and clustering within judicial circuits.
 7. Model diagnostics: C-index, time-dependent AUC (`timeROC`), Covariate Balance (IPTW), Frailty Variance, and Schoenfeld residuals for PH testing
 
+## Current Authoritative Code Run
+- **Date**: 2026-04-06
+- **Scheme A distribution**: 3,801 settlement / 5,971 dismissal / 3,196 censored (`29.3% / 46.0% / 24.6%`)
+- **Baseline Cox PSLRA HRs**: settlement `0.563`, dismissal `1.409`
+- **Extended Cox PSLRA HRs**: settlement `0.784`, dismissal `1.661`
+- **Extended Fine-Gray PSLRA SHRs**: settlement `0.503`, dismissal `1.719`
+- **IPTW MSM PSLRA HRs**: settlement `0.741`, dismissal `1.519`
+- For full authoritative numbers and thesis-writing guidance, use `docs/session-log.md`
+
 ## Key Covariates
 - `pslra`: binary indicator (filing after Dec 22, 1995)
 - `circuit`: federal circuit (1–11, DC, Federal)
 - `nos_detailed` / `statutory_basis`: Section 10b, Section 11, Section 16, etc.
 - `origin`: original filing vs. transfer vs. remand
+- `origin_cat`: "Removed" is collapsed into "Other" globally in `01_clean.R` so Cox, Fine-Gray, IPTW, and frailty models share the same factor structure
 - `mdl_status`: MDL consolidation indicator
 - `demand_category`: monetary demand buckets
 - `case_complexity_proxy`: number of defendants or related cases (when available)
@@ -99,6 +109,9 @@ thesis-project/
 - Scripts should be independently runnable but share `utils.R` for common functions
 - All scripts read from `data/cleaned/` and write to `output/`
 - Before running any analysis, always read and understand the existing script first
+- Authoritative thesis pipeline: `code/01_clean.R` through `code/08_robustness.R`
+- `code/InterimScript.R` is historical only and intentionally stops if run
+- `code/verify_dismissal_flip.R` and `code/utils/judgment_diagnostic.R` are auxiliary sanity-check tools, not primary sources for thesis tables or prose
 
 ## Writing Conventions
 - Use `\citet{}` for "Author (Year)" and `\citep{}` for "(Author, Year)"

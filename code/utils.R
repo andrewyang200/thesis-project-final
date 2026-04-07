@@ -68,20 +68,20 @@ save_table <- function(tbl, filename, caption = "", label = "") {
 }
 
 # --- Data Helpers ---
-# Simplified Scheme A event coding (does NOT disaggregate Code 6 by JUDGMENT).
-# The authoritative version is code/01_clean.R::code_events(), which uses the
-# JUDGMENT field to split Code 6 into plaintiff victories (settlement) vs.
-# defendant victories (dismissal). This function is retained as a convenience
-# reference for Scheme A logic without the JUDGMENT-field refinement.
+# Simplified Scheme A event coding helper.
+# This mirrors the CURRENT Scheme A logic for one-row-at-a-time inspection only.
+# The authoritative implementation remains code/01_clean.R::code_events(), which
+# also handles Schemes B/C and operates on full data frames.
 # Source: FJC IDB Codebook (docs/fjc_codebook.md)
 # NOTE: Schemes B and C reclassify codes 12 and 5 — see code/01_clean.R::code_events()
 code_event <- function(disposition, judgment = NA_integer_) {
   case_when(
-    disposition == 13                                      ~ 1L,  # Settlement
-    disposition == 6 & judgment == 1                        ~ 1L,  # Code 6 plaintiff victory
-    disposition %in% c(2, 3, 4, 12, 14, 15, 17, 18, 19, 20) ~ 2L, # Dismissal
-    disposition == 6 & judgment == 2                        ~ 2L,  # Code 6 defendant victory
-    TRUE                                                   ~ 0L   # Censored/other
+    disposition == 13                                           ~ 1L,  # Settlement
+    disposition %in% c(4, 6, 15, 17, 19, 20) & judgment == 1    ~ 1L,  # Plaintiff judgment
+    disposition %in% c(2, 3, 12, 14)                            ~ 2L,  # Dismissal
+    disposition %in% c(4, 6, 15, 17, 19, 20) & judgment == 2    ~ 2L,  # Defendant judgment
+    disposition == 18                                            ~ 0L,  # Statistical closing
+    TRUE                                                         ~ 0L   # Censored/other
   )
 }
 
@@ -94,10 +94,14 @@ compute_duration <- function(filing_date, termination_date) {
 format_hr <- function(model, coef_name, digits = 2) {
   # Extract hazard ratio with CI and p-value for prose
   s <- summary(model)
+  coef_names <- rownames(s$coefficients)
+  if (!(coef_name %in% coef_names)) {
+    stop(sprintf("Coefficient '%s' not found in model.", coef_name))
+  }
   
   # Handle standard/robust coxph vs coxme (frailty) objects
   if (inherits(model, "coxme")) {
-    idx <- which(rownames(s$coefficients) == coef_name)
+    idx <- which(coef_names == coef_name)
     hr <- exp(s$coefficients[idx, "coef"])
     # coxme doesn't have a native confint method, compute manually using SE
     se <- s$coefficients[idx, "se(coef)"]
@@ -105,7 +109,7 @@ format_hr <- function(model, coef_name, digits = 2) {
     ci_hi <- exp(s$coefficients[idx, "coef"] + 1.96 * se)
     p <- s$coefficients[idx, "p"]
   } else {
-    idx <- which(rownames(s$coefficients) == coef_name)
+    idx <- which(coef_names == coef_name)
     hr <- exp(s$coefficients[idx, "coef"])
     ci_lo <- exp(confint(model)[idx, 1])
     ci_hi <- exp(confint(model)[idx, 2])

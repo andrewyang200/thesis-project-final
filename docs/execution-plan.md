@@ -3,6 +3,7 @@
 > **Generated**: 2026-03-27
 > **Deadline**: April 9, 2026 (13 days)
 > **Source**: docs/discovery-assessment.md (3-stage assessment)
+> **Update (2026-04-06)**: Code-side revalidation corrected judgment-bearing disposition coding in `01_clean.R`, censored `DISP=18`, and refreshed all downstream outputs. Treat any older numeric examples in this plan as superseded by `docs/session-log.md`.
 
 ---
 
@@ -727,7 +728,7 @@ Fix ALL known bugs during extraction:
 ---
 
 #### Task 16 [REVIEW]: Final Number Verification
-- [ ] Not started
+- [~] Code-side revalidation complete (2026-04-06); LaTeX propagation and thesis-level verification still pending
 
 **WHAT**: Run a systematic cross-check of every number in the thesis against R output:
 - Re-run all scripts, capture output
@@ -739,7 +740,7 @@ Fix ALL known bugs during extraction:
 
 **INPUTS**: All code scripts, all chapter files, `output/analysis_log.txt`
 
-**OUTPUTS**: Verification report (all numbers confirmed or corrected)
+**OUTPUTS**: Verification report (all numbers confirmed or corrected). Use `docs/session-log.md` as the current code-side source of truth before checking prose.
 
 **ACCEPTANCE CRITERIA**:
 - Zero unverified numbers remain
