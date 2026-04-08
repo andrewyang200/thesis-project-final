@@ -13,42 +13,28 @@ this thesis fills.
 \section{Survival Analysis and Competing Risks:
 Conceptual Foundations}
 
-Survival analysis provides a statistical framework for modeling
-time-to-event data in the presence of censoring---situations
-where the event has not yet occurred for some observations by
-the study's end \citep{kalbfleisch2002}. The Kaplan-Meier
-estimator provides nonparametric survival curve estimation,
-while the Cox proportional hazards model enables semi-parametric
-covariate regression without requiring specification of the
-baseline hazard function \citep{kaplan1958, cox1972}. The Cox
-model assumes proportional hazards---constant hazard ratios over
-time---which can be diagnosed and addressed through
-residual-based tests and modeling extensions
-\citep{grambsch1994}.
+Survival analysis models time-to-event data in the presence of
+censoring \citep{kalbfleisch2002}. The Kaplan-Meier estimator
+provides nonparametric survival curves, while the Cox
+proportional hazards model estimates semi-parametric covariate
+associations without specifying the baseline hazard
+\citep{kaplan1958, cox1972}. In settings where cases face
+multiple mutually exclusive exits, however, standard
+single-event survival methods are insufficient.
 
-In many settings, including litigation outcomes, observations
-face multiple mutually exclusive event types: competing risks.
-For securities class actions, a case may terminate via
-settlement or dismissal, and the occurrence of one precludes
-the other. Classical survival analysis that treats one event as
-primary and censors competing events yields biased cumulative
-incidence estimates \citep{putter2007}. Two approaches address
-this rigorously. Cause-specific hazard models estimate separate
-hazards for each event type, treating competing events as
-censored at the time of the competing event; this yields a
-clean conditional interpretation of instantaneous risk among cases still at risk but does not
-directly estimate absolute outcome probabilities. Fine-Gray
-subdistribution hazard models directly parameterize the
-CIF for each outcome, allowing
-marginal probability estimation in the presence of competing
-risks \citep{fine1999}. The Aalen-Johansen estimator provides
-nonparametric CIF estimation \citep{aalen1978}, and Gray's test
-provides a nonparametric test of equality of CIFs across groups
-\citep{gray1988}.
-
-Performance metrics such as Harrell's concordance index and
-time-dependent area-under-curve (AUC) assess discrimination
-\citep{harrell1982, heagerty2000}.
+That problem is central here. Securities class actions
+typically terminate through either settlement or dismissal,
+and the occurrence of one precludes the other. Treating one
+outcome as the event of interest and the other as ordinary
+censoring biases cumulative incidence estimates
+\citep{putter2007}. The competing-risks literature instead
+distinguishes between cause-specific hazard models, which
+estimate event-specific instantaneous rates, and Fine-Gray
+subdistribution models, which estimate how covariates shift
+the cumulative incidence function (CIF) itself
+\citep{fine1999}. The Aalen-Johansen estimator provides the
+nonparametric analogue for CIF estimation, and Gray's test
+compares CIFs across groups \citep{aalen1978, gray1988}.
 
 While survival and competing-risks methods are standard in
 clinical trials and labor economics, they remain uncommon in
@@ -67,40 +53,18 @@ framework in this thesis: propensity-score re-weighting for
 composition adjustment, and shared frailty models for
 unobserved clustering.
 
-Inverse probability of treatment weighting uses a
-propensity score---the estimated probability of receiving
-treatment given observed covariates---to re-weight
-observations so that the treated and control groups are
-balanced on measured characteristics
-\citep{xieliu2005}. In survival settings, IPTW-weighted
-Kaplan-Meier and Cox estimators can recover treatment-specific
-survival curves and hazard ratios that adjust for confounding
-by observed covariates. \citet{austinfine2025} extend IPTW
-to competing-risks settings, demonstrating that weighted
-Aalen-Johansen estimators can recover unbiased cumulative
-incidence estimates and IPTW-weighted cause-specific Cox
-models can recover unbiased hazard ratios, under identifying
-assumptions (no unmeasured confounding, positivity, correct
-propensity-score specification) whose applicability to
-observational legal settings requires careful scrutiny, as
-we discuss next.
-
-A critical distinction applies to our setting. Standard IPTW
-assumes that treatment assignment is influenced by observed
-covariates---as when physicians select patients for a drug
-based on clinical characteristics \citep{austinfine2025}.
-The PSLRA, however, is a legislative date cutoff: every case
-filed after December~22, 1995 is ``treated.'' The propensity
-score therefore models temporal changes in case composition
-(e.g., shifts in circuit filing patterns or statutory basis
-mix across eras), not a selection mechanism into treatment.
-We accordingly interpret our IPTW-weighted estimates as
-\emph{composition-adjusted}---isolating the PSLRA component
-from concurrent changes in the observable case mix---rather
-than as causally identified treatment effects. The
-no-unmeasured-confounding assumption is implausible over a
-34-year study window spanning major economic cycles, evolving
-judicial attitudes, and shifts in SEC enforcement intensity.
+Inverse probability of treatment weighting uses a propensity
+score to re-weight observations so that treated and control
+groups are balanced on observed covariates
+\citep{xieliu2005}. \citet{austinfine2025} extend IPTW to
+competing-risks settings, showing that weighted Aalen-Johansen
+and cause-specific Cox estimators can recover adjusted
+cumulative incidence and hazard estimates under strong
+identifying assumptions. In our setting, those assumptions are
+not cleanly satisfied, so IPTW is used as a composition
+adjustment rather than as a causal design; the precise scope
+of that interpretation is developed in
+Chapter~\ref{ch:methodology}.
 
 Shared frailty models address a different source of bias:
 unobserved heterogeneity within clusters. When cases filed
@@ -119,13 +83,10 @@ circuits. \citet{frevent2024} extend this framework to
 spatially correlated frailties, treating geographic units
 as clusters with shared latent risk factors.
 
-With only 11 circuit clusters (after restricting to circuits with $\geq 50$ securities cases), frailty variance estimates carry
-substantial uncertainty---well below the 20--30 clusters
-typically recommended for reliable variance component
-estimation. We therefore present frailty
-results as a sensitivity analysis alongside cluster-robust
-standard errors, rather than as a standalone modeling
-framework.
+The small number of circuit-level clusters in our setting
+constrains the precision of frailty variance estimates; the
+specific implications and our mitigation strategy are
+addressed in Chapter~\ref{ch:methodology}.
 
 \section{Empirical Landscape of Securities Class Actions}
 
@@ -142,9 +103,7 @@ settlement range from 3.0 to 3.7 years \citep{cornerstone2024}.
 These descriptive cohort plots provide valuable baseline
 information but do not estimate formal hazard functions, account
 for censoring, or test for covariate effects while properly
-modeling the competing nature of outcomes. Our analysis provides
-the first formal competing-risks estimates of these quantities
-at population scale.
+modeling the competing nature of outcomes.
 
 \subsection{The PSLRA and Procedural Reform}
 
@@ -191,32 +150,28 @@ across federal circuits \citep{johnson2001, perino2003}.
 with case outcomes and settlement patterns.
 Furthermore, multidistrict litigation (MDL) consolidation represents a
 distinct procedural pathway that concentrates large numbers
-of related cases before a single judge. Yet, the current 
-literature lacks a dynamic analysis of how this consolidation 
-alters the underlying hazard processes of case resolution over time.
-
-Crucially, these studies rely on static regression models that either 
-condition on settlement occurring or estimate dismissal probability
-separately. Because they do not account for the mutually exclusive, 
-competing nature of these outcomes, they suffer from the selection 
-bias inherent in conditioning on a single outcome type.
+of related cases before a single judge. Yet, the current
+literature lacks a dynamic analysis of how this consolidation
+alters the underlying hazard processes of case resolution
+over time. Because MDL consolidation suppresses both
+settlement and dismissal rates simultaneously, its net
+effect on cumulative outcome probabilities cannot be
+determined from static models that examine each outcome
+in isolation.
 
 \subsection{Prior Use of Survival Methods}
 
 While survival methods are rare in this domain, \citet{brochet2014}
 analyze settlement speed using Cox proportional hazards models
-conditional on cases that eventually settle. This approach fundamentally mischaracterizes 
-the data generating process. Because dismissals systematically tend 
-to occur earlier in litigation than settlements, treating dismissed 
-cases as right-censored---mathematically implying they remain at 
-risk of settling at some unobserved future time---upwardly biases 
-the cumulative probability of settlement and distorts covariate 
-hazard ratios. 
-
-The conditional-on-settlement design thus
-represents the state of the art in survival-based analysis of
-securities litigation---and its fundamental limitation motivates
-the competing-risks framework developed in this thesis.
+conditional on cases that eventually settle. That design
+mischaracterizes the data-generating process. Because
+dismissals tend to occur earlier than settlements, treating
+dismissed cases as right-censored implies that they remain at
+risk of settling at some unobserved future time, which
+upwardly biases settlement probabilities and distorts hazard
+ratios. The limitation of this conditional-on-settlement
+approach motivates the competing-risks framework developed in
+this thesis.
 
 \section{Federal Court Administrative Data}
 
@@ -230,20 +185,16 @@ Securities class actions are primarily identified using
 nature-of-suit (NOS) Code~850 (``Securities, Commodities,
 and Exchange'').
 
-A major challenge is the ambiguity of disposition codes. The
-IDB includes codes for ``Dismissed: Settled'' (Code~13) and
-``Dismissed: Voluntarily'' (Code~12), but recent work using
-docket-text event ontologies suggests that many voluntary
-dismissals correspond to settlement-like resolutions, implying
-that IDB disposition codes may understate settlement counts
-\citep{scales2024}. This ``hidden settlement'' problem can lead
-to undercounting of settlements and misclassification of
-outcomes. Empirical studies have documented high rates of error
-and missingness in disposition fields \citep{clermont2002,
-hadfield2004}. We address this measurement error through
-sensitivity analyses under three alternative disposition coding
-schemes and demonstrate that our central findings are robust
-to all coding choices.
+A major challenge is outcome coding. Voluntary dismissals may
+include settlement-like resolutions, and judgment-bearing
+dispositions can conflate plaintiff and defendant victories
+unless the IDB's \texttt{JUDGMENT} field is consulted.
+Docket-based work and prior audits therefore suggest that raw
+IDB disposition fields can misstate settlement counts and
+misclassify outcomes \citep{scales2024, clermont2002,
+hadfield2004}. These measurement problems make the IDB
+analytically valuable but not turnkey; the dedicated coding
+framework is developed in Chapter~\ref{ch:data}.
 
 Despite these limitations, the IDB remains the most
 comprehensive source for population-level data on federal civil
@@ -278,20 +229,15 @@ changes in case composition using propensity-score methods, nor
 has any modeled unobserved circuit-level heterogeneity through
 shared frailty specifications in this litigation context.
 
-This thesis fills the gap by producing the first formal
-estimates of: (i) 12-, 24-, and 36-month cumulative incidence
-of settlement and dismissal by PSLRA regime and circuit;
-(ii) cause-specific and subdistribution hazard ratios
-quantifying how the PSLRA, statutory basis, case origin, MDL
-status, and jurisdictional basis affect the instantaneous risk
-and marginal probability of each outcome; (iii) whether the
-PSLRA effect on dismissal hazard varies over litigation
-duration and across circuits; (iv) whether a propensity-score
-composition adjustment isolates the PSLRA component from
-concurrent changes in the observable case mix
-\citep{xieliu2005, austinfine2025}; and (v) whether
-circuit-level shared frailty models reveal unobserved
-jurisdictional heterogeneity beyond what fixed-effect
-covariates capture \citep{ruetenbudde2019}. The following
-chapter formalizes the statistical framework used to pursue
-these five objectives.
+This thesis fills the gap by applying a full
+competing-risks framework---cause-specific and
+subdistribution hazard models, propensity-score composition
+adjustment, and shared frailty sensitivity
+analysis---to population-level federal securities litigation
+data. Where prior work estimates single-outcome hazards or
+static regression coefficients, this thesis jointly
+estimates cumulative incidence, time-varying and
+circuit-heterogeneous PSLRA associations, and the distinct
+contributions of case composition versus the legislative
+reform itself. The following chapter formalizes the
+statistical framework used to pursue these objectives.

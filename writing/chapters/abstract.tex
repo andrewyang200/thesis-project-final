@@ -1,30 +1,28 @@
-Federal securities class actions are among the most economically consequential
-categories of U.S. civil litigation, yet the statistical methods applied to
-their duration and outcomes have lagged behind the survival analysis literature.
-This thesis applies the first full competing-risks framework to federal
-securities litigation at population scale, analyzing 12,968 cases from the
-Federal Judicial Center's Integrated Database (IDB) spanning 1990--2024.
-We estimate Aalen-Johansen cumulative incidence functions, cause-specific Cox
-proportional hazards and Fine-Gray subdistribution models, inverse probability
-of treatment weighting (IPTW) to adjust for observable case-mix shifts, and
-circuit-level shared frailty models to quantify unobserved jurisdictional
-heterogeneity.
+Federal securities class actions are economically important, but their
+resolution has rarely been studied with methods that treat settlement and
+dismissal as competing risks. This thesis presents, to our knowledge, the
+first population-scale competing-risks survival analysis of federal securities
+litigation, using 12,968 cases from the Federal Judicial Center's Integrated
+Database (1990--2024). We estimate Aalen-Johansen cumulative incidence
+functions, cause-specific Cox models, Fine-Gray subdistribution models, and
+inverse probability of treatment weighting (IPTW) to examine how the Private
+Securities Litigation Reform Act of 1995 (PSLRA), judicial circuit, and case
+characteristics shape resolution timing and type.
 
-The Private Securities Litigation Reform Act of 1995 (PSLRA) exhibits a
-temporally structured rather than uniform association with litigation dynamics.
-A piecewise Cox decomposition reveals a sharp first-year dismissal hazard
-elevation (HR~$= 1.95$), a null middle period (HR~$= 1.05$, $p = 0.58$), and
-a modest late re-emergence (HR~$= 1.33$), consistent with the PSLRA's
-heightened pleading standard acting as an early-stage filter. A
-composition-adjusted IPTW estimate (MSM HR~$\approx 1.53$) confirms the
-dismissal finding survives observable compositional adjustment, while
-approximately half of the raw settlement suppression (unadjusted HR~$= 0.445$;
-composition-adjusted HR~$= 0.690$) is explained by concurrent case-mix shifts.
-Circuit geography emerges as the dominant structural predictor of outcomes,
-with settlement hazard ratios ranging from 4.1 to 17.6 times the Second
-Circuit baseline. An MDL sign-reversal---bilateral suppression of cause-specific
-hazards with no detectable cumulative settlement disadvantage---illustrates why
-single-outcome approaches systematically mischaracterize resolution dynamics.
-While secular pre-trends limit strict causal attribution, the competing-risks
-framework reveals structural features of securities litigation dynamics
-previously invisible to single-outcome approaches.
+The strongest result is an increase in early dismissal after the PSLRA. In a
+piecewise Cox model, the dismissal association is largest in the first year
+after filing (HR~$= 1.789$), weaker in years one to two (HR~$= 1.255$), and
+null thereafter, consistent with an early pleading-stage filter. Evidence for
+reduced settlement is directionally similar but less stable across
+composition-adjusted, circuit-specific, time-trend, and cluster-robust
+specifications. Judicial geography is a structural predictor: settlement
+hazards vary sharply across circuits relative to the Second Circuit baseline.
+Fine-Gray models show that MDL cases can have lower instantaneous settlement
+rates yet higher cumulative settlement probability, illustrating how
+single-outcome approaches miss important resolution dynamics. Placebo and
+time-trend checks indicate that the estimates should be interpreted as
+associational or composition-adjusted rather than causal.
+
+These results show that competing-risks methods improve the empirical
+characterization of securities litigation and sharpen the most defensible claim
+about the PSLRA: it is associated primarily with more early dismissals.

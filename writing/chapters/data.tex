@@ -33,8 +33,27 @@ district and circuit identifiers; origin code; class action
 flag; procedural progress code; jurisdiction code; jury demand
 indicator; monetary demand amount; and the \texttt{section}
 field recording the statutory provision under which the case
-was filed. Securities class actions are identified using
-NOS Code~850 (``Securities, Commodities, and Exchange'').
+was filed. Securities class actions are identified using NOS~850.
+
+\section{Sample Construction}
+
+We begin with all civil cases coded as NOS~850 filed from 1990 onward, yielding 65,899 cases. The 1990 start date balances sample size against data quality and provides a meaningful pre-PSLRA comparison period. We then retain cases with the IDB class action flag equal to~1, reducing the sample to 13,708 cases (20.8\% of NOS~850). Finally, we exclude cases with non-positive computed durations---740 zero-duration entries that we treat as administrative artifacts, though a small number may represent genuine same-day resolutions---yielding a final analysis sample of \textbf{12,968} federal securities class actions filed between 1990 and 2024.
+
+\begin{table}[htbp]
+\centering
+\caption{Sample Construction}
+\label{tab:sample_construction}
+\renewcommand{\arraystretch}{1.2} % Vertical breathing room
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r r @{}}
+\toprule
+\textbf{Stage} & \textbf{N} & \textbf{\%} \\
+\midrule
+All NOS 850 cases (1990--present) & 65,899 & 100.0 \\
+Class action flag $= 1$            & 13,708 &  20.8 \\
+Valid duration ($> 0$ days)       & 12,968 &  19.7 \\
+\bottomrule
+\end{tabular*}
+\end{table}
 
 \subsection{Data Quality and Known Limitations}
 
@@ -69,47 +88,32 @@ issues directly relevant to our analysis
     well-populated.
 \end{itemize}
 
-\section{Sample Construction}
-
-We begin with all civil cases coded as NOS~850 (``Securities, Commodities, and Exchange'') filed from 1990 onward, yielding 65,899 cases. The 1990 start date balances sample size against data quality and provides a meaningful pre-PSLRA comparison period. We then retain cases with the IDB class action flag equal to~1, reducing the sample to 13,708 cases (20.8\% of NOS~850). Finally, we exclude cases with non-positive computed durations---740 zero-duration administrative artifacts that represent same-day processing entries rather than substantive resolutions---yielding a final analysis sample of \textbf{12,968} federal securities class actions filed between 1990 and 2024.
-
-\begin{table}[htbp]
-\centering
-\caption{Sample Construction}
-\label{tab:sample_construction}
-\renewcommand{\arraystretch}{1.2} % Vertical breathing room
-\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r r @{}}
-\toprule
-\textbf{Stage} & \textbf{N} & \textbf{\%} \\
-\midrule
-All NOS 850 cases (1990--present) & 65,899 & 100.0 \\
-Class action flag $= 1$            & 13,708 &  20.8 \\
-Valid duration ($> 0$ days)       & 12,968 &  19.7 \\
-\bottomrule
-\end{tabular*}
-\end{table}
-
 \section{Disposition Coding Schemes}
 \label{sec:coding_schemes}
 
-We implement three coding schemes that span the plausible
+The IDB records how each case terminates using numeric
+disposition codes assigned by the clerk of court. We
+implement three coding schemes that span the plausible
 range of settlement/dismissal classifications given the
 known Code~12 ambiguity:
 
 \begin{itemize}
     \item \textbf{Scheme~A (Primary).} Code~13 $\to$
-    settlement; Codes~2, 3, 4, 12, 14, 15, 17, 18, 19, 20
-    $\to$ dismissal. Code~6 (judgment on motion before
-    trial) is disaggregated using the IDB \texttt{JUDGMENT}
-    field: \texttt{JUDGMENT}~$= 1$ (plaintiff victory,
-    701~cases) $\to$ settlement; \texttt{JUDGMENT}~$= 2$
-    (defendant victory, 1,418~cases) $\to$ dismissal;
-    \texttt{JUDGMENT}~$\in \{3, 4, -8, \text{NA}\}$
-    (ambiguous or missing, 270~cases) $\to$ censored.
-    Trial codes, transfer codes, remands, and reopened
-    cases are treated as censored, as they do not represent
-    terminal resolution. This is the most conservative
-    treatment and is used for all main results.
+    settlement; Codes~2, 3, 12, 14 $\to$ dismissal.
+    Six judgment-bearing disposition codes---4, 6, 15,
+    17, 19, and 20---are disaggregated using the IDB
+    \texttt{JUDGMENT} field: \texttt{JUDGMENT}~$= 1$
+    (plaintiff victory) $\to$ settlement;
+    \texttt{JUDGMENT}~$= 2$ (defendant victory) $\to$
+    dismissal; \texttt{JUDGMENT}~$\in \{3, 4, -8,
+    \text{NA}\}$ (ambiguous or missing) $\to$ censored.
+    Code~18 (statistical closing, 1,198~cases) is
+    censored in all schemes because it reflects
+    administrative reclassification rather than
+    substantive resolution. Trial codes, transfer codes,
+    remands, and reopened cases are also censored. This
+    is the most conservative treatment and is used for
+    all main results.
 
     \item \textbf{Scheme~B (Liberal).} Identical to
     Scheme~A except Code~12 is reclassified as settlement,
@@ -119,37 +123,47 @@ known Code~12 ambiguity:
 
     \item \textbf{Scheme~C (Expanded).} Identical to
     Scheme~B with the additional reclassification of
-    Code~5 (consent judgment) as settlement.
+    Code~5 (consent judgment), which is otherwise censored,
+    as settlement.
 \end{itemize}
 
-\paragraph{Code~6 Disaggregation.}
-In the raw IDB extract, disposition Code~6 (``Judgment on
-Motion Before Trial'') encompasses 2,389 cases---18.4\% of
-the analysis sample. Prior studies using the IDB typically
-classify all Code~6 cases as dismissals, reasoning that
-most judgments on pre-trial motions in securities
-litigation are defense-favorable (granted motions to
-dismiss or summary judgment). However, this default
-classification conflates two substantively different
-outcomes: plaintiff-favorable pre-trial judgments and
-defendant victories. We resolve this measurement error by using the
-IDB's \texttt{JUDGMENT} field, which records whether the
-judgment favored the plaintiff (\texttt{JUDGMENT}~$= 1$) or
-the defendant (\texttt{JUDGMENT}~$= 2$). This
-disaggregation moves 701 previously hidden settlements into
-their correct settlement pathway and retains 1,418
-defendant victories as dismissals. The 270 cases with
-ambiguous or missing \texttt{JUDGMENT} values are
-conservatively censored. This refinement is applied
-identically across all three coding schemes and addresses
-the well-documented ``hidden settlements'' and ``hidden
-dismissals'' measurement error in standard IDB extracts
-\citep{scales2024}. We note that 93.4\% of the
-reclassified plaintiff victories (655 of 701) are
-post-PSLRA filings, which reflects the era-specific growth
-in Code~6 usage rather than a systematic coding artifact;
-the analytical implications of this temporal concentration
-are discussed in Chapter~\ref{ch:discussion}.
+\paragraph{Judgment-Bearing Disposition Disaggregation.}
+Six IDB disposition codes---4 (default judgment), 6
+(judgment on motion before trial), 15 (judgment on award
+of arbitrator), 17 (judgment on consent), 19 (judgment
+after judicial/bench trial), and 20 (judgment after jury
+trial)---record court judgments whose direction depends on
+the IDB \texttt{JUDGMENT} field. Together these codes
+encompass 4,182 cases (32.3\% of the analysis sample).
+Code~6 alone accounts for 2,389 of these, while Code~17
+contributes another 1,723; the remaining four codes
+contribute 70 cases combined. Prior studies using the IDB
+typically classify all judgment-bearing codes as
+dismissals, reasoning that most pre-trial motions in
+securities litigation are defense-favorable. That default is
+incomplete: it conflates plaintiff victories with defendant
+victories, a distinction that is only recoverable from the
+\texttt{JUDGMENT} field. We resolve this measurement error
+by using the \texttt{JUDGMENT} field to disaggregate each
+code: \texttt{JUDGMENT}~$= 1$ (plaintiff victory, 1,786
+cases total) $\to$ settlement; \texttt{JUDGMENT}~$= 2$
+(defendant victory, 1,647 cases) $\to$ dismissal;
+ambiguous or missing values (749 cases) $\to$ censored.
+For Code~6 specifically, this reclassifies 701 plaintiff
+victories as settlements and retains 1,418 defendant
+victories as dismissals, with 270 ambiguous cases
+censored. This refinement is applied identically across
+all three coding schemes and addresses
+\emph{judgment-direction misclassification} in standard
+IDB extracts. It is analytically distinct from the
+Code~12 ``hidden settlements'' problem discussed above,
+which is handled separately through Schemes~B and~C
+\citep{scales2024}. We note that 93.4\% of the Code~6
+plaintiff victories (655 of 701)
+are post-PSLRA filings, reflecting era-specific growth
+in Code~6 usage; the potential era-confound interpretation
+and its implications for coding scheme robustness are
+examined in Chapter~\ref{ch:discussion}.
 
 \begin{table}[htbp]
 \centering
@@ -160,24 +174,29 @@ are discussed in Chapter~\ref{ch:discussion}.
 \toprule
 \textbf{Scheme} & \textbf{N} & \textbf{Settl.} & \textbf{Dism.} & \textbf{Cens.} & \textbf{\% S} & \textbf{\% D} \\
 \midrule
-A (Primary)  & 12,968 & 2,716 & 8,733 & 1,519 & 20.9 & 67.3 \\
-B (Liberal)  & 12,968 & 4,520 & 6,929 & 1,519 & 34.9 & 53.4 \\
-C (Expanded) & 12,968 & 4,834 & 6,929 & 1,205 & 37.3 & 53.4 \\
+A (Primary)  & 12,968 & 3,801 & 5,971 & 3,196 & 29.3 & 46.0 \\
+B (Liberal)  & 12,968 & 5,605 & 4,167 & 3,196 & 43.2 & 32.1 \\
+C (Expanded) & 12,968 & 5,919 & 4,167 & 2,882 & 45.6 & 32.1 \\
 \bottomrule
 \end{tabular*}
 \end{table}
 
-Under Scheme~A, 20.9\% of cases settle and 67.3\% are
-dismissed, with 11.7\% censored. The Scheme~A settlement
-rate is below the roughly 46\% reported by
-Cornerstone Research \citep{cornerstone2024}, reflecting two
-factors: Cornerstone tracks cases with publicly disclosed
-settlements, while the IDB captures the full population
-including small cases dismissed early; and Scheme~A
-conservatively treats Code~12 as dismissal. Under Scheme~B,
-which reclassifies Code~12 voluntary dismissals as
-settlements, the settlement rate rises to 34.9\%, closing
-much of the gap with industry benchmarks.
+Scheme~C's lower censored count reflects the reclassification
+of the 314 Code~5 consent judgments, which are censored
+under Schemes~A and~B, into the settlement category.
+
+Under Scheme~A, 29.3\% of cases settle and 46.0\% are
+dismissed, with 24.6\% censored. The settlement rate is
+below the roughly 46\% reported by Cornerstone Research
+\citep{cornerstone2024}. The gap reflects a denominator
+difference: Cornerstone reports settlement rates among
+resolved cases only, whereas our percentages use all
+12,968 cases---including the 24.6\% that are censored---as
+the denominator. Additionally, Scheme~A conservatively
+treats Code~12 voluntary dismissals as dismissals rather
+than hidden settlements. Under Scheme~B, which reclassifies
+Code~12 as settlement, the settlement rate rises to
+43.2\%, closely approximating the Cornerstone benchmark.
 
 \section{Variable Definitions}
 
@@ -203,13 +222,23 @@ reference category in all regression models.
 
 \subsection{Case Origin and MDL Flag}
 
-We capture procedural pathways using two variables. First, the IDB 
-origin code is categorized into: ``Original'' (federal filing, reference category), 
-``Removed'' (from state court), ``MDL'' (transfers), and ``Other''. 
-Second, because MDL cases can originate differently but share 
-post-filing consolidation mechanics, we define a binary MDL flag 
-equal to 1 if the \texttt{mdldock} field is populated with a 
-non-missing, non-sentinel value. 
+We capture procedural pathways using two variables. First,
+the IDB origin code is categorized into three levels:
+``Original'' (federal filing, reference category), ``MDL''
+(multidistrict transfers), and ``Other'' (which includes
+cases removed from state court, remands from the court of
+appeals, reinstated cases, and transfer-1404 cases,
+collapsed to avoid thin cells). In the cleaned cohort, that
+``Other'' category comprises 265 removed cases, 104 remands,
+492 reinstated cases, and 385 transfer-1404 cases; the
+standalone removed cell is especially sparse pre-PSLRA
+(1 case), so keeping it separate would produce unstable
+era-by-origin comparisons.
+Second, because MDL cases can originate through different
+pathways but share post-filing consolidation mechanics, we
+define a binary MDL flag equal to 1 if the
+\texttt{mdldock} field is populated with a non-missing,
+non-sentinel value.
 
 \subsection{Jurisdictional and Statutory Basis}
 
@@ -217,9 +246,9 @@ We construct a binary indicator for federal question jurisdiction
 using the IDB \texttt{juris} field. For statutory basis, we use the 
 IDB \texttt{section} field to classify claims as: \texttt{0078} 
 (Exchange Act \S~10(b)) $\to$ ``10(b)''; \texttt{0077} (Securities Act
-\S~11) $\to$ ``Section~11''; and all other values $\to$ ``Other/Both''. 
-A missingness indicator is included in all models to preserve the 
-estimation sample.
+\S~11) $\to$ ``Section~11''; and all other values $\to$ ``Other/Both''.
+Models that include statutory basis retain missing values as an
+explicit ``Missing'' factor level, preserving the estimation sample.
 
 \section{Sample Summary Statistics}
 
@@ -260,15 +289,34 @@ D.C.               &    16 &  0.1 \\
 \end{tabular*}
 \end{table}
 
+\subsection{Origin and Statutory Basis}
+
+Across the full 12,968-case cohort, origin is observed for
+12,882 cases: 11,029 originally filed cases, 607 MDL
+transfers, and 1,246 cases in the collapsed ``Other''
+category (265 removed, 104 remands, 492 reinstated cases,
+and 385 transfer-1404 cases); the remaining 86 cases have
+missing origin. In the 12,866-case extended
+estimation sample used for models that include statutory
+basis, those 86 missing-origin cases and the 16 D.C.\
+Circuit cases omitted from circuit-adjusted specifications
+are excluded. Within that 12,866-case sample, statutory
+basis is distributed as 9,424 Section~10(b), 1,488
+Section~11, 1,820 Other/Both, and 134 cases retained in an
+explicit ``Missing'' category.
+
 \subsection{Duration by Outcome}
 Table~\ref{tab:duration} presents duration statistics for resolved 
 cases under the primary conservative coding assumption (Scheme A). 
 Settlements take substantially longer to resolve than
-dismissals: median 2.81 years versus 1.40 years. The
-dismissal distribution is strongly right-skewed, reflecting
-a large mass of cases dismissed quickly on pleadings within
-the first year, alongside a long right tail of cases
-that survive initial motions.
+dismissals: median 3.00 years versus 1.01 years. Half of
+all dismissals are resolved within roughly one year of
+filing, consistent with early disposition at the
+motion-to-dismiss stage, whereas the median settlement
+requires three full years. The dismissal distribution is
+strongly right-skewed, with a large mass of cases
+dismissed on pleadings in the first year and a thinner
+right tail of cases that survive initial motions.
 
 \begin{table}[htbp]
 \centering
@@ -279,8 +327,8 @@ that survive initial motions.
 \toprule
 \textbf{Outcome} & \textbf{N} & \textbf{Mean} & \textbf{Median} & \textbf{Q25} & \textbf{Q75} \\
 \midrule
-Settlement & 2,716 & 3.18 & 2.81 & 1.62 & 4.23 \\
-Dismissal  & 8,733 & 2.02 & 1.40 & 0.29 & 3.00 \\
+Settlement & 3,801 & 3.59 & 3.00 & 1.81 & 5.10 \\
+Dismissal  & 5,971 & 1.56 & 1.01 & 0.24 & 2.18 \\
 \bottomrule
 \end{tabular*}
 \end{table}
@@ -288,13 +336,20 @@ Dismissal  & 8,733 & 2.02 & 1.40 & 0.29 & 3.00 \\
 
 
 \subsection{Outcomes by PSLRA Regime}
-Table~\ref{tab:byregime} illustrates the stark compositional shift 
-in outcomes associated with the PSLRA. Of the 12,968 total cases,
-1,032 (8.0\%) were filed pre-PSLRA and 11,936 (92.0\%) post-PSLRA.
-The pre-PSLRA settlement rate sits at 40.0\%, whereas the post-PSLRA
-settlement rate falls to 19.3\%. This raw disparity underscores 
-the necessity of our formal hazard modeling in Chapter 5 to control 
-for competing risks and concurrent case characteristics.
+Table~\ref{tab:byregime} illustrates the compositional
+shift in outcomes across PSLRA regimes. Of 12,968 total
+cases, 1,032 (8.0\%) were filed pre-PSLRA and 11,936
+(92.0\%) post-PSLRA. Under the pre-PSLRA regime,
+settlement was the most common resolved outcome (45.1\%),
+exceeding dismissal (36.2\%). This ordering reverses
+sharply in the post-PSLRA era: the dismissal rate rises to
+46.9\% while the settlement rate falls to 27.9\%. The
+reversal---from a settlement-dominated to a
+dismissal-dominated resolution landscape---provides
+the descriptive motivation for the formal hazard
+modeling in Chapter~\ref{ch:results}, which examines
+the PSLRA's association while accounting for competing
+risks and concurrent shifts in case characteristics.
 
 \begin{table}[htbp]
 \centering
@@ -305,10 +360,10 @@ for competing risks and concurrent case characteristics.
 \toprule
 \textbf{Regime} & \textbf{N} & \textbf{Settl.} & \textbf{Dism.} & \textbf{Cens.} & \textbf{\% S} & \textbf{\% D} \\
 \midrule
-Pre-PSLRA   & 1,032  & 413   & 510   & 109   & 40.0 & 49.4 \\
-Post-PSLRA  & 11,936 & 2,303 & 8,223 & 1,410 & 19.3 & 68.9 \\
+Pre-PSLRA   & 1,032  & 465   & 374   & 193   & 45.1 & 36.2 \\
+Post-PSLRA  & 11,936 & 3,336 & 5,597 & 3,003 & 27.9 & 46.9 \\
 \midrule
-\textbf{Total} & \textbf{12,968} & \textbf{2,716} & \textbf{8,733} & \textbf{1,519} & \textbf{20.9} & \textbf{67.3} \\
+\textbf{Total} & \textbf{12,968} & \textbf{3,801} & \textbf{5,971} & \textbf{3,196} & \textbf{29.3} & \textbf{46.0} \\
 \bottomrule
 \end{tabular*}
 \end{table}

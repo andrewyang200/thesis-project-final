@@ -1,13 +1,14 @@
 % ============================================================
-% results.tex — Restructured for claim-based presentation
-% Sections 5.1--5.2: Fully updated with Code 6 numbers (2026-04-02)
-% Sections 5.3--5.4: Rebuilt with Code 6 numbers (2026-04-02)
-% Sections 5.5--5.6: Rebuilt with verified numbers (2026-04-03)
+% results.tex
 % ============================================================
 
 This chapter presents the empirical results of the
 competing-risks survival analysis described in
-Chapter~\ref{ch:methodology}. We proceed from nonparametric
+Chapter~\ref{ch:methodology}, addressing the central
+research question: how do the PSLRA, circuit geography,
+and case characteristics jointly shape the timing and type
+of resolution in federal securities class actions?
+We proceed from nonparametric
 characterization of duration and outcomes
 (Section~\ref{sec:results_overview}), through layered
 assessment of the PSLRA's association with case resolution
@@ -18,10 +19,6 @@ structural characteristics
 (Section~\ref{sec:results_characteristics}), to model
 diagnostics (Section~\ref{sec:results_diagnostics}) and a
 summary of findings (Section~\ref{sec:results_summary}).
-The organizing question throughout is: how do the PSLRA,
-circuit geography, and case characteristics jointly shape
-the timing and type of resolution in federal securities
-class actions?
 
 %% ============================================================
 %% SECTION 5.1 — OVERVIEW
@@ -32,15 +29,13 @@ class actions?
 
 \subsection{Overall Duration}
 
-Figure~\ref{fig:km_overall} presents the Kaplan-Meier
-estimate of the overall survival function for the full
-analysis sample of 12,968 federal securities class actions.
-The curve drops steeply in the first two years, reflecting
-the concentration of dismissals during the
-motion-to-dismiss phase: approximately 33\% of cases are
-resolved within the first year, and roughly 52\% within two
-years. Resolution slows markedly after year four, with fewer
-than 5\% of cases remaining pending beyond eight years.
+Securities class actions resolve rapidly in aggregate:
+approximately 28\% of cases terminate within the first year,
+and roughly 47\% within two years, reflecting the
+concentration of dismissals during the motion-to-dismiss
+phase. Resolution slows markedly after year four, with fewer
+than 7\% of cases remaining pending beyond eight years
+(Figure~\ref{fig:km_overall}).
 
 \begin{figure}[htb]
     \centering
@@ -64,29 +59,22 @@ than 5\% of cases remaining pending beyond eight years.
 
 \subsection{Competing-Risks Cumulative Incidence: Overall}
 
-Figure~\ref{fig:cif_overall} decomposes overall resolution
-into its two competing terminal events. Dismissal incidence
-climbs rapidly: by two years post-filing, approximately 44\%
-of cases have been dismissed, and by five years the cumulative
-dismissal probability approaches 67\%. Settlement incidence
-accumulates more slowly, reaching approximately 24\% by
-eight years. The two curves do not converge, reflecting the
-fundamental asymmetry between the two outcomes: dismissal
-is the dominant resolution pathway, operating primarily
-through early pleading-stage motions, while settlement is
-a comparatively rare and temporally dispersed event
-concentrated among cases that survive the initial
-motion-to-dismiss.
+Dismissal is the dominant resolution pathway, reaching
+approximately 37\% cumulative incidence by two years and
+51\% by five years, while settlement accumulates more
+gradually to 29\% at five years and 39\% at eight years
+(Figure~\ref{fig:cif_overall}). The two curves do not
+converge, reflecting a fundamental asymmetry: dismissal
+operates primarily through early pleading-stage motions,
+while settlement accumulates more slowly among cases that
+survive the initial motion-to-dismiss gauntlet.
 
 A naive Kaplan-Meier estimate of time to settlement that
 censors dismissals would produce upwardly biased settlement
 probabilities by treating dismissed cases as though they
-remained at risk of eventual settlement---precisely the
-type of bias the Aalen-Johansen competing-risks estimator
-avoids. The dominance of dismissal as a resolution pathway
-and its temporal concentration in the first two years
-provide the empirical baseline against which we now assess
-whether the PSLRA systematically altered these patterns.
+remained at risk of eventual settlement. The Aalen-Johansen
+curves avoid that distortion and establish the baseline
+pattern against which the PSLRA analysis is evaluated.
 
 %% ============================================================
 %% SECTION 5.2 — THE PSLRA EFFECT
@@ -95,10 +83,10 @@ whether the PSLRA systematically altered these patterns.
 \section{The PSLRA and Litigation Outcomes}
 \label{sec:results_pslra}
 
-The PSLRA is associated with a substantial increase in dismissal hazard
-and a corresponding suppression of settlement probability
-across the entire 1990--2024 observation window. This section
-builds the evidence in five layers---nonparametric patterns,
+The PSLRA is robustly associated with higher dismissal
+hazard, while the settlement evidence points in the same
+direction but proves materially less stable across
+specifications. This section builds the evidence in five layers---nonparametric patterns,
 associational estimates, time-varying dynamics,
 composition-adjusted inference, and robustness
 checks---each progressively narrowing the range of plausible
@@ -106,40 +94,40 @@ explanations for the observed divergence.
 
 \subsection{Nonparametric Evidence: CIF by PSLRA Regime}
 
-Figure~\ref{fig:cif_pslra} stratifies the cumulative
-incidence functions by PSLRA regime. Post-PSLRA dismissal
-incidence rises sharply in the first year and reaches 68.1\%
-by five years, substantially above the pre-PSLRA trajectory
-of 49.2\%. Post-PSLRA settlement incidence is simultaneously
-suppressed, reaching only 17.0\% at five years compared
-with 41.8\% pre-PSLRA. The reform is associated with
-divergent shifts in both competing processes simultaneously
-and in opposite directions.
+The PSLRA is associated with divergent shifts in both
+competing processes simultaneously and in opposite
+directions. Post-PSLRA dismissal incidence rises sharply in
+the first year and reaches 52.1\% by five years, above the
+pre-PSLRA five-year trajectory of 37.8\%; settlement
+incidence is simultaneously suppressed, reaching 26.8\% at
+five years compared with 51.0\% pre-PSLRA
+(Figure~\ref{fig:cif_pslra}).
 
 \begin{figure}[htb]
     \centering
     \includegraphics[width=\linewidth]{fig_cif_pslra.png}
     \vskip 5pt
-    \caption[Cumulative Incidence of Outcomes by PSLRA Regime]{Aalen-Johansen CIFs stratified by PSLRA regime. Solid lines = Pre-PSLRA ($n = 1{,}032$); dashed = Post-PSLRA ($n = 11{,}936$). Green = settlement; orange/red = dismissal. Gray's test rejects equality for both settlement (statistic $= 302$, $p < 0.001$) and dismissal (statistic $= 167$, $p < 0.001$).}
+    \caption[Cumulative Incidence of Outcomes by PSLRA Regime]{Aalen-Johansen CIFs stratified by PSLRA regime. Solid lines = Pre-PSLRA ($n = 1{,}032$); dashed = Post-PSLRA ($n = 11{,}936$). Green = settlement; orange/red = dismissal. Gray's test---which evaluates whether CIFs differ significantly across groups in the presence of competing risks---rejects equality for both settlement (statistic $= 131.3$, $p < 0.001$) and dismissal (statistic $= 82.1$, $p < 0.001$).}
     \label{fig:cif_pslra}
 \end{figure}
 
 Table~\ref{tab:cif_horizons} quantifies differences at four
-key horizons. The divergence is particularly pronounced in the
-first year: one-year dismissal incidence is 30.9\%
-post-PSLRA versus 17.6\% pre-PSLRA, consistent with the
+key horizons. The divergence is particularly pronounced in
+the first year: one-year dismissal incidence is 25.4\%
+post-PSLRA versus 15.4\% pre-PSLRA, consistent with the
 PSLRA's heightened pleading requirements concentrating
 dismissals at the pleading stage. The settlement gap widens
-steadily: the five-year settlement difference is 24.8
-percentage points (41.8\% vs.\ 17.0\%), indicating a sustained
+steadily: the five-year settlement difference is 24.2
+percentage points (51.0\% vs.\ 26.8\%), indicating a sustained
 divergence in outcome probabilities rather than merely a
-timing shift. Notably, pre-PSLRA five-year dismissal and
-settlement CIFs are within 7.4 percentage points of each
-other (49.2\% vs.\ 41.8\%), suggesting that under the old
-regime the two outcomes were roughly equiprobable for
-long-duration cases. Post-PSLRA, dismissal probability
-exceeds settlement probability by a factor of four or more
-at every horizon.
+timing shift. Notably, under the pre-PSLRA regime
+settlement actually \emph{dominates} dismissal at five
+years (51.0\% vs.\ 37.8\%), reflecting a litigation
+environment in which cases that survived early motions had
+a better-than-even chance of settling. This ordering
+reverses post-PSLRA, where five-year dismissal probability
+(52.1\%) nearly doubles the settlement probability
+(26.8\%).
 
 \begin{table}[htbp]
 \centering
@@ -150,11 +138,11 @@ at every horizon.
 \toprule
 \textbf{Regime} & \textbf{Outcome} & \textbf{1 yr} & \textbf{2 yr} & \textbf{3 yr} & \textbf{5 yr} \\
 \midrule
-Pre-PSLRA  & Settlement &  5.9 & 20.2 & 29.1 & 41.8 \\
-           & Dismissal  & 17.6 & 31.9 & 37.1 & 49.2 \\
+Pre-PSLRA  & Settlement &  6.4 & 22.4 & 33.3 & 51.0 \\
+           & Dismissal  & 15.4 & 25.6 & 29.7 & 37.8 \\
 \midrule
-Post-PSLRA & Settlement &  2.5 &  6.6 & 11.3 & 17.0 \\
-           & Dismissal  & 30.9 & 44.9 & 55.7 & 68.1 \\
+Post-PSLRA & Settlement &  3.0 &  9.0 & 16.2 & 26.8 \\
+           & Dismissal  & 25.4 & 37.5 & 45.5 & 52.1 \\
 \bottomrule
 \end{tabular*}
 \end{table}
@@ -168,13 +156,12 @@ informative than the test statistics alone.
 
 \subsection{Associational Evidence: Baseline Cause-Specific Cox Models}
 
-Table~\ref{tab:cox_baseline} presents baseline cause-specific
-Cox models with the PSLRA indicator as the sole covariate.
-Post-PSLRA filing is associated with a 55\% lower
+Post-PSLRA filing is associated with a 44\% lower
 instantaneous settlement hazard (hazard ratio
-[HR] $= 0.445$, 95\% CI: 0.401--0.495, $p < 0.001$) and a
-47\% higher instantaneous dismissal hazard (HR $= 1.468$,
-95\% CI: 1.342--1.606, $p < 0.001$). In a competing-risks setting, a hazard ratio above one indicates a higher instantaneous rate of experiencing that specific outcome (faster time-to-that-outcome); a hazard ratio below one indicates a lower instantaneous rate. Because settlement and dismissal are competing events, a higher cause-specific hazard for one outcome does not guarantee shorter overall case duration---it reflects the instantaneous rate of that particular terminal event, holding the competing pathway fixed. However, as detailed in
+[HR] $= 0.563$, 95\% CI: 0.511--0.621, $p < 0.001$) and a
+41\% higher instantaneous dismissal hazard (HR $= 1.409$,
+95\% CI: 1.269--1.565, $p < 0.001$;
+Table~\ref{tab:cox_baseline}). In a competing-risks setting, a hazard ratio above one indicates a higher instantaneous rate of experiencing that specific outcome (faster time-to-that-outcome); a hazard ratio below one indicates a lower instantaneous rate. Because settlement and dismissal are competing events, a higher cause-specific hazard for one outcome does not guarantee shorter overall case duration---it reflects the instantaneous rate of that particular terminal event, holding the competing pathway fixed. However, as detailed in
 Section~\ref{sec:results_robustness}, the settlement
 association is highly sensitive to time-trend controls and
 loses statistical significance entirely in circuit-specific
@@ -189,8 +176,8 @@ sub-samples.
 \toprule
 \textbf{Outcome} & \textbf{HR} & \textbf{95\% CI} & \textbf{$p$} \\
 \midrule
-Settlement & 0.445 & (0.401, 0.495) & $<$0.001 \\
-Dismissal  & 1.468 & (1.342, 1.606) & $<$0.001 \\
+Settlement & 0.563 & (0.511, 0.621) & $<$0.001 \\
+Dismissal  & 1.409 & (1.269, 1.565) & $<$0.001 \\
 \bottomrule
 \end{tabular*}
 \end{table}
@@ -204,55 +191,67 @@ Section~\ref{sec:piecewise} and implies that the constant
 hazard ratios above are best interpreted as time-averaged
 summaries of a more complex temporal relationship.
 
-\subsection{Time-Varying PSLRA Association with Dismissal Hazard}
+\subsection{Time-Varying PSLRA Associations by Outcome}
 \label{sec:piecewise}
 
-Table~\ref{tab:piecewise} presents the piecewise constant
-hazard model for dismissal. The temporal decomposition
-reveals a distinctive three-phase pattern. In the first year,
-post-PSLRA cases are associated with a 95\% higher
-instantaneous dismissal hazard (HR $= 1.948$, 95\% CI:
-1.675--2.266, $p < 0.001$): the PSLRA's heightened
-pleading requirements and automatic discovery stay
-concentrate dismissals at the pleading stage. In years one
-to two, the PSLRA association vanishes entirely
-(HR $= 1.050$, 95\% CI: 0.883--1.249, $p = 0.582$):
-cases that survived the first-year gauntlet face no
-differential dismissal risk. For cases surviving beyond two
-years, a modest but significant PSLRA association
-re-emerges (HR $= 1.329$, 95\% CI: 1.148--1.538,
-$p < 0.001$).
+The PSLRA's association with dismissal hazard declines
+monotonically over case duration: a strong first-year
+elevation (HR $= 1.789$, 95\% CI: 1.520--2.105,
+$p < 0.001$) consistent with the Act's heightened pleading
+requirements and automatic discovery stay concentrating
+dismissals at the pleading stage (Table~\ref{tab:piecewise}).
+In years one to two, the association attenuates to a modest
+26\% elevation that is marginally significant
+(HR $= 1.255$, 95\% CI: 1.016--1.550, $p = 0.035$).
+Beyond two years, the PSLRA association with dismissal is
+indistinguishable from null (HR $= 1.063$, 95\% CI:
+0.886--1.276, $p = 0.510$).
 
 \begin{table}[htb]
 \centering
-\caption{PSLRA Association with Dismissal Hazard by Time Period}
+\caption{Piecewise PSLRA Associations by Outcome and Time Period}
 \label{tab:piecewise}
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r c r @{}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l l r c r @{}}
 \toprule
-\textbf{Period} & \textbf{HR} & \textbf{95\% CI} & \textbf{$p$} \\
+\textbf{Outcome} & \textbf{Period} & \textbf{HR} & \textbf{95\% CI} & \textbf{$p$} \\
 \midrule
-0--1 years & 1.948 & (1.675, 2.266) & $<$0.001 \\
-1--2 years & 1.050 & (0.883, 1.249) & 0.582    \\
-2$+$ years & 1.329 & (1.148, 1.538) & $<$0.001 \\
+Dismissal  & 0--1 years & 1.789 & (1.520, 2.105) & $<$0.001 \\
+           & 1--2 years & 1.255 & (1.016, 1.550) & 0.035    \\
+           & 2$+$ years & 1.063 & (0.886, 1.276) & 0.510    \\
+\addlinespace[0.4em]
+Settlement & 0--1 years & 0.518 & (0.395, 0.678) & $<$0.001 \\
+           & 1--2 years & 0.387 & (0.323, 0.464) & $<$0.001 \\
+           & 2$+$ years & 0.673 & (0.591, 0.767) & $<$0.001 \\
 \bottomrule
 \end{tabular*}
+\begin{minipage}{\textwidth}
+\vskip 4pt
+\footnotesize \textit{Note:} Each hazard ratio is specific to the listed follow-up interval after time-splitting; these are interval-specific, not cumulative, effects through that horizon.
+\end{minipage}
 \end{table}
 
-This three-phase pattern---strong early association, null
-middle-period, modest late re-emergence---is, to our
-knowledge, the first formal documentation of the PSLRA's
-time-varying signature using a piecewise survival framework
-on population-level administrative data. The cutpoints at
-$t = 1$ and $t = 2$ years were chosen heuristically to align
-with the typical procedural timeline of a motion to dismiss
-(see Section~\ref{sec:ph_diag} for the selection rationale).
-The piecewise specification is applied to both outcomes for
-symmetry; the dismissal model's global PH test does not
-reject proportionality for the PSLRA indicator
-($p = 0.120$), so the dismissal decomposition supplements
-the settlement violation rather than correcting one of its
-own.
+The settlement side follows a different temporal pattern.
+Post-PSLRA settlement hazard is suppressed in all three
+intervals: 48\% lower in the first year
+(HR $= 0.518$, $p < 0.001$), 61\% lower in years one to two
+(HR $= 0.387$, $p < 0.001$), and 33\% lower after two years
+(HR $= 0.673$, $p < 0.001$). Unlike dismissal, the
+settlement association does not fade to null within the
+piecewise model; its strongest suppression appears in the
+middle interval and then attenuates. That pattern should be
+read alongside the broader fragility of the settlement
+finding under circuit-specific decomposition, cluster-robust
+inference, and time-trend controls discussed below.
+
+Taken together, the piecewise results show that time
+variation is outcome-specific. Dismissal follows a sharp
+early-stage spike that decays to null, while settlement
+remains below unity in all three periods. Because the
+Grambsch-Therneau tests reject proportional hazards for the
+PSLRA term in both outcomes, this decomposition addresses a
+documented modeling problem rather than adding a purely
+exploratory layer.
 
 \subsection{Composition-Adjusted Evidence: IPTW Triangulation}
 \label{sec:results_iptw}
@@ -273,8 +272,13 @@ Chapter~\ref{ch:methodology}, using inverse probability of
 treatment weighting to re-weight the pre-PSLRA
 control sample to match the post-PSLRA case mix on observed
 covariates. The IPTW analysis uses 12,866 cases with
-complete covariate data (102 cases dropped due to missing
-origin or statutory basis); the slight difference in
+complete covariate data; relative to the full 12,968-case
+cohort, 16 D.C.\ Circuit cases are omitted because
+circuit-adjusted models exclude circuits with fewer than 50
+cases, and 86 additional cases have missing origin.
+Statutory basis missingness is retained as an explicit
+``Missing'' level rather than treated as an exclusion. The
+slight difference in
 unadjusted HRs relative to Table~\ref{tab:cox_baseline}
 reflects this restricted sample.
 Table~\ref{tab:iptw_triangulation} presents the results,
@@ -290,10 +294,10 @@ estimation.
 \toprule
 \textbf{Strategy} & \textbf{Settlement HR} & \textbf{Dismissal HR} \\
 \midrule
-1.\ Unadjusted                         & 0.439            & 1.466 \\
-2.\ Regression-Adjusted                & 0.701            & 1.746 \\
-3.\ Covariate-Adjusted IPTW (Weighted Regression) & 0.709            & 1.804 \\
-4.\ Marginal Structural Model          & \textbf{0.690}   & \textbf{1.526} \\
+1.\ Unadjusted                         & 0.557            & 1.414 \\
+2.\ Regression-Adjusted                & 0.784            & 1.661 \\
+3.\ Covariate-Adjusted IPTW (Weighted Regression) & 0.780            & 1.754 \\
+4.\ Marginal Structural Model          & \textbf{0.741}   & \textbf{1.519} \\
 \bottomrule
 \end{tabular*}
 \begin{minipage}{\textwidth}
@@ -302,7 +306,7 @@ estimation.
 IPTW uses ATT (average treatment on the treated) weights with
 99th-percentile trimming (cap $\approx 43.5$).
 Effective sample size after weighting: 578 (56.0\% efficiency).
-All 19 covariates achieve $|\text{SMD}| < 0.1$ after weighting;
+All 20 covariate-level balance rows achieve $|\text{SMD}| < 0.1$ after weighting;
 balance diagnostics are presented in
 Section~\ref{sec:results_diagnostics}.
 Row~4 (MSM) is the preferred composition-adjusted estimate
@@ -315,25 +319,36 @@ are statistically significant at $p < 0.001$. The key
 comparison is between the unadjusted estimate (row~1) and the
 marginal structural model (row~4).
 
-For dismissal, the composition-adjusted HR is 1.526,
-\emph{slightly amplified} from the unadjusted 1.466. After
+For dismissal, the composition-adjusted MSM HR is 1.519,
+modestly amplified from the unadjusted 1.414. After
 adjusting for observable shifts in circuit composition, case
 origin, and statutory basis, the PSLRA remains associated
-with a 53\% higher instantaneous dismissal hazard. The
-amplification indicates that concurrent compositional changes
+with a 52\% higher instantaneous dismissal hazard. The
+amplification is a point-estimate comparison rather than a
+formally tested difference, so the interpretation is
+suggestive rather than statistically confirmed. It suggests
+that concurrent compositional changes
 in the case mix---such as shifts in circuit filing
-patterns---partially \emph{offset} the PSLRA's
+patterns---partially offset the PSLRA's
 dismissal-accelerating association; removing this confounding
 reveals a somewhat larger underlying divergence.
 
-For settlement, the picture is different. The
-composition-adjusted HR is 0.690, substantially attenuated
-from the unadjusted 0.439. The raw 56\% reduction in
-settlement hazard shrinks to a 31\% reduction after
-composition adjustment. Approximately half of the raw
-settlement suppression is associated with observable shifts in the case mix across the pre- and post-PSLRA periods---shifts in circuit composition, statutory basis mix, and case origins. The residual association is not causally attributable to the reform; unmeasured temporal confounders may account for part or all of it.
+For settlement, the composition-adjusted MSM HR is 0.741,
+attenuated from the unadjusted 0.557. The raw 44\%
+reduction in settlement hazard shrinks to a 26\% reduction
+after composition adjustment, indicating that a meaningful
+share of the raw settlement suppression is associated with
+observable shifts in the case mix across the pre- and
+post-PSLRA periods. The residual association is not
+causally attributable to the reform; unmeasured temporal
+confounders may account for part or all of it.
 
-An important caveat applies to the amplification comparison: Table~\ref{tab:iptw_triangulation} reports point estimates but not confidence intervals or standard errors for the MSM (row~4) and covariate-adjusted IPTW (row~3) strategies. The observed shift from 1.466 to 1.526 for dismissal is a point-estimate comparison that has not been formally tested; bootstrapped inference for these specifications is deferred to future work. The amplification narrative should therefore be interpreted as suggestive, not as a statistically confirmed divergence.
+An important caveat applies to the amplification comparison:
+Table~\ref{tab:iptw_triangulation} reports point estimates
+but not confidence intervals for the MSM (row~4) and
+covariate-adjusted IPTW (row~3) strategies. Bootstrapped
+inference for these specifications is deferred to future
+work.
 
 Figure~\ref{fig:cif_weighted} shows the IPTW-weighted
 CIFs by PSLRA regime. After
@@ -361,23 +376,20 @@ consistent with the hazard ratio estimates.
     \label{fig:cif_weighted}
 \end{figure}
 
-These estimates remove the portion of the PSLRA association
-explained by concurrent shifts in observable case
-composition. They are not causal estimates: unmeasured
-confounders---economic cycles, judicial attitudes, changes
-in plaintiff-bar sophistication, and SEC enforcement
-patterns---remain uncontrolled, a point reinforced by the
-placebo test in Section~\ref{sec:results_robustness}.
+Consistent with the composition-adjusted interpretation
+established above, these weighted CIFs isolate the PSLRA
+component from observable case-mix shifts but do not
+control for unmeasured temporal confounders.
 
 \subsection{Robustness and Identification Limits}
 \label{sec:results_robustness}
 
-Figure~\ref{fig:robustness} and Table~\ref{tab:robustness}
-present PSLRA hazard ratios from seven distinct baseline Cox
-specifications. Across every specification, settlement HRs
-are below 1 and dismissal HRs are above 1. The direction
-of the PSLRA association is not an artifact of any particular
-coding, sampling, or time-trend choice.
+The directional PSLRA association---settlement HRs below 1,
+dismissal HRs above 1---holds across all seven baseline Cox
+specifications, confirming that the finding is not an
+artifact of any particular coding, sampling, or time-trend
+choice (Figure~\ref{fig:robustness},
+Table~\ref{tab:robustness}).
 
 \begin{figure}[htb]
     \centering
@@ -396,26 +408,26 @@ coding, sampling, or time-trend choice.
 \toprule
 \textbf{Specification} & \textbf{Outcome} & \textbf{HR} & \textbf{95\% CI} & \textbf{$p$} \\
 \midrule
-Scheme A: Primary       & Settlement & 0.445 & (0.401, 0.495) & $<$0.001 \\
-                        & Dismissal  & 1.468 & (1.342, 1.606) & $<$0.001 \\
+Scheme A: Primary       & Settlement & 0.563 & (0.511, 0.621) & $<$0.001 \\
+                        & Dismissal  & 1.409 & (1.269, 1.565) & $<$0.001 \\
 \addlinespace[0.5em]
-Scheme B: Code 12 = S   & Settlement & 0.722 & (0.657, 0.794) & $<$0.001 \\
-                        & Dismissal  & 1.321 & (1.199, 1.455) & $<$0.001 \\
+Scheme B: Code 12 = S   & Settlement & 0.799 & (0.730, 0.874) & $<$0.001 \\
+                        & Dismissal  & 1.183 & (1.053, 1.330) & 0.005 \\
 \addlinespace[0.5em]
-Scheme C: Codes 12+5 = S & Settlement & 0.716 & (0.653, 0.784) & $<$0.001 \\
-                        & Dismissal  & 1.321 & (1.199, 1.455) & $<$0.001 \\
+Scheme C: Codes 12+5 = S & Settlement & 0.788 & (0.722, 0.859) & $<$0.001 \\
+                        & Dismissal  & 1.183 & (1.053, 1.330) & 0.005 \\
 \addlinespace[0.5em]
-Excl.\ post-2020        & Settlement & 0.443 & (0.398, 0.492) & $<$0.001 \\
-                        & Dismissal  & 1.400 & (1.280, 1.532) & $<$0.001 \\
+Excl.\ post-2020        & Settlement & 0.558 & (0.506, 0.616) & $<$0.001 \\
+                        & Dismissal  & 1.333 & (1.200, 1.481) & $<$0.001 \\
 \addlinespace[0.5em]
-Second Circuit only     & Settlement & 0.980 & (0.496, 1.935) & 0.953    \\
-                        & Dismissal  & 1.748 & (1.372, 2.227) & $<$0.001 \\
+Second Circuit only     & Settlement & 1.052 & (0.757, 1.462) & 0.762    \\
+                        & Dismissal  & 1.941 & (1.387, 2.715) & $<$0.001 \\
 \addlinespace[0.5em]
-Ninth Circuit only      & Settlement & 0.869 & (0.724, 1.042) & 0.129    \\
-                        & Dismissal  & 1.804 & (1.547, 2.104) & $<$0.001 \\
+Ninth Circuit only      & Settlement & 0.957 & (0.803, 1.140) & 0.622    \\
+                        & Dismissal  & 1.575 & (1.329, 1.865) & $<$0.001 \\
 \addlinespace[0.5em]
-Time-trend (spline)     & Settlement & 0.610 & (0.454, 0.820) & 0.001    \\
-                        & Dismissal  & 2.449 & (1.988, 3.016) & $<$0.001 \\
+Time-trend (spline)     & Settlement & 0.714 & (0.548, 0.932) & 0.013    \\
+                        & Dismissal  & 3.515 & (2.730, 4.525) & $<$0.001 \\
 \bottomrule
 \end{tabular*}
 \end{table}
@@ -423,11 +435,11 @@ Time-trend (spline)     & Settlement & 0.610 & (0.454, 0.820) & 0.001    \\
 Five observations warrant emphasis. First, Schemes~B and~C
 reclassify Code~12 (voluntary dismissal) and Code~5 (consent
 judgment) as settlements, producing settlement HRs of
-$\approx 0.72$ compared with 0.445 under Scheme~A. The
+$\approx 0.79$ compared with 0.563 under Scheme~A. The
 PSLRA settlement association is sensitive to disposition
-coding but remains large and significant under all schemes.
-Dismissal HRs attenuate modestly (1.321 vs.\ 1.468) under
-liberal coding.
+coding but remains significant under all schemes.
+Dismissal HRs attenuate from 1.409 to 1.183 under liberal
+coding, with $p$ rising from $< 0.001$ to 0.005.
 
 Second, excluding post-2020 cases has virtually no effect on
 estimates, indicating that recently filed cases with high
@@ -435,33 +447,50 @@ censoring rates do not distort the results.
 
 Third, the circuit-specific sub-models provide the most
 important qualification of the settlement finding. Within
-the Second Circuit, the PSLRA's association with settlement
-hazard is non-significant (HR $= 0.980$, $p = 0.953$), and
-within the Ninth Circuit the association does not reach
-conventional significance (HR $= 0.869$, $p = 0.129$). The
-PSLRA dismissal association, by contrast, is significant and
-substantial in both circuits (Second: HR $= 1.748$; Ninth:
-HR $= 1.804$). This pattern suggests that the pooled
-settlement HR reflects between-circuit composition effects
-as much as within-circuit reform associations.
+the Second Circuit, the PSLRA settlement HR \emph{crosses
+unity} (HR $= 1.052$, $p = 0.762$), and within the Ninth
+Circuit the association is non-significant
+(HR $= 0.957$, $p = 0.622$). The PSLRA dismissal
+association, by contrast, is significant and substantial in
+both circuits (Second: HR $= 1.941$; Ninth:
+HR $= 1.575$). This pattern suggests that part of the pooled
+settlement HR reflects between-circuit composition rather
+than a stable within-circuit reform association.
 
-Fourth, the spline time-trend control is the strongest
-identification test: after flexibly absorbing nonlinear
+Fourth, the spline time-trend control is the most
+parametrically flexible identification check: after
+flexibly absorbing nonlinear
 secular trends in judicial behavior via a natural cubic
 spline ($\text{df} = 3$), the PSLRA dismissal HR
-\emph{increases} to 2.449 ($p < 0.001$), confirming that
-the dismissal association is not a calendar-time artifact.
-The settlement HR attenuates to 0.610 and remains significant
-($p = 0.001$) under the spline specification, but the
-attenuation from 0.445 indicates that part of the raw
+\emph{increases} to 3.515 ($p < 0.001$). The corresponding
+PSLRA VIF is 5.32, quantifying substantial overlap between
+the reform indicator and the spline basis without collapsing
+into exact collinearity. This does not prove
+that the dismissal association is free of calendar-time
+confounding; rather, it shows that the positive dismissal
+association persists, and even enlarges, under one flexible
+time-trend specification.
+This estimate is an outlier in the robustness range: six of
+seven specifications produce dismissal HRs between 1.183
+and 1.941, and the spline value reflects a methodologically
+distinct specification in which the flexible time trend
+absorbs secular variation and amplifies the discrete
+step-change at the PSLRA cutoff. It should be read as the
+upper bound of a wide but directionally consistent range
+rather than a representative central estimate.
+The settlement HR attenuates to 0.714 and remains significant
+($p = 0.013$) under the spline specification, but the
+attenuation from 0.563 indicates that part of the raw
 settlement suppression is confounded with secular trends.
 
 Fifth, across all seven specifications the dismissal HR
-ranges from 1.32 to 2.45 and the settlement HR ranges from
-0.44 to 0.98. The dismissal direction is unanimous and
+ranges from 1.183 to 3.515 and the settlement HR ranges from
+0.558 to 1.052. The dismissal direction is unanimous and
 statistically significant in every specification. The
-settlement direction is consistent (all HRs $< 1$) but
-loses significance in circuit sub-samples.
+settlement direction is consistent in six of seven
+specifications but crosses unity in the Second Circuit
+sub-sample and loses significance in both circuit-specific
+analyses.
 
 \subsubsection*{Temporal Identification and Placebo Results}
 
@@ -473,60 +502,37 @@ Section~\ref{sec:temporal_id}.
 \textbf{Clean-window analysis (1993--1998).} Restricting the
 sample to a narrow six-year window ($n = 1{,}235$)
 surrounding the PSLRA's effective date yields a dismissal
-HR of 1.394 (95\% CI: 1.190--1.633, $p < 0.001$) and a
-settlement HR of 0.733 (95\% CI: 0.607--0.884, $p = 0.001$).
-Both associations are attenuated relative to the full-sample
-baseline, as expected in a restricted window with less
-statistical power, but they remain significant and
-directionally consistent.
+HR of 1.482 (95\% CI: 1.243--1.768, $p < 0.001$) and a
+settlement HR of 0.724 (95\% CI: 0.607--0.864, $p < 0.001$).
+Both associations remain significant and directionally
+consistent with the full-sample baseline.
 
 \textbf{Placebo cutoff test (1992).} As a falsification
 check, we construct a placebo ``law'' at January~1, 1992 and
 re-estimate on the pre-PSLRA sample only ($n = 1{,}032$,
 spanning 1990--1995). The placebo produces a significant
-dismissal HR of 0.719 (95\% CI: 0.597--0.867, $p < 0.001$),
-indicating that the model detects pre-existing trends in
-dismissal rates during the early 1990s \emph{even in the
-absence of any legislative change}. This result has two
-implications. First, it reinforces the importance of flexible
-time-trend controls: a simple before-after comparison may
-partially reflect secular judicial drift. Second, it
-strengthens our decision to frame all estimates as
-associational or composition-adjusted rather than causally
-identified. The PSLRA's association is robust and substantial
-across specifications, but the pre-existing trend detected
-by the placebo test precludes clean causal attribution to the
-reform in isolation.
+dismissal HR of 0.733 (95\% CI: 0.588--0.913, $p = 0.006$)
+and a settlement HR of 1.638 (95\% CI: 1.289--2.082,
+$p < 0.001$). The placebo dismissal HR is below unity,
+indicating a \emph{downward} pre-existing trend in dismissal
+rates during the early 1990s---the opposite direction from
+the PSLRA's subsequent upward association. The directional
+contrast means the pre-trend does not inflate the estimated
+PSLRA effect, but the model's ability to detect
+period-specific effects in the absence of any legislative
+change precludes clean causal attribution. This reinforces
+our decision to frame all estimates as associational or
+composition-adjusted.
 
 \subsubsection*{Synthesis: The Weight of Evidence}
 
-The five evidence layers converge on a clear pattern.
-The PSLRA is associated with higher dismissal hazard across
-every model and specification, with a composition-adjusted
-estimate of HR $\approx 1.53$ (MSM) and a full range of
-1.32--2.45 across robustness checks. The dismissal
-association is concentrated in the first year of case life
-(piecewise HR $= 1.948$), vanishes in the second year, and
-re-emerges modestly thereafter. This three-phase temporal
-signature is robust to composition adjustment and spline
-time-trend controls.
-
-The PSLRA's association with settlement suppression is
-directionally consistent across all specifications
-(all HRs $< 1$) but more fragile. The raw settlement HR of
-0.445 attenuates to 0.690 after composition adjustment
-(Table~\ref{tab:iptw_triangulation}) and to 0.610 under
-flexible time-trend controls
-(Table~\ref{tab:robustness}). Critically, the settlement
-association loses statistical significance entirely within
-individual circuits (Second Circuit: HR $= 0.980$,
-$p = 0.953$; Ninth Circuit: HR $= 0.869$, $p = 0.129$).
-The 1992 placebo test, detecting significant pre-existing
-trends before the reform was enacted, further limits causal
-attribution. The settlement finding should be interpreted
-as a robust population-level pattern whose attribution to
-the PSLRA specifically, rather than to concurrent secular
-trends, cannot be established with these data.
+Across these evidence layers, one conclusion is stable and
+one is qualified. The dismissal association is consistently
+positive and strongest early in the life of the case. The
+settlement association is directionally similar in many
+specifications but substantially more fragile, failing to
+survive cluster-robust inference or the Second- and
+Ninth-Circuit sub-samples.
 
 %% ============================================================
 %% SECTION 5.3 — GEOGRAPHIC DISPARITY
@@ -535,17 +541,16 @@ trends, cannot be established with these data.
 \section{Geographic Disparity Across Federal Circuits}
 \label{sec:results_circuits}
 
-Circuit geography is the dominant predictor of securities litigation outcomes. Settlement hazard ratios relative to the Second Circuit span a nearly 18-fold range across circuits, dwarfing the magnitude of the PSLRA association. Moreover, the PSLRA's association with outcomes is not uniform across jurisdictions: likelihood ratio tests reject a homogeneous PSLRA coefficient in favor of circuit-specific responses, and a shared frailty analysis confirms that substantial unobserved heterogeneity remains even after conditioning on observed covariates.
+Circuit geography is a dominant predictor of securities litigation outcomes. Settlement hazard ratios relative to the Second Circuit range from 1.1 to 4.3 times across circuits, indicating that judicial venue substantially shapes the likelihood of settlement at any given duration. The PSLRA's association with outcomes is not uniform across jurisdictions: likelihood ratio tests reject a homogeneous PSLRA coefficient in favor of circuit-specific responses, and a shared frailty analysis detects residual unobserved heterogeneity after conditioning on observed covariates.
 
 \subsection{Cumulative Incidence by Circuit}
 
-Figures~\ref{fig:cif_circuit_dismissal}
-and~\ref{fig:cif_circuit_settlement} present CIFs for the
-four largest circuits by case volume plus the Sixth Circuit.
-Circuit heterogeneity is substantial, and the patterns
-are not symmetric across outcomes---a nuanced finding
-that the competing-risks framework reveals and that
-standard single-outcome analyses would miss.
+Circuit heterogeneity in resolution patterns is substantial,
+and the patterns are not symmetric across outcomes---a
+finding that the competing-risks framework reveals and that
+standard single-outcome analyses would miss
+(Figures~\ref{fig:cif_circuit_dismissal}
+and~\ref{fig:cif_circuit_settlement}).
 
 \begin{figure}[htb]
     \centering
@@ -563,35 +568,36 @@ standard single-outcome analyses would miss.
         \label{fig:cif_circuit_settlement}
     \end{subfigure}
     \vskip 10pt
-    \caption[Cumulative Incidence of Outcomes by Judicial Circuit]{Aalen-Johansen CIFs by circuit (top 4 by volume plus Sixth Circuit). Gray's test rejects equality for settlement ($\text{stat} = 905.2$, $p < 0.001$) and dismissal ($\text{stat} = 112.5$, $p < 0.001$).}
+    \caption[Cumulative Incidence of Outcomes by Judicial Circuit]{Aalen-Johansen CIFs by circuit (top 4 by volume plus Sixth Circuit). Gray's test rejects equality for settlement ($\text{stat} = 204.0$, $p < 0.001$) and dismissal ($\text{stat} = 321.2$, $p < 0.001$).}
     \label{fig:cif_circuit}
 \end{figure}
 
 For dismissal (Figure~\ref{fig:cif_circuit_dismissal}),
-the Second Circuit exhibits the highest long-run dismissal
-incidence, reaching approximately 75\% by six years. The
-Fifth Circuit leads in early dismissal---nearly 40\% by year
-one---reflecting aggressive early motion practice in Texas
-and Louisiana. The Third Circuit has the lowest overall
-dismissal incidence among these circuits, plateauing near 50\%.
+the Fifth Circuit rather than the Second has the highest
+cumulative dismissal incidence among the plotted circuits.
+It reaches 34.7\% by year one and finishes with the highest
+dismissal CIF overall, while the Second Circuit still
+reaches a high 56.0\% by year six. The Third Circuit remains
+the lowest-dismissal curve among the plotted circuits at
+42.4\% by year six.
 
 The settlement picture is qualitatively different
 (Figure~\ref{fig:cif_circuit_settlement}). The Third Circuit
-has the highest settlement incidence, reaching approximately
-30\% by year three. The Second Circuit has the lowest
-settlement incidence of any major circuit, barely reaching
-5\% by six years. This combination---low settlement
-probability and high dismissal incidence---is the defining
-empirical signature of the Second Circuit.
+has the highest settlement incidence, reaching 29.4\% by
+year three. The Second Circuit remains the lowest among the
+plotted circuits, but it reaches 22.3\% by year six rather
+than near-zero levels. Taken together, the figures show the
+Second Circuit as a comparatively low-settlement,
+high-dismissal venue, not as the single most extreme
+dismissal outlier in cumulative-incidence terms.
 
 \subsection{Circuit Effects in Cause-Specific Cox Models}
 
-Table~\ref{tab:cox_circuit} presents cause-specific Cox
-models with PSLRA and circuit fixed effects ($n = 12{,}952$).
-The Second Circuit serves as the reference category---the
-dominant venue for securities class actions by volume and,
-as Section~\ref{sec:results_pslra} established, the circuit
-with the lowest settlement propensity.
+Every circuit exhibits significantly higher settlement
+hazard than the Second Circuit---the dominant venue by
+volume and, as Section~\ref{sec:results_pslra} established,
+the circuit with the lowest settlement propensity
+(Table~\ref{tab:cox_circuit}; $n = 12{,}952$).
 
 \begin{table}[htb]
 \centering
@@ -604,63 +610,69 @@ with the lowest settlement propensity.
 \cmidrule(lr){2-3} \cmidrule(lr){4-5}
 \textbf{Covariate} & \textbf{HR} & \textbf{95\% CI} & \textbf{HR} & \textbf{95\% CI} \\
 \midrule
-Post-PSLRA    & 0.686 & (0.616, 0.765)
-              & 1.640 & (1.498, 1.796) \\
-First Circ.   & 8.156 & (6.101, 10.904)
-              & 1.504 & (1.326, 1.706) \\
-Third Circ.   & 17.59 & (14.63, 21.15)
-              & 1.166 & (1.052, 1.293) \\
-Fourth Circ.  & 4.066 & (3.433, 4.815)
-              & 0.300 & (0.267, 0.338) \\
-Fifth Circ.   & 7.660 & (6.146, 9.547)
-              & 1.360 & (1.237, 1.496) \\
-Sixth Circ.   & 15.97 & (12.91, 19.75)
-              & 0.821 & (0.704, 0.958) \\
-Seventh Circ. & 9.477 & (7.627, 11.78)
-              & 1.211 & (1.082, 1.356) \\
-Eighth Circ.  & 13.41 & (10.71, 16.79)
-              & 1.070 & (0.942, 1.214) \\
-Ninth Circ.   & 8.910 & (7.646, 10.38)
-              & 1.106 & (1.048, 1.168) \\
-Tenth Circ.   & 11.22 & (9.175, 13.72)
-              & 0.898 & (0.797, 1.011) \\
-Eleventh Circ.& 8.346 & (6.642, 10.49)
-              & 1.508 & (1.365, 1.666) \\
+Post-PSLRA    & 0.754 & (0.683, 0.834)
+              & 1.558 & (1.401, 1.733) \\
+First Circ.   & 2.248 & (1.751, 2.886)
+              & 1.442 & (1.239, 1.680) \\
+Third Circ.   & 4.326 & (3.768, 4.965)
+              & 1.043 & (0.918, 1.186) \\
+Fourth Circ.  & 1.134 & (1.008, 1.275)
+              & 0.367 & (0.318, 0.422) \\
+Fifth Circ.   & 1.986 & (1.664, 2.371)
+              & 1.396 & (1.247, 1.564) \\
+Sixth Circ.   & 3.830 & (3.216, 4.562)
+              & 0.995 & (0.841, 1.178) \\
+Seventh Circ. & 2.536 & (2.140, 3.005)
+              & 1.500 & (1.323, 1.701) \\
+Eighth Circ.  & 3.672 & (3.070, 4.393)
+              & 1.051 & (0.903, 1.223) \\
+Ninth Circ.   & 2.451 & (2.233, 2.691)
+              & 1.183 & (1.108, 1.262) \\
+Tenth Circ.   & 3.233 & (2.785, 3.751)
+              & 0.745 & (0.637, 0.872) \\
+Eleventh Circ.& 2.165 & (1.803, 2.600)
+              & 1.528 & (1.355, 1.723) \\
 \bottomrule
 \end{tabular*}
 \end{table}
 
-The most striking finding is the extreme magnitude of circuit
-effects on settlement hazard. Every other circuit has a
-settlement hazard 4.1 to 17.6 times that of the Second
-Circuit, with the Third Circuit reaching a remarkable
-HR $= 17.59$. The Second Circuit is, by a wide margin, the
-jurisdiction in which securities class actions are least
-likely to settle at any given duration. On the dismissal
-side, the Fourth Circuit stands out: its dismissal hazard
-is only 30\% of the Second Circuit's (HR $= 0.300$,
-95\% CI: 0.267--0.338), the lowest of any circuit, while
-the Sixth and Tenth Circuits also have lower dismissal
-hazards than the reference. The circuit-only Cox models
-achieve moderate discrimination (C-index: settlement $= 0.709$,
-dismissal $= 0.581$).
+The most persistent finding is the structural role of
+circuit geography in settlement outcomes. Every other
+circuit has a settlement hazard 1.1 to 4.3 times that of
+the Second Circuit, with the Third Circuit at the top
+(HR $= 4.326$). The Second Circuit remains the jurisdiction
+in which securities class actions are least likely to settle
+at any given duration, though the magnitude of the gap is
+smaller than the raw CIF plots suggest once the PSLRA is
+controlled for. On the dismissal side, the Fourth Circuit
+stands out: its dismissal hazard is only 37\% of the
+Second Circuit's (HR $= 0.367$, 95\% CI: 0.318--0.422),
+the lowest of any circuit, while the Tenth Circuit is also
+below the reference (HR $= 0.745$). The circuit-only Cox
+models achieve moderate discrimination (C-index:
+settlement $= 0.646$, dismissal $= 0.569$).
 
 \subsection{PSLRA $\times$ Circuit Interaction}
 
 Likelihood ratio tests comparing the additive
 circuit-PSLRA specification against a model with interaction
 terms reject the null of a uniform PSLRA association for both
-outcomes: settlement ($\chi^2 = 20.5$, df $= 5$, $p = 0.001$)
-and dismissal ($\chi^2 = 37.2$, df $= 5$,
-$p = 5.5 \times 10^{-7}$). The PSLRA's association with outcomes varies
-across jurisdictions.
+outcomes: settlement ($\chi^2 = 51.45$, df $= 5$,
+$p = 7.0 \times 10^{-10}$) and dismissal ($\chi^2 = 71.87$,
+df $= 5$, $p = 4.2 \times 10^{-14}$). The PSLRA's
+association with outcomes varies significantly across
+jurisdictions.
 
 Table~\ref{tab:interaction} presents the interaction model
 results ($n = 10{,}652$; restricted to the five largest
 circuits plus the Second Circuit reference). The main PSLRA
 coefficient captures the reform's association in the reference
 Second Circuit; each interaction term gives the multiplicative
-modification for the named circuit. To obtain the circuit-specific PSLRA hazard ratio for any circuit, multiply the main PSLRA HR by that circuit's interaction term HR (e.g., for the Third Circuit's settlement association: $1.344 \times 0.413 = 0.555$).
+modification for the named circuit. To obtain the
+circuit-specific PSLRA hazard ratio for any circuit,
+multiply the main PSLRA HR by that circuit's interaction
+term HR (e.g., for the Third Circuit's settlement
+association: $1.411 \times 0.377 \approx 0.532$).
 
 \begin{table}[htbp]
 \centering
@@ -674,46 +686,45 @@ modification for the named circuit. To obtain the circuit-specific PSLRA hazard 
 \textbf{Term} & \textbf{HR} & \textbf{95\% CI} & \textbf{$p$}
               & \textbf{HR} & \textbf{95\% CI} & \textbf{$p$} \\
 \midrule
-PSLRA (main)       & 1.344 & (0.704, 2.564)  & 0.371
-                   & 2.422 & (1.902, 3.085)  & $< 0.001$ \\
+PSLRA (main)       & 1.411 & (1.016, 1.959)  & 0.040
+                   & 2.660 & (1.904, 3.716)  & $< 0.001$ \\
 \addlinespace[0.4em]
 \textit{Interactions} & & & & & & \\
-$\times$ Third    & 0.413 & (0.207, 0.824) & 0.012
-                  & 0.994 & (0.674, 1.465) & 0.975 \\
-$\times$ Fourth   & 0.596 & (0.207, 1.713) & 0.336
-                  & 0.266 & (0.158, 0.446) & $< 0.001$ \\
-$\times$ Fifth    & 0.368 & (0.172, 0.784) & 0.010
-                  & 0.620 & (0.426, 0.903) & 0.013 \\
-$\times$ Ninth    & 0.662 & (0.339, 1.295) & 0.228
-                  & 0.768 & (0.577, 1.021) & 0.070 \\
-$\times$ Eleventh & 0.333 & (0.148, 0.749) & 0.008
-                  & 0.441 & (0.301, 0.647) & $< 0.001$ \\
+$\times$ Third    & 0.377 & (0.250, 0.567) & $< 0.001$
+                  & 2.325 & (1.214, 4.453) & 0.011 \\
+$\times$ Fourth   & 0.745 & (0.308, 1.804) & 0.514
+                  & 0.145 & (0.081, 0.259) & $< 0.001$ \\
+$\times$ Fifth    & 0.380 & (0.229, 0.629) & $< 0.001$
+                  & 0.447 & (0.284, 0.703) & $< 0.001$ \\
+$\times$ Ninth    & 0.761 & (0.525, 1.101) & 0.148
+                  & 0.589 & (0.405, 0.855) & 0.005 \\
+$\times$ Eleventh & 0.235 & (0.137, 0.403) & $< 0.001$
+                  & 0.678 & (0.395, 1.165) & 0.160 \\
 \midrule
-\multicolumn{4}{l}{C-index: 0.740 (settlement), 0.609 (dismissal)} \\
+\multicolumn{4}{l}{C-index: 0.690 (settlement), 0.607 (dismissal)} \\
 \bottomrule
 \end{tabular*}
 \end{table}
 
-For settlement, the main PSLRA term is non-significant
-(HR $= 1.344$, $p = 0.371$), indicating no detectable
-reform association within the Second Circuit alone. All interaction
-terms are below 1, with three reaching significance: the
-Third (HR $= 0.413$, $p = 0.012$), Fifth (HR $= 0.368$,
-$p = 0.010$), and Eleventh (HR $= 0.333$, $p = 0.008$)
-Circuits. Because the baseline PSLRA association (relative to
-the Second Circuit) is near unity, interaction multipliers
-below 1 indicate that the reform's association with settlement
-suppression was concentrated in circuits other than the
-reference. The Second Circuit's already restrictive settlement
-environment left less room for additional suppression.
+For settlement, the main PSLRA term is marginally
+significant (HR $= 1.411$, $p = 0.040$), indicating a
+modest reform association within the Second Circuit. The
+interaction terms are uniformly below 1, with three
+reaching high significance: the Third (HR $= 0.377$,
+$p < 0.001$), Fifth (HR $= 0.380$, $p < 0.001$), and
+Eleventh (HR $= 0.235$, $p < 0.001$) Circuits. These
+multipliers below 1 indicate that the reform's association
+with settlement suppression was concentrated in circuits
+other than the reference.
 
 For dismissal, the main PSLRA term is strongly significant
-(HR $= 2.422$, $p < 0.001$), indicating a 142\% higher
+(HR $= 2.660$, $p < 0.001$), indicating a 166\% higher
 dismissal hazard in the Second Circuit post-reform. The most
 striking interactions are in the Fourth Circuit
-(HR $= 0.266$, $p < 0.001$) and Eleventh Circuit
-(HR $= 0.441$, $p < 0.001$), indicating strong attenuation
-of the PSLRA's dismissal amplification in these jurisdictions.
+(HR $= 0.145$, $p < 0.001$) and Fifth Circuit
+(HR $= 0.447$, $p < 0.001$), indicating strong attenuation
+of the PSLRA's dismissal amplification in these
+jurisdictions.
 These patterns are consistent with documented variation in
 judicial application of the ``strong inference'' scienter
 pleading standard across circuits
@@ -722,25 +733,20 @@ pleading standard across circuits
 \subsection{Shared Frailty Sensitivity Analysis}
 \label{sec:frailty}
 
-The circuit fixed-effects models in
-Sections~\ref{sec:results_circuits}--\ref{sec:results_characteristics}
-treat each circuit as a separate stratum. A complementary
-approach asks whether \emph{unobserved} circuit-level
-heterogeneity---differences in judicial culture, local bar
-practices, or case-management norms not captured by the
-covariates---further shapes outcomes. We fit shared frailty
-models (Gaussian random intercepts on the log-hazard scale
-via \texttt{coxme}) as a sensitivity analysis, noting
-that the 11 circuits fall below the 20--30 clusters typically
-recommended for reliable variance estimation.
-
-Table~\ref{tab:frailty} reports the frailty variance
-$\hat{\theta}$ and compares PSLRA hazard ratios across
-estimation strategies. The settlement frailty variance ($\hat{\theta} = 0.449$) is suggestive of unobserved circuit-level heterogeneity beyond what covariates explain, though with only 11 clusters this estimate is highly uncertain and should be treated as indicative rather than precise.
-By contrast, the dismissal frailty variance is modest
-($\hat{\theta} = 0.033$), suggesting that the fixed-effect
-circuit indicators already capture most circuit-level
-variation in dismissal timing.
+Residual unobserved circuit-level heterogeneity persists
+after conditioning on observed covariates, though it is
+modest in magnitude. We fit shared frailty models
+(Gaussian random intercepts on the log-hazard scale via
+\texttt{coxme}) as a sensitivity analysis, noting that the
+11 circuits fall below the 20--30 clusters typically
+recommended for reliable variance estimation. The extended
+settlement frailty variance ($\hat{\theta} = 0.130$)
+suggests that fixed-effect circuit indicators capture most
+but not all circuit-level variation in settlement timing; the
+extended dismissal frailty variance is smaller still
+($\hat{\theta} = 0.040$), indicating that the dismissal
+hazard is comparatively uniform across circuits after
+covariate adjustment (Table~\ref{tab:frailty}).
 
 \begin{table}[htbp]
 \centering
@@ -752,14 +758,14 @@ variation in dismissal timing.
 \textbf{Model} & \textbf{HR} & \textbf{95\% CI} & \textbf{$p$-value} \\
 \midrule
 \multicolumn{4}{l}{\textit{Settlement}} \\
-\quad Extended FE (naive SE) & 0.702 & (0.629, 0.783) & $2.2 \times 10^{-10}$ \\
-\quad Extended FE (cluster-robust SE) & 0.702 & (0.518, 0.951) & 0.023 \\
-\quad Extended RE (frailty, $\hat{\theta} = 0.449$) & 0.701 & (0.628, 0.782) & $1.9 \times 10^{-10}$ \\
+\quad Extended FE (naive SE) & 0.784 & (0.709, 0.867) & $2.4 \times 10^{-6}$ \\
+\quad Extended FE (cluster-robust SE) & 0.784 & (0.559, 1.099) & 0.158 \\
+\quad Extended RE (frailty, $\hat{\theta} = 0.130$) & 0.783 & (0.707, 0.866) & $2.0 \times 10^{-6}$ \\
 \addlinespace[0.5em]
 \multicolumn{4}{l}{\textit{Dismissal}} \\
-\quad Extended FE (naive SE) & 1.751 & (1.599, 1.918) & $1.4 \times 10^{-33}$ \\
-\quad Extended FE (cluster-robust SE) & 1.751 & (1.459, 2.102) & $1.9 \times 10^{-9}$ \\
-\quad Extended RE (frailty, $\hat{\theta} = 0.033$) & 1.750 & (1.598, 1.917) & $1.5 \times 10^{-33}$ \\
+\quad Extended FE (naive SE) & 1.661 & (1.493, 1.847) & $8.6 \times 10^{-21}$ \\
+\quad Extended FE (cluster-robust SE) & 1.661 & (1.298, 2.126) & $5.5 \times 10^{-5}$ \\
+\quad Extended RE (frailty, $\hat{\theta} = 0.040$) & 1.660 & (1.493, 1.847) & $9.1 \times 10^{-21}$ \\
 \bottomrule
 \end{tabular*}
 \begin{minipage}{\textwidth}
@@ -769,19 +775,22 @@ variation in dismissal timing.
 \end{table}
 
 The PSLRA point estimates are virtually identical across all
-three estimation strategies (settlement HR $\approx 0.70$,
-dismissal HR $\approx 1.75$), confirming that the fixed-effects
-specification adequately adjusts for between-circuit confounding.
-However, cluster-robust standard errors are substantially wider
-than naive standard errors: the settlement confidence interval
-widens by a factor of 2.8$\times$ (from 0.629--0.783 to
-0.518--0.951, with $p$ rising from $2.2 \times 10^{-10}$ to
-0.023), and the dismissal interval widens by 2.0$\times$ (from
-1.599--1.918 to 1.459--2.102). Both associations remain
-statistically significant under the most conservative
-cluster-robust inference, but the settlement result is notably
-less precise---consistent with the fragility documented in the
-IPTW analysis (Section~\ref{sec:results_iptw}).
+three estimation strategies (settlement HR $\approx 0.78$,
+dismissal HR $\approx 1.66$), confirming that the
+fixed-effects specification adequately adjusts for
+between-circuit confounding. However, cluster-robust standard
+errors are substantially wider than naive standard errors:
+the settlement confidence interval widens to 0.559--1.099,
+with $p$ rising from $2.4 \times 10^{-6}$ to 0.158---\emph{no
+longer statistically significant} at conventional levels.
+The dismissal interval widens to 1.298--2.126 but remains
+highly significant ($p = 5.5 \times 10^{-5}$). The
+settlement result's loss of significance under cluster-robust
+inference reinforces the fragility documented in the IPTW
+and circuit-specific analyses: the PSLRA's settlement
+association depends on pooling across circuits and does not
+survive conservative variance estimation that accounts for
+within-circuit correlation.
 
 %% ============================================================
 %% SECTION 5.4 — CASE CHARACTERISTICS
@@ -794,19 +803,14 @@ Beyond the PSLRA and circuit geography, case-level characteristics---most notabl
 
 \subsection{Extended Cause-Specific Cox Models}
 
-The extended models add origin, MDL status, jurisdictional basis,
-and statutory basis to the circuit-adjusted specification
-($n = 12{,}866$ cases with complete covariate data; near-universal statutory basis coverage in the estimation sample, with a ``Missing'' indicator preserving
-the full sample).
-
+The PSLRA associations are robust to the addition of
+origin, MDL status, jurisdictional basis, and statutory
+basis: the settlement hazard ratio is 0.784 (95\% CI:
+0.709--0.867) and the dismissal HR is 1.661 (95\% CI:
+1.493--1.847) in the extended specification ($n = 12{,}866$;
 Tables~\ref{tab:cox_ext_settle}
-and~\ref{tab:cox_ext_dismiss} present the results. The PSLRA
-associations are robust to all additional covariates: the
-settlement hazard ratio (a ratio below 1 indicating a lower
-instantaneous rate of settlement, holding competing risks fixed)
-is 0.702 (95\% CI: 0.629--0.783) and the dismissal HR is 1.751
-(95\% CI: 1.599--1.918). These estimates are close to the
-circuit-only specification (0.686 and 1.640, respectively),
+and~\ref{tab:cox_ext_dismiss}). These estimates are close to the
+circuit-only specification (0.754 and 1.558, respectively),
 confirming that the structural break is not an artifact of
 compositional differences in origin, MDL status, or statutory
 basis across regimes.
@@ -820,31 +824,30 @@ basis across regimes.
 \toprule
 \textbf{Covariate} & \textbf{HR} & \textbf{95\% CI} \\
 \midrule
-Post-PSLRA            & 0.702 & (0.629, 0.783) \\
+Post-PSLRA            & 0.784 & (0.709, 0.867) \\
 \addlinespace[0.5em]
 \textit{Circuit (Ref: Second Circuit)} & & \\
-First Circuit         &  5.598 & (4.168, 7.517) \\
-Third Circuit         & 12.36  & (10.22, 14.95) \\
-Fourth Circuit        &  5.054 & (3.876, 6.591) \\
-Fifth Circuit         &  5.852 & (4.675, 7.326) \\
-Sixth Circuit         & 11.14  & (8.952, 13.87) \\
-Seventh Circuit       &  6.606 & (5.284, 8.259) \\
-Eighth Circuit        &  9.736 & (7.737, 12.25) \\
-Ninth Circuit         &  6.256 & (5.329, 7.345) \\
-Tenth Circuit         &  8.670 & (7.019, 10.71) \\
-Eleventh Circuit      &  5.579 & (4.408, 7.063) \\
+First Circuit         &  1.782 & (1.385, 2.292) \\
+Third Circuit         &  3.481 & (3.021, 4.012) \\
+Fourth Circuit        &  1.926 & (1.592, 2.331) \\
+Fifth Circuit         &  1.722 & (1.439, 2.061) \\
+Sixth Circuit         &  3.086 & (2.583, 3.689) \\
+Seventh Circuit       &  2.011 & (1.691, 2.392) \\
+Eighth Circuit        &  3.062 & (2.554, 3.670) \\
+Ninth Circuit         &  1.944 & (1.762, 2.145) \\
+Tenth Circuit         &  2.805 & (2.398, 3.281) \\
+Eleventh Circuit      &  1.625 & (1.346, 1.961) \\
 \addlinespace[0.5em]
 \textit{Case Characteristics} & & \\
-Origin: Removed       &  1.540 & (1.053, 2.252) \\
-Origin: MDL           &  0.517 & (0.409, 0.654) \\
-Origin: Other         &  1.755 & (1.536, 2.005) \\
-MDL Flag              &  0.284 & (0.212, 0.379) \\
-Federal Question      &  3.849 & (1.830, 8.098) \\
+Origin: MDL           &  0.397 & (0.330, 0.478) \\
+Origin: Other         &  1.720 & (1.543, 1.918) \\
+MDL Flag              &  0.490 & (0.425, 0.566) \\
+Federal Question      &  2.830 & (1.702, 4.706) \\
 \addlinespace[0.5em]
 \textit{Statutory Basis (Ref: 10(b))} & & \\
-Section 11            &  1.167 & (1.013, 1.345) \\
-Other/Both Statutory  &  1.117 & (0.999, 1.250) \\
-Missing               &  1.016 & (0.731, 1.414) \\
+Section 11            &  1.091 & (0.979, 1.217) \\
+Other/Both Statutory  &  0.994 & (0.902, 1.095) \\
+Missing               &  0.831 & (0.600, 1.151) \\
 \bottomrule
 \end{tabular*}
 \end{table}
@@ -858,67 +861,68 @@ Missing               &  1.016 & (0.731, 1.414) \\
 \toprule
 \textbf{Covariate} & \textbf{HR} & \textbf{95\% CI} \\
 \midrule
-Post-PSLRA            & 1.751 & (1.599, 1.918) \\
+Post-PSLRA            & 1.661 & (1.493, 1.847) \\
 \addlinespace[0.5em]
 \textit{Circuit (Ref: Second Circuit)} & & \\
-First Circuit         & 1.243 & (1.096, 1.410) \\
-Third Circuit         & 0.966 & (0.871, 1.071) \\
-Fourth Circuit        & 0.707 & (0.603, 0.828) \\
-Fifth Circuit         & 1.184 & (1.077, 1.303) \\
-Sixth Circuit         & 0.685 & (0.586, 0.801) \\
-Seventh Circuit       & 0.959 & (0.856, 1.073) \\
-Eighth Circuit        & 0.944 & (0.832, 1.072) \\
-Ninth Circuit         & 0.904 & (0.855, 0.954) \\
-Tenth Circuit         & 0.813 & (0.719, 0.920) \\
-Eleventh Circuit      & 1.181 & (1.069, 1.305) \\
+First Circuit         & 1.194 & (1.025, 1.390) \\
+Third Circuit         & 0.870 & (0.766, 0.989) \\
+Fourth Circuit        & 0.643 & (0.527, 0.783) \\
+Fifth Circuit         & 1.202 & (1.073, 1.347) \\
+Sixth Circuit         & 0.833 & (0.702, 0.988) \\
+Seventh Circuit       & 1.200 & (1.058, 1.361) \\
+Eighth Circuit        & 0.910 & (0.782, 1.058) \\
+Ninth Circuit         & 0.968 & (0.907, 1.033) \\
+Tenth Circuit         & 0.727 & (0.621, 0.851) \\
+Eleventh Circuit      & 1.222 & (1.084, 1.378) \\
 \addlinespace[0.5em]
 \textit{Case Characteristics} & & \\
-Origin: Removed       & 0.791 & (0.632, 0.990) \\
-Origin: MDL           & 0.215 & (0.180, 0.256) \\
-Origin: Other         & 1.035 & (0.953, 1.124) \\
-MDL Flag              & 0.247 & (0.219, 0.277) \\
-Federal Question      & 2.145 & (1.522, 3.022) \\
+Origin: MDL           & 0.323 & (0.261, 0.400) \\
+Origin: Other         & 0.857 & (0.777, 0.945) \\
+MDL Flag              & 0.106 & (0.084, 0.134) \\
+Federal Question      & 2.148 & (1.368, 3.373) \\
 \addlinespace[0.5em]
 \textit{Statutory Basis (Ref: 10(b))} & & \\
-Section 11            & 1.118 & (1.044, 1.197) \\
-Other/Both Statutory  & 1.029 & (0.966, 1.096) \\
-Missing               & 0.971 & (0.779, 1.211) \\
+Section 11            & 1.167 & (1.074, 1.269) \\
+Other/Both Statutory  & 1.097 & (1.019, 1.181) \\
+Missing               & 0.851 & (0.646, 1.122) \\
 \bottomrule
 \end{tabular*}
 \end{table}
 
-MDL consolidation is associated with large and approximately
-symmetric changes in both outcome hazards. Cases assigned to an MDL docket have
-a 72\% lower settlement hazard (HR $= 0.284$, 95\% CI:
-0.212--0.379) and a 75\% lower dismissal hazard (HR $= 0.247$,
-95\% CI: 0.219--0.277). This bilateral suppression indicates
-that MDL consolidation dramatically prolongs case pendency by
-suspending normal resolution dynamics while coordinating
-discovery and bellwether proceedings across related cases.
+MDL consolidation is associated with large suppression
+of both outcome hazards. Cases assigned to an MDL docket
+have a 51\% lower settlement hazard (HR $= 0.490$, 95\% CI:
+0.425--0.566) and a 89\% lower dismissal hazard
+(HR $= 0.106$, 95\% CI: 0.084--0.134). The asymmetric
+magnitude---dismissal is suppressed far more than
+settlement---indicates that MDL consolidation does not
+merely slow resolution uniformly but is associated with a
+fundamental alteration in
+the balance between competing outcomes, a finding whose
+implications are explored in the Fine-Gray comparison below.
 Federal question jurisdiction is associated with higher
-hazards for both outcomes ($\text{HR}_\text{settle} = 3.849$,
-$\text{HR}_\text{dismiss} = 2.145$). Section~11 cases have a
+hazards for both outcomes ($\text{HR}_\text{settle} = 2.830$,
+$\text{HR}_\text{dismiss} = 2.148$). Section~11 cases have a
 modestly higher dismissal hazard than Section~10(b) cases
-(HR $= 1.118$, 95\% CI: 1.044--1.197) and a modestly higher
-settlement hazard (HR $= 1.167$, 95\% CI: 1.013--1.345).
+(HR $= 1.167$, 95\% CI: 1.074--1.269).
 
 Grambsch-Therneau global tests reject proportional hazards
-in both extended models (settlement: $\chi^2 = 301.1$,
-$p < 0.001$; dismissal: $\chi^2 = 471.2$, $p < 0.001$),
+in both extended models (settlement: $\chi^2 = 597.4$,
+$p < 0.001$; dismissal: $\chi^2 = 361.8$, $p < 0.001$),
 driven primarily by circuit, origin, MDL flag, and statutory
-basis. As in Section~\ref{sec:results_pslra}, the extended
-Cox estimates should be interpreted as average associations
-over the study period.
+basis. The time-averaged interpretation noted in
+Section~\ref{sec:results_pslra} applies here as well.
 
 \subsection{Cause-Specific versus Subdistribution Models}
 
-While cause-specific hazard ratios isolate a covariate's
-association with one outcome holding the competing risk fixed,
-the Fine-Gray subdistribution hazard ratio captures the net
-association with cumulative incidence---accounting for both
-the direct pathway and the indirect pathway through the
-competing event. Table~\ref{tab:fg_comparison} compares the
-two frameworks for selected covariates in the extended models.
+The cause-specific and subdistribution frameworks diverge
+sharply for covariates that suppress both competing
+hazards simultaneously---most dramatically for MDL
+consolidation, where the two estimands carry opposite
+signs (Table~\ref{tab:fg_comparison}).
+Recall that the cause-specific HR holds the competing
+pathway fixed, while the Fine-Gray SHR directly reflects
+the cumulative probability of the focal outcome.
 
 \begin{table}[htbp]
 \centering
@@ -929,11 +933,11 @@ two frameworks for selected covariates in the extended models.
 \toprule
 \textbf{Outcome} & \textbf{Covariate} & \textbf{CS HR} & \textbf{FG SHR} & \textbf{FG 95\% CI} & \textbf{FG $p$} \\
 \midrule
-Settlement & Post-PSLRA & 0.702 & 0.454 & (0.414, 0.498) & $< 0.001$ \\
-           & MDL Flag   & 0.284 & 1.167 & (0.913, 1.492) & 0.217 \\
+Settlement & Post-PSLRA & 0.784 & 0.503 & (0.452, 0.560) & $< 0.001$ \\
+           & MDL Flag   & 0.490 & 2.468 & (2.241, 2.717) & $< 0.001$ \\
 \midrule
-Dismissal  & Post-PSLRA & 1.751 & 1.864 & (1.731, 2.007) & $< 0.001$ \\
-           & MDL Flag   & 0.247 & 0.488 & (0.460, 0.517) & $< 0.001$ \\
+Dismissal  & Post-PSLRA & 1.661 & 1.719 & (1.549, 1.908) & $< 0.001$ \\
+           & MDL Flag   & 0.106 & 0.174 & (0.138, 0.219) & $< 0.001$ \\
 \bottomrule
 \end{tabular*}
 \begin{minipage}{\textwidth}
@@ -944,8 +948,8 @@ Dismissal  & Post-PSLRA & 1.751 & 1.864 & (1.731, 2.007) & $< 0.001$ \\
 
 For the PSLRA, Fine-Gray subdistribution hazard ratios are
 more extreme than cause-specific ratios for both outcomes
-(settlement SHR $= 0.454$ vs.\ CS HR $= 0.702$; dismissal
-SHR $= 1.864$ vs.\ CS HR $= 1.751$). The amplification
+(settlement SHR $= 0.503$ vs.\ CS HR $= 0.784$; dismissal
+SHR $= 1.719$ vs.\ CS HR $= 1.661$). The amplification
 occurs because the PSLRA is associated with increased
 dismissals, which reduces the pool of cases available to
 settle; the subdistribution model captures this indirect
@@ -953,25 +957,35 @@ pathway through the competing risk while the cause-specific
 model holds it fixed.
 
 The MDL comparison is the most analytically revealing
-divergence. Despite the dramatically lower cause-specific
-settlement hazard (HR $= 0.284$), the Fine-Gray
-subdistribution hazard ratio for settlement is modestly
-above 1 (SHR $= 1.167$), though \emph{not statistically
-significant} ($p = 0.217$, 95\% CI: 0.913--1.492). The
-reconciliation is that MDL cases also have very low
-dismissal hazard (CS HR $= 0.247$): because MDL cases
-rarely get dismissed, the pool available to settle remains
-large throughout, and cumulative settlement probability is
-not detectably different from non-MDL cases despite the
-substantially lower instantaneous settlement rate. This sign
-reversal---visible only through competing-risks
-analysis---illustrates why both frameworks are necessary for
-a complete picture of resolution dynamics.
+divergence. The intuition is this: MDL cases resolve slowly,
+but because they are almost never \emph{dismissed}, the cases
+that would have exited via dismissal in a non-MDL setting
+instead remain available to settle, and over time more of
+them do. A lower rate of settlement at any given moment can
+produce a \emph{higher} cumulative probability of settlement
+when the competing exit route is nearly shut off.
+
+Despite the substantially lower cause-specific
+settlement hazard (CS HR $= 0.490$), the Fine-Gray
+subdistribution hazard ratio for settlement is
+\emph{significantly above unity} (SHR $= 2.468$,
+95\% CI: 2.241--2.717, $p < 0.001$). The reconciliation
+lies in the competing pathway: MDL cases have an
+extremely low dismissal hazard (CS HR $= 0.106$), so the
+pool of MDL cases available to settle remains large
+throughout follow-up. Despite resolving more slowly at any
+given moment, MDL cases accumulate substantially higher
+cumulative settlement probability than non-MDL cases
+precisely because so few are dismissed along the way. This
+sign reversal---a lower instantaneous settlement rate
+producing a \emph{higher} cumulative settlement
+probability---is visible only through competing-risks
+analysis and represents one of the strongest
+methodological arguments for the dual-framework approach
+used in this thesis.
 
 %% ============================================================
-%% SECTION 5.5 — DIAGNOSTICS (Task 12, rebuilt 2026-04-03)
-%% All numbers verified against 07_diagnostics.R, 05_causal_iptw.R,
-%% 06_frailty.R output (2026-04-01 pipeline, re-verified 2026-04-03).
+%% SECTION 5.5 — DIAGNOSTICS
 %% ============================================================
 
 \section{Model Diagnostics and Validation}
@@ -981,18 +995,17 @@ This section evaluates the assumptions underlying the
 models presented in
 Sections~\ref{sec:results_pslra}--\ref{sec:results_characteristics}
 and quantifies their predictive performance. We address
-four diagnostic dimensions: proportional hazards testing,
+five diagnostic dimensions: cause-specific proportional
+hazards testing, Fine-Gray proportional hazards testing,
 covariate balance under IPTW weighting, frailty variance
 estimation, and out-of-sample discrimination.
 
 \subsection{Proportional Hazards Assessment}
 \label{subsec:ph_diagnostics}
 
-The Cox proportional hazards model assumes that each
-covariate's effect on the hazard is constant over time. A
-violation of this assumption does not invalidate the model
-but means that estimated hazard ratios are best interpreted
-as time-averaged summaries rather than constant multipliers.
+As noted in Section~\ref{sec:results_pslra}, PH violations
+do not invalidate the Cox model but imply that constant
+hazard ratios are time-averaged summaries.
 Table~\ref{tab:ph_tests} reports the Grambsch--Therneau test
 applied to the extended cause-specific models.
 
@@ -1008,14 +1021,14 @@ applied to the extended cause-specific models.
 \cmidrule(lr){2-3} \cmidrule(lr){4-5}
 \textbf{Covariate} & $\chi^2$ & $p$ & $\chi^2$ & $p$ \\
 \midrule
-\texttt{post\_pslra}   & 50.41  & $< 0.001$ &  2.42 & 0.120 \\
-\texttt{circuit\_f}     & 185.0  & $< 0.001$ & 236.8 & $< 0.001$ \\
-\texttt{origin\_cat}    & 235.0  & $< 0.001$ &  83.0 & $< 0.001$ \\
-\texttt{mdl\_flag}      &  0.004 & 0.952     & 137.6 & $< 0.001$ \\
-\texttt{juris\_fq}      &  0.37  & 0.544     &   2.52 & 0.113 \\
-\texttt{stat\_basis\_f} &  9.18  & 0.027     &  60.1 & $< 0.001$ \\
+\texttt{post\_pslra}   & 92.35  & $< 0.001$ &  14.67 & $< 0.001$ \\
+\texttt{circuit\_f}     & 268.9  & $< 0.001$ & 177.1 & $< 0.001$ \\
+\texttt{origin\_cat}    & 241.2  & $< 0.001$ & 132.0 & $< 0.001$ \\
+\texttt{mdl\_flag}      & 197.3  & $< 0.001$ &  1.053 & 0.305 \\
+\texttt{juris\_fq}      &  0.004 & 0.947     &   2.668 & 0.102 \\
+\texttt{stat\_basis\_f} &  59.76 & $< 0.001$ &  63.26 & $< 0.001$ \\
 \addlinespace[0.3em]
-\textbf{GLOBAL}        & 301.1  & $< 0.001$ & 471.2 & $< 0.001$ \\
+\textbf{GLOBAL}        & 597.4  & $< 0.001$ & 361.8 & $< 0.001$ \\
 \bottomrule
 \end{tabular}
 \begin{minipage}{\textwidth}
@@ -1027,21 +1040,33 @@ levels.
 \end{minipage}
 \end{table}
 
-Both the settlement and dismissal models reject the
-global proportional hazards null ($\chi^2 = 301.1$ and
-$471.2$, respectively; both $p < 0.001$). This result is
-expected in a sample of $n = 12{,}866$ spanning 34 years:
-even modest departures from proportionality are detected
-with high power. Among individual covariates, the PSLRA
-indicator violates proportional hazards in the settlement
-model ($\chi^2 = 50.41$, $p < 0.001$) but not in the
-dismissal model ($\chi^2 = 2.42$, $p = 0.12$), consistent
-with the piecewise analysis in
-Section~\ref{sec:results_pslra} showing that the PSLRA's
-association with dismissal is concentrated in the first
-year and re-emerges beyond two years. Circuit and origin
-covariates violate proportionality in both models,
-reflecting their evolving role over multi-decade follow-up.
+Both models reject the global proportional hazards null
+($\chi^2 = 597.4$ and $361.8$, respectively; both
+$p < 0.001$). This is expected in a sample of
+$n = 12{,}866$ spanning 34 years: even modest departures
+from proportionality are detected with high power. The
+PSLRA indicator violates proportional hazards in both
+models---settlement ($\chi^2 = 92.35$, $p < 0.001$) and
+dismissal ($\chi^2 = 14.67$, $p < 0.001$)---confirming
+that the PSLRA's association with both outcomes varies
+over case duration. This is consistent with the piecewise
+analysis in Section~\ref{sec:results_pslra}, which
+documents a monotonically declining dismissal association
+and a settlement suppression that weakens at longer
+durations. Circuit, origin, and statutory basis covariates
+also violate proportionality in both models, reflecting
+their evolving role over multi-decade follow-up.
+
+The Fine-Gray models exhibit the same issue. For the
+settlement subdistribution model, the post-PSLRA term rejects
+proportional hazards ($\chi^2 = 54.92$,
+$p = 1.25 \times 10^{-13}$), and the global test rejects
+strongly ($\chi^2 = 1463.8$, $p < 0.001$). For dismissal,
+the post-PSLRA term also rejects proportional hazards
+($\chi^2 = 11.78$, $p = 5.97 \times 10^{-4}$), with a
+global statistic of $\chi^2 = 346.5$ ($p < 0.001$). The PH
+violations documented in this thesis are therefore not
+confined to the cause-specific Cox framework.
 
 Figure~\ref{fig:schoenfeld} displays scaled Schoenfeld
 residuals for the PSLRA indicator plotted against time.
@@ -1049,9 +1074,9 @@ In the settlement model, the smoothed trajectory drifts
 upward from the constant-HR baseline, indicating that
 the settlement-suppression association weakens at longer
 durations. In the dismissal model, the trajectory
-remains close to the fitted coefficient line, confirming
-that the time-averaged HR provides a reasonable summary of
-the dismissal association.
+trends downward over time, consistent with the piecewise
+finding that the PSLRA's dismissal association is
+strongest in the first year and decays thereafter.
 
 \begin{figure}[htbp]
 \centering
@@ -1068,14 +1093,11 @@ from the dashed line indicates non-proportionality.}
 \end{figure}
 
 These violations motivate two responses already
-incorporated in our analysis. First, the piecewise Cox
-model (Section~\ref{sec:results_pslra}) decomposes the
-time-varying PSLRA association into distinct periods, capturing
-the non-proportionality directly. Second, all constant-HR
-estimates throughout this chapter---including the IPTW
-composition-adjusted estimates---are interpreted as
-time-averaged summaries rather than literal constant
-multipliers.
+incorporated in our analysis: the piecewise Cox model
+(Section~\ref{sec:results_pslra}) decomposes the
+time-varying PSLRA association directly, and all constant-HR
+estimates carry the time-averaged interpretation established
+in Section~\ref{sec:results_pslra}.
 
 \subsection{IPTW Covariate Balance}
 \label{subsec:iptw_balance}
@@ -1090,9 +1112,12 @@ trimming (cap $\approx 43.5$), which reweight the smaller
 pre-PSLRA cohort to match the post-PSLRA covariate
 distribution.
 
-Figure~\ref{fig:iptw_balance} presents the Love plot of
-standardized mean differences before and after
-weighting. After weighting, all 19 covariate levels
+Figure~\ref{fig:iptw_balance} presents the Love plot---a
+diagnostic display in which each row is a covariate and the
+horizontal axis shows the standardized mean difference (SMD)
+between treated and control groups before and after
+weighting; covariates falling within $|\text{SMD}| < 0.1$
+are considered adequately balanced. After weighting, all 20 covariate-level balance rows
 achieve $|\text{SMD}| < 0.10$, the conventional threshold
 for adequate balance \citep{austinfine2025}. The largest
 residual imbalance is $\text{SMD} = 0.035$ (Section~11
@@ -1109,7 +1134,7 @@ all eight IPTW hazard ratios achieving $p < 0.001$
 \centering
 \includegraphics[width=0.75\textwidth]{fig_iptw_balance.pdf}
 \caption{Love plot of standardized mean differences before
-(unadjusted) and after IPTW weighting. All 19 covariate
+(unadjusted) and after IPTW weighting. All 20 covariate-level balance
 levels fall below the $|\text{SMD}| = 0.10$ threshold
 after weighting. ATT weights with 99th-percentile trimming;
 effective sample size = 578.}
@@ -1122,8 +1147,7 @@ cases overlap only in a narrow central range, reflecting the 11.6:1
 post-to-pre imbalance inherent to the legislative date cutoff. Cases in
 regions of near-zero overlap receive extreme ATT weights; trimming at the
 99th percentile (cap $\approx 43.5$) discards the most extreme pre-PSLRA
-reweightings at the cost of 11 observations and reduces the ESS from
-approximately 600 to 578.
+reweightings and reduces the effective sample size to 578.
 
 \begin{figure}[htbp]
 \centering
@@ -1146,10 +1170,12 @@ Second, several covariates---circuit filing location,
 MDL consolidation, case origin---may themselves be
 consequences of the PSLRA rather than pre-treatment
 confounders. If the PSLRA altered where and how cases were
-filed, then adjusting for these covariates removes part
-of the PSLRA's effect pathway, and the composition-adjusted
-HR is best interpreted as a lower bound on the total
-PSLRA association (see Section~\ref{sec:results_pslra}).
+filed, then adjusting for these covariates conditions on
+potential downstream channels of the reform. The
+composition-adjusted HR should therefore be interpreted as
+the portion of the association that remains after
+conditioning on those observables, not as a literal lower
+bound on the total PSLRA association.
 
 \subsection{Frailty Variance}
 \label{subsec:frailty_diagnostics}
@@ -1162,30 +1188,23 @@ quantity is the frailty variance $\hat{\theta}$, which
 measures the magnitude of unobserved between-circuit
 variation on the log-hazard scale.
 
-For the extended settlement model, $\hat{\theta} = 0.449$,
-suggestive of unobserved circuit-level heterogeneity beyond what covariates explain, though the 11-cluster constraint makes this estimate highly imprecise. For the
-extended dismissal model, $\hat{\theta} = 0.033$,
+For the extended settlement model, $\hat{\theta} = 0.130$,
+suggesting modest residual circuit-level heterogeneity
+beyond what the fixed-effect covariates capture. For the
+extended dismissal model, $\hat{\theta} = 0.040$,
 indicating that the covariate-adjusted dismissal hazard
 is comparatively uniform across circuits. The contrast
-is consistent with settlement outcomes being more
-sensitive to local judicial culture and bar practices
+is consistent with settlement outcomes being somewhat
+more sensitive to local judicial culture and bar practices
 than dismissal outcomes, which are more tightly governed
 by federal procedural standards.
 
-These estimates carry an important limitation: the frailty
-models use only 11 circuit-level clusters (circuits with
-$\geq 50$ cases), below the 20--30 clusters typically
-recommended for reliable variance component estimation.
-With so few clusters, the frailty variance may be biased
-downward, and confidence intervals for $\hat{\theta}$ are
-unreliable. For this reason, the frailty analysis is
-framed as a sensitivity analysis throughout---its primary
-value lies in confirming that the PSLRA hazard ratio is
-virtually unchanged between fixed-effect and
-random-effect specifications ($\Delta \text{HR} < 0.002$
-for both outcomes) and in providing cluster-robust standard
-errors that widen the confidence intervals appropriately
-(Section~\ref{sec:results_circuits}).
+The small-cluster limitation discussed in
+Section~\ref{sec:frailty} applies; the frailty analysis is
+a sensitivity check whose primary value lies in confirming
+that the PSLRA hazard ratio is virtually unchanged between
+fixed-effect and random-effect specifications
+($\Delta \text{HR} < 0.002$ for both outcomes).
 
 \subsection{Predictive Discrimination}
 \label{subsec:discrimination}
@@ -1211,11 +1230,11 @@ predictions.
 \textbf{Model} & \textbf{C-index} & \textbf{AUC@1yr}
   & \textbf{AUC@3yr} & \textbf{AUC@5yr} & \textbf{IBS} \\
 \midrule
-Cox (Settlement)       & 0.727 & 0.750 & 0.737 & 0.835 & 0.100 \\
-Cox (Dismissal)        & 0.597 & 0.595 & 0.635 & 0.781 & 0.181 \\
+Cox (Settlement)       & 0.679 & 0.732 & 0.705 & 0.793 & 0.121 \\
+Cox (Dismissal)        & 0.597 & 0.595 & 0.643 & 0.775 & 0.184 \\
 \addlinespace[0.5em]
-Fine-Gray (Settlement) & 0.662 & 0.693 & 0.645 & 0.599 & --- \\
-Fine-Gray (Dismissal)  & 0.578 & 0.559 & 0.606 & 0.754 & --- \\
+Fine-Gray (Settlement) & 0.555 & 0.659 & 0.531 & 0.377 & --- \\
+Fine-Gray (Dismissal)  & 0.595 & 0.592 & 0.633 & 0.770 & --- \\
 \bottomrule
 \end{tabular*}
 \begin{minipage}{\textwidth}
@@ -1239,175 +1258,55 @@ infinite coefficients that prevent prediction).
 \end{minipage}
 \end{table}
 
-The Cox model achieves moderate discrimination for
-settlement outcomes (C-index $= 0.727$), with
-time-dependent AUC rising from 0.750 at one year to
-0.835 at five years. The improvement at longer horizons
-reflects the accumulating influence of observable case
-characteristics---particularly circuit geography and PSLRA
-regime---on settlement timing. For dismissal, discrimination
-is weaker (C-index $= 0.597$, AUC@1yr $= 0.595$),
-suggesting that unobserved case-merit factors such as the
-strength of the underlying legal claims, quality of
-counsel, and evidentiary posture play a larger role in
-dismissal outcomes than the structural covariates available
-in the IDB.
+The predictive picture is uneven. The cause-specific Cox
+model performs best for settlement, with moderate
+discrimination overall and a non-monotone AUC trajectory
+that is weakest at three years and strongest at five. The
+dismissal-side Cox model is weaker, suggesting that
+unobserved case-merit factors remain important. Fine-Gray
+performance is lower overall, and the settlement
+subdistribution model is especially weak by five years
+(AUC@5yr $= 0.377$), falling below the no-skill threshold in
+Figure~\ref{fig:auc_over_time}. Cox IBS values of 0.121 for
+settlement and 0.184 for dismissal indicate improvement over
+naive marginal prediction, but they also confirm substantial
+residual uncertainty.
 
-The Fine-Gray models show lower C-indices than their
-cause-specific Cox counterparts (0.662 vs.\ 0.727 for
-settlement; 0.578 vs.\ 0.597 for dismissal). This gap
-is partly methodological: the Fine-Gray C-index is an
-approximation because the concordance computation treats
-competing events as censored, whereas the subdistribution
-framework keeps those subjects at risk. The Fine-Gray
-settlement AUC@5yr (0.599) is low, reflecting the
-difficulty of discriminating long-horizon settlement
-probability when competing dismissals progressively
-remove cases from the risk set.
-
-The integrated Brier score, which measures average
-squared prediction error over time (lower values indicate
-better calibration), confirms the discrimination pattern:
-Cox settlement IBS $= 0.100$ (vs.\ reference
-Kaplan-Meier IBS $= 0.124$, a 19\% reduction), and Cox
-dismissal IBS $= 0.181$ (vs.\ reference $= 0.207$, a 13\%
-reduction). The models improve upon marginal prediction
-but leave substantial residual uncertainty---consistent
-with the moderate C-indices and the expectation that
-administrative data cannot capture case-specific legal
-merit.
-
-Figure~\ref{fig:auc_over_time} visualizes the AUC trajectories across
-prediction horizons. The Cox settlement model's AUC rises steadily from
-0.750 at one year to 0.835 at five years, reflecting the accumulating
-influence of circuit and PSLRA regime on long-horizon outcomes. The
-Fine-Gray models show comparatively lower and flatter discrimination,
-consistent with the methodological limitations of the approximated C-index
-noted above.
+Figure~\ref{fig:auc_over_time} visualizes the same ranking
+across horizons: Cox settlement performs best, Cox dismissal
+is weaker, and Fine-Gray settlement deteriorates sharply at
+long horizons.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\linewidth]{fig_auc_over_time.pdf}
 \caption{Time-dependent AUC at 1, 2, 3, and 5-year prediction horizons for
 cause-specific Cox and Fine-Gray models on the held-out 30\% test set
-($n = 3{,}861$). The Cox settlement model improves markedly at longer
-horizons (AUC: 0.750 $\to$ 0.835); Fine-Gray models show comparatively
-lower discrimination. Dotted line marks the no-skill classifier
-(AUC $= 0.5$). Computed via \texttt{timeROC} with IPCW weights.}
+($n = 3{,}861$). Cox settlement performs best overall,
+Fine-Gray models show lower discrimination, and the
+Fine-Gray settlement curve falls below
+the no-skill line by year five. Dotted line marks the no-skill
+classifier (AUC $= 0.5$). Computed via \texttt{timeROC} with IPCW
+weights.}
 \label{fig:auc_over_time}
 \end{figure}
 
 %% ============================================================
-%% SECTION 5.6 — SUMMARY (Task 12, rebuilt 2026-04-03)
-%% All numbers verified against session-log.md Section 3
-%% and R output (2026-04-01 pipeline, re-verified 2026-04-03).
+%% SECTION 5.6 — SUMMARY
 %% ============================================================
 
 \section{Summary of Findings}
 \label{sec:results_summary}
 
-This section consolidates the principal results of the
-competing-risks analysis. We organize findings into two
-tiers: associational results from the cause-specific Cox
-and Fine-Gray models (Tier~1), and composition-adjusted
-results from the IPTW analysis that account for observable
-shifts in the case mix across the pre- and post-PSLRA
-periods (Tier~2). Unless otherwise noted, all hazard ratios
-are from the extended specification with full covariates.
-
-\begin{enumerate}
-
-\item \textbf{The PSLRA is associated with a temporally structured elevation in dismissal hazard---concentrated in the first year, null in the second, and modestly re-emergent thereafter (Tier~1)---and this association survives composition adjustment (Tier~2).} The extended
-cause-specific Cox model yields a dismissal hazard ratio
-of $\text{HR} = 1.751$ ($p < 0.001$), and the
-composition-adjusted IPTW marginal structural estimate is
-$\text{HR} = 1.526$ ($p < 0.001$). Across all seven
-robustness specifications---alternative disposition coding
-schemes, temporal restrictions, circuit sub-samples, and
-flexible spline time-trend controls---the dismissal HR
-ranges from 1.32 to 2.45, with none crossing unity.
-
-\item \textbf{The PSLRA's association with dismissal is
-concentrated in the first year of litigation and exhibits a
-three-phase temporal pattern (Tier~1).} The piecewise Cox
-model shows a strong early-phase effect (0--1 year:
-$\text{HR} = 1.948$, $p < 0.001$), no detectable
-association during the second year ($\text{HR} = 1.050$,
-$p = 0.582$), and a modest re-emergence beyond two years
-($\text{HR} = 1.329$, $p < 0.001$). This temporal
-structure aligns with the PSLRA's heightened pleading
-standards, which primarily affect the motion-to-dismiss
-stage.
-
-\item \textbf{The PSLRA is associated with settlement
-suppression, but this association is fragile under
-alternative specifications (Tiers~1 and~2).} The
-baseline cause-specific Cox model estimates a settlement
-$\text{HR} = 0.445$ ($p < 0.001$), which attenuates to
-0.690 ($p < 0.001$) after IPTW composition adjustment
-and to 0.610 ($p = 0.001$) under flexible spline
-time-trend controls. The settlement association loses
-statistical significance entirely in circuit-specific
-sub-samples (Second Circuit: $\text{HR} = 0.980$,
-$p = 0.953$; Ninth Circuit: $\text{HR} = 0.869$,
-$p = 0.129$). A 1992 placebo cutoff test detects
-significant pre-existing trends in the pre-PSLRA period
-(dismissal $\text{HR} = 0.719$, $p < 0.001$), further
-limiting the attributability of the settlement-suppression
-association---and all PSLRA associations---to the reform
-itself.
-
-\item \textbf{Circuit geography is the dominant structural
-predictor of case outcomes, with substantial unobserved
-heterogeneity in settlement but not dismissal (Tiers~1
-and~2).} Circuit indicators account for the largest share
-of explained variation in both Cox models. The shared
-frailty model estimates a settlement frailty variance of
-$\hat{\theta} = 0.449$---suggestive of unobserved
-circuit-level heterogeneity beyond what covariates
-capture, though highly uncertain with only 11 clusters---versus $\hat{\theta} = 0.033$ for dismissal.
-This contrast suggests that settlement outcomes are
-more sensitive to local judicial culture and bar
-practices, while dismissal outcomes are more tightly
-governed by federal procedural standards. The 11-cluster
-limitation warrants caution in interpreting the magnitude
-of $\hat{\theta}$, but the qualitative settlement--dismissal
-contrast is robust.
-
-\item \textbf{The PSLRA's associations are heterogeneous
-across circuits (Tier~1).} Interaction models reveal that the
-reform's settlement suppression is weakest in the Second
-Circuit and its dismissal amplification is most strongly
-attenuated in the Fourth and Eleventh Circuits. This geographic
-heterogeneity implies that the PSLRA's practical impact
-depends on where a case is filed.
-
-\item \textbf{MDL consolidation suppresses both
-cause-specific hazards, but competing-risks analysis
-reveals a sign reversal invisible to single-outcome
-models (Tier~1).} The cause-specific Cox model estimates
-that MDL cases face substantially lower instantaneous
-settlement and dismissal rates. However, the Fine-Gray
-subdistribution model yields a modestly \emph{higher}
-cumulative settlement probability
-($\text{SHR} = 1.167$, $p = 0.217$): because MDL
-cases are rarely dismissed, the pool available to
-settle remains large throughout follow-up, and
-cumulative settlement probability is not detectably
-lower than in non-MDL cases despite the reduced
-instantaneous rate.
-
-\item \textbf{Observable covariates achieve moderate
-predictive discrimination for settlement but weak
-discrimination for dismissal.} The cause-specific Cox
-model attains a C-index of 0.727 for settlement and
-0.597 for dismissal on the held-out test set. The gap
-indicates that dismissal outcomes depend more heavily on
-unobserved case-merit factors---such as the strength of
-the underlying legal claims, quality of counsel, and
-evidentiary posture---than on the structural covariates
-available in the IDB. This finding underscores both the
-value and the limits of administrative data for modeling
-litigation outcomes.
-
-\end{enumerate}
+This section closes the empirical chapter with two broad
+conclusions. The dismissal association is the stable
+finding: it is positive in every specification,
+concentrated early in case life, and still above unity after
+composition adjustment. The settlement association is
+materially weaker, attenuating under time-trend control and
+failing the cluster-robust and major circuit-specific
+checks. Competing-risks methods also expose heterogeneity
+that single-outcome models would miss, especially circuit
+geography and the MDL sign reversal. Chapter~\ref{ch:discussion}
+interprets these patterns and the identification limits that
+bound them.

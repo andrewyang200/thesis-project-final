@@ -1,6 +1,6 @@
 # Thesis State — Current Code-Side Source of Truth
 
-> Last updated: 2026-04-07.
+> Last updated: 2026-04-08.
 > Use `docs/authoritative-numbers.md` and `code/utils/extract_all_numbers.R` for exact thesis numbers.
 > This file is the condensed continuity summary for future sessions.
 
@@ -9,8 +9,8 @@
 ## 1. Status
 
 - **Phase 1-3**: complete.
-- **Phase 4**: code-side verification complete; LaTeX propagation and final thesis-level review still pending.
-- **Current blocker**: update the chapter `.tex` files to match the verified 2026-04-07 outputs, then run final `/review` and `/challenge`.
+- **Phase 4**: chapter `.tex` propagation and thesis-level revision are complete against the verified 2026-04-07 / 2026-04-08 state.
+- **Current blocker**: one final fresh-eyes adversarial review for numeric traceability, overclaim / underclaim, redundancy, and any remaining defense vulnerabilities.
 
 ### Source Hierarchy
 1. `docs/authoritative-numbers.md`
@@ -118,7 +118,7 @@
 
 ---
 
-## 4. Writing Constraints and Stale Chapters
+## 4. Writing State and Remaining Watch Items
 
 ### Headline Writing Rules
 - Lead dismissal claims with the IPTW MSM dismissal estimate (`HR = 1.519`) rather than the spline extreme.
@@ -127,16 +127,13 @@
 - Report that both outcomes violate PH; do not describe the constant-HR models as fully time-invariant.
 - Report Fine-Gray honestly: stronger causal-composition contrast for settlement, but weaker discrimination than Cox.
 
-### Known Stale `.tex` Files
-- `writing/chapters/abstract.tex`
-- `writing/chapters/introduction.tex`
-- `writing/chapters/methodology.tex`
-- `writing/chapters/data.tex`
-- `writing/chapters/results.tex`
-- `writing/chapters/discussion.tex`
-- `writing/chapters/conclusion.tex`
+### Chapter State as of 2026-04-08
+- No core chapter should be treated as presumptively stale.
+- `writing/chapters/abstract.tex`, `writing/chapters/intro.tex`, `writing/chapters/litreview.tex`, `writing/chapters/methodology.tex`, `writing/chapters/data.tex`, `writing/chapters/results.tex`, `writing/chapters/discussion.tex`, and `writing/chapters/conclusion.tex` were reread and aligned to the refreshed outputs.
+- The discussion now carries the Code 6 / `93.4%` judgment-bearing asymmetry as a limitation; the conclusion only cross-references that limitation.
+- The results chapter now includes the settlement-side piecewise table and narrative, plus the Fine-Gray PH diagnostics.
 
-### Specific Stale Themes To Remove
+### Do Not Reintroduce
 - old Scheme A event shares (`20.9 / 67.3 / 11.7`)
 - old Cox numbers (`0.445`, `1.468`, `0.702`, `1.751`)
 - old Fine-Gray numbers (`0.454`, `1.864`)
@@ -145,6 +142,13 @@
 - any prose that treats judgment-bearing coding as a Code-6-only issue
 - any causal language stronger than the locked discipline above
 
+### Remaining Review Targets
+- unnecessary within- and cross-chapter repetition, especially `results -> discussion -> conclusion`
+- overclaim on the settlement side
+- underclaim or omission in limitations / diagnostics integration
+- any number in prose that cannot be traced to the current source hierarchy
+- final submission polish: citations, figure readability, and `writing/chapters/acknow.tex`
+
 ### Final Non-Code Item
 - `writing/chapters/acknow.tex` still needs Andrew's personal text.
 
@@ -152,11 +156,10 @@
 
 ## 5. Next Steps
 
-1. Propagate the verified 2026-04-07 numbers into the stale chapter files.
-2. Update prose so the coding rules, robustness ranges, PH violations, and Fine-Gray findings match the current outputs.
-3. Run thesis-level `/review` on the `.tex` files.
-4. Run thesis-level `/challenge` on the `.tex` files.
-5. Resolve any last citation, formatting, or number-integrity issues before submission.
+1. Run one final adversarial thesis-level review from a fresh chat with strict source hierarchy and no presumption that the prose is correct.
+2. Verify any remaining prose-level numbers that are challenged or appear weakly sourced.
+3. Resolve any final overclaim, underclaim, missing limitation, or redundancy issues surfaced by that review.
+4. Finish submission polish: citations, figure readability, formatting, and `writing/chapters/acknow.tex`.
 
 ---
 
@@ -174,3 +177,11 @@
 - regenerated `output/models/fine_gray_models.rds`
 - reconciled `docs/authoritative-numbers.md`, `code/utils/extract_all_numbers.R`, and the saved Fine-Gray artifact
 
+### 2026-04-08
+- verified the `93.4%` Code 6 asymmetry directly from the saved cleaned cohort artifact: `655 / 701` post-PSLRA plaintiff-victory reclassifications
+- verified and integrated Fine-Gray PH diagnostics (`54.92`, `1.25e-13`; `11.78`, `5.97e-04`) into the results diagnostics section
+- verified and integrated the settlement-side piecewise PSLRA results (`0.518`, `0.387`, `0.673`) into the results chapter with matching prose
+- corrected stale methodology / results language, including baseline model description and interaction examples
+- rebalanced the thesis so dismissal remains the strongest defended claim and settlement is described as materially more fragile
+- performed a full-thesis redundancy pass; tightened `intro`, `litreview`, `results`, `discussion`, and `conclusion`
+- moved the Code 6 asymmetry discussion out of `conclusion.tex` future directions and into `discussion.tex` limitations, leaving only a cross-reference in the conclusion

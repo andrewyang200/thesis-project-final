@@ -5,7 +5,7 @@
 This chapter motivates the research question---what determines the
 timing and type of resolution in federal securities class
 actions---situates the thesis within the empirical litigation
-literature, and states the five core contributions.
+literature, and summarizes the principal contributions.
 
 Federal securities class actions represent one of the most
 economically significant categories of civil litigation in the
@@ -57,11 +57,19 @@ court records only a dismissal---masking these ``hidden
 settlements'' and distorting true resolution probabilities
 \citep{scales2024}.
 
-This thesis addresses these gaps along two dimensions. Methodologically, it applies the first full competing-risks survival framework to federal securities class actions at population scale, drawing on 12,968 cases from the Federal Judicial Center's (FJC) Integrated Database (IDB) spanning 1990--2024. We characterize litigation duration nonparametrically using Aalen-Johansen cumulative incidence functions (CIFs), estimate both cause-specific Cox proportional hazards and Fine-Gray subdistribution models, and deploy inverse probability of treatment weighting (IPTW) to adjust for compositional differences between the pre- and post-PSLRA case populations---the first propensity-score application in this litigation domain. Because the PSLRA is a legislative date cutoff rather than a treatment influenced by case characteristics, we interpret the weighted estimates as composition-adjusted rather than causally identified. Circuit-level shared frailty models, using 11 circuits as clustering units after excluding circuits with fewer than 50 cases, complement these estimates as a sensitivity analysis quantifying unobserved jurisdictional heterogeneity.
+This thesis addresses these gaps along two dimensions. Methodologically, it applies, to our knowledge, the first full competing-risks survival framework to federal securities class actions at population scale, drawing on 12,968 cases from the Federal Judicial Center's (FJC) Integrated Database (IDB) spanning 1990--2024. We characterize litigation duration with Aalen-Johansen cumulative incidence functions (CIFs), estimate both cause-specific Cox proportional hazards and Fine-Gray subdistribution models, which directly parameterize the cumulative probability of each outcome, and use inverse probability of treatment weighting (IPTW) as a composition-adjustment strategy rather than a causal design. Circuit-level shared frailty models complement these estimates by quantifying residual jurisdictional heterogeneity.
 
-Substantively, examining more than 30~years of federal securities litigation dynamics, we find that the PSLRA's association with case outcomes is not a uniform shift but a temporally structured phenomenon. A piecewise Cox decomposition reveals a sharp dismissal hazard elevation in the first year of litigation---consistent with the heightened pleading standard operating at the motion-to-dismiss stage---followed by a null middle period and a modest late re-emergence. Across seven robustness specifications---including alternative disposition coding schemes, temporal restrictions, circuit sub-samples, and flexible spline time-trend controls---the PSLRA dismissal hazard ratio ranges from 1.32 to 2.45, with the composition-adjusted IPTW estimate at approximately 1.53 (a 53\% increase in the instantaneous rate of dismissal). The PSLRA is also associated with settlement suppression in the baseline specification (HR $= 0.445$), though this association attenuates substantially under flexible time-trend controls (HR $= 0.610$) and loses statistical significance entirely in circuit-specific sub-samples, suggesting that part of the raw settlement association reflects secular changes in litigation patterns. We further quantify how the PSLRA's association varies over litigation duration and across circuits, and how MDL consolidation bilaterally suppresses both competing hazards.
+Substantively, the results show that the PSLRA's association with case outcomes is not uniform over time. Its strongest and most defensible association is an increase in early dismissal hazard that fades over litigation duration. The settlement evidence points in the same direction in several specifications, including the piecewise model, but is materially more fragile under circuit-specific, time-trend, and cluster-robust checks. The thesis also shows that judicial geography is a major structural determinant of outcomes and that MDL consolidation changes the relationship between instantaneous hazards and cumulative outcome probabilities.
 
-On the data side, we address the well-documented challenges of the FJC Integrated Database \citep{clermont2002, alexander1991}, most notably the ambiguity of disposition Code~6, which we disaggregate using the IDB's JUDGMENT field to correctly classify 701 plaintiff-victory outcomes that would otherwise be recorded as dismissals. A 1992 placebo cutoff test reveals a significant pre-existing downward trend in dismissal rates---opposite in direction to the PSLRA's subsequent upward association---suggesting the reform overcame a secular headwind. This finding reinforces our decision to frame all estimates as associational or composition-adjusted rather than causally identified.
+On the data side, the thesis resolves two measurement
+problems in the FJC Integrated Database \citep{clermont2002,
+alexander1991}: ambiguity between settlement-like dismissals
+and true dismissals, and ambiguity within judgment-bearing
+dispositions. Chapter~\ref{ch:data} develops those coding
+choices and their sensitivity analyses in detail. Because the
+placebo and time-trend checks leave temporal confounding
+unresolved, the thesis frames its estimates as associational
+or composition-adjusted rather than causally identified.
 
 The remainder of this thesis is organized as follows.
 Chapter~\ref{ch:litreview} reviews the empirical securities
