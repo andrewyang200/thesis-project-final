@@ -205,7 +205,7 @@ All `\ref{}` calls have matching `\label{}` definitions. **No broken cross-refer
 ### \cite integrity
 - All cited keys exist in `refs.bib`. **No missing citations.**
 - **Uncited bib entries**: `eisenberg1997`, `heagerty2005`, `courtlistener`.
-- **Duplicate citation style** (rubric violation): `litreview.tex` line 129-130 writes `Wang et al.\ (2022) find that...settlement patterns \citep{wang2022}` — the name is written out AND cited parenthetically. Should use `\citet{wang2022}` or just the parenthetical.
+- **Duplicate citation style** (rubric violation): `litreview.tex` line 129-130 writes `Wang et al.\ (2022) find that...settlement patterns \citep{wang2022}` — the name is written out AND cited parenthetically. Should use `\citep{wang2022}` or just the parenthetical.
 
 ### Figure coverage
 All 8 figures referenced in text exist in `output/figures/`. RSF figures (7, 8) must be removed or replaced after the pivot. No PDF versions exist — only PNG.
@@ -295,7 +295,7 @@ All 8 figures referenced in text exist in `output/figures/`. RSF figures (7, 8) 
 | Introduction framing | Methods-focused, not causal inference | Rewrite contributions, reframe objective |
 | Causal language (results line 231) | "causal signature" used without IPTW | Remove causal language or qualify |
 | RSF references | Abandoned but still in intro, methodology, results | Remove Sections 22-23 references, update contribution (iv) |
-| Duplicate citation (litreview line 129) | Wang et al. cited two ways | Use `\citet` only |
+| Duplicate citation (litreview line 129) | Wang et al. cited two ways | Use `\citep` only |
 | Performance table (Table 5.11) | Numbers unreliable | Recompute after fixing bug |
 
 ### PARTIALLY DONE

@@ -119,7 +119,7 @@ thesis-project/
 - `code/verify_dismissal_flip.R` and `code/utils/judgment_diagnostic.R` are auxiliary sanity-check tools, not primary sources for thesis tables or prose
 
 ## Writing Conventions
-- Use `\citet{}` for "Author (Year)" and `\citep{}` for "(Author, Year)"
+- Use `\citep{}` for "Author (Year)" and `\citep{}` for "(Author, Year)"
 - Figures referenced as `Figure~\ref{fig:name}`, tables as `Table~\ref{tab:name}`
 - Equations numbered only when referenced later
 - American English spelling

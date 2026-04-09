@@ -37,13 +37,13 @@ was filed. Securities class actions are identified using NOS~850.
 
 \section{Sample Construction}
 
-We begin with all civil cases coded as NOS~850 filed from 1990 onward, yielding 65,899 cases. The 1990 start date balances sample size against data quality and provides a meaningful pre-PSLRA comparison period. We then retain cases with the IDB class action flag equal to~1, reducing the sample to 13,708 cases (20.8\% of NOS~850). Finally, we exclude cases with non-positive computed durations---740 zero-duration entries that we treat as administrative artifacts, though a small number may represent genuine same-day resolutions---yielding a final analysis sample of \textbf{12,968} federal securities class actions filed between 1990 and 2024.
+We begin with all civil cases coded as NOS~850 filed from 1990 onward, yielding 65,899 cases. The 1990 start date balances sample size against data quality and provides a meaningful pre-PSLRA comparison period. We then retain cases with the IDB class action flag equal to~1, restricting the sample to cases procedurally designated as class actions---the form of litigation directly subject to the PSLRA's heightened pleading requirements. This reduces the sample to 13,708 cases (20.8\% of NOS~850 filings). Finally, we exclude cases with non-positive computed durations---740 zero-duration entries that we treat as administrative artifacts, though a small number may represent genuine same-day resolutions---yielding a final analysis sample of 12,968 federal securities class actions filed between 1990 and 2024.
 
 \begin{table}[htbp]
 \centering
 \caption{Sample Construction}
 \label{tab:sample_construction}
-\renewcommand{\arraystretch}{1.2} % Vertical breathing room
+\renewcommand{\arraystretch}{1.2}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r r @{}}
 \toprule
 \textbf{Stage} & \textbf{N} & \textbf{\%} \\
@@ -66,11 +66,10 @@ issues directly relevant to our analysis
     class action flag misses substantial fractions of actual
     class actions and incorrectly flags some non-class
     actions \citep{clermont2002, alexander1991}. Because the
-    IDB case title field exhibits over 99\% missingness in our
-    NOS~850 sample, keyword-based identification is not
-    feasible with IDB data alone. CourtListener integration
-    for title-based validation is deferred to future work
-    (Chapter~\ref{ch:conclusion}).
+    IDB case title field is blank in most NOS~850 cases and
+    the nonblank entries are typically short internal codes
+    rather than usable titles, keyword-based identification is
+    not feasible with IDB data alone.
 
     \item \textbf{Disposition code ambiguity.} The IDB
     voluntary dismissal code (Code~12) is known to include
@@ -82,9 +81,9 @@ issues directly relevant to our analysis
 
     \item \textbf{Missingness in secondary fields.} Monetary
     demand amounts exhibit 98.4\% missingness; jury demand
-    information is missing for 50.7\% of cases. Critical
-    fields for duration analysis---filing date, termination
-    date, disposition code, circuit, and origin---are
+    information is missing for 50.7\% of cases. However, critical
+    fields for duration analysis (filing date, termination
+    date, disposition code, circuit, and origin) are
     well-populated.
 \end{itemize}
 
@@ -98,7 +97,7 @@ range of settlement/dismissal classifications given the
 known Code~12 ambiguity:
 
 \begin{itemize}
-    \item \textbf{Scheme~A (Primary).} Code~13 $\to$
+    \item \textbf{Scheme~A (Narrow).} Code~13 $\to$
     settlement; Codes~2, 3, 12, 14 $\to$ dismissal.
     Six judgment-bearing disposition codes---4, 6, 15,
     17, 19, and 20---are disaggregated using the IDB
@@ -115,13 +114,13 @@ known Code~12 ambiguity:
     is the most conservative treatment and is used for
     all main results.
 
-    \item \textbf{Scheme~B (Liberal).} Identical to
+    \item \textbf{Scheme~B (Intermediate).} Identical to
     Scheme~A except Code~12 is reclassified as settlement,
     reflecting the hypothesis that voluntary dismissals
     predominantly represent private settlements
     \citep{scales2024}.
 
-    \item \textbf{Scheme~C (Expanded).} Identical to
+    \item \textbf{Scheme~C (Broad).} Identical to
     Scheme~B with the additional reclassification of
     Code~5 (consent judgment), which is otherwise censored,
     as settlement.
@@ -134,7 +133,7 @@ of arbitrator), 17 (judgment on consent), 19 (judgment
 after judicial/bench trial), and 20 (judgment after jury
 trial)---record court judgments whose direction depends on
 the IDB \texttt{JUDGMENT} field. Together these codes
-encompass 4,182 cases (32.3\% of the analysis sample).
+encompass 4,182 cases (32.2\% of the analysis sample).
 Code~6 alone accounts for 2,389 of these, while Code~17
 contributes another 1,723; the remaining four codes
 contribute 70 cases combined. Prior studies using the IDB
@@ -153,8 +152,7 @@ For Code~6 specifically, this reclassifies 701 plaintiff
 victories as settlements and retains 1,418 defendant
 victories as dismissals, with 270 ambiguous cases
 censored. This refinement is applied identically across
-all three coding schemes and addresses
-\emph{judgment-direction misclassification} in standard
+all three coding schemes and addresses judgment-direction misclassification in standard
 IDB extracts. It is analytically distinct from the
 Code~12 ``hidden settlements'' problem discussed above,
 which is handled separately through Schemes~B and~C
@@ -174,9 +172,9 @@ examined in Chapter~\ref{ch:discussion}.
 \toprule
 \textbf{Scheme} & \textbf{N} & \textbf{Settl.} & \textbf{Dism.} & \textbf{Cens.} & \textbf{\% S} & \textbf{\% D} \\
 \midrule
-A (Primary)  & 12,968 & 3,801 & 5,971 & 3,196 & 29.3 & 46.0 \\
-B (Liberal)  & 12,968 & 5,605 & 4,167 & 3,196 & 43.2 & 32.1 \\
-C (Expanded) & 12,968 & 5,919 & 4,167 & 2,882 & 45.6 & 32.1 \\
+A (Narrow)       & 12,968 & 3,801 & 5,971 & 3,196 & 29.3 & 46.0 \\
+B (Intermediate) & 12,968 & 5,605 & 4,167 & 3,196 & 43.2 & 32.1 \\
+C (Broad)        & 12,968 & 5,919 & 4,167 & 2,882 & 45.6 & 32.1 \\
 \bottomrule
 \end{tabular*}
 \end{table}
@@ -237,8 +235,9 @@ era-by-origin comparisons.
 Second, because MDL cases can originate through different
 pathways but share post-filing consolidation mechanics, we
 define a binary MDL flag equal to 1 if the
-\texttt{mdldock} field is populated with a non-missing,
-non-sentinel value.
+\texttt{mdldock} field is populated with a valid docket
+number assigned by the Judicial Panel on Multidistrict
+Litigation.
 
 \subsection{Jurisdictional and Statutory Basis}
 
@@ -262,7 +261,7 @@ accounts for 31.2\% (4,051 cases) and the Second Circuit accounts for
 undisputed centers of U.S. securities litigation. Table~\ref{tab:bycircuit} 
 details the full distribution.
 
-\begin{table}[htb]
+\begin{table}[htbp]
 \centering
 \caption{Sample Distribution by Circuit}
 \label{tab:bycircuit}
@@ -307,7 +306,7 @@ explicit ``Missing'' category.
 
 \subsection{Duration by Outcome}
 Table~\ref{tab:duration} presents duration statistics for resolved 
-cases under the primary conservative coding assumption (Scheme A). 
+cases under the narrow coding assumption (Scheme~A). 
 Settlements take substantially longer to resolve than
 dismissals: median 3.00 years versus 1.01 years. Half of
 all dismissals are resolved within roughly one year of
@@ -376,7 +375,3 @@ upon request at no cost. All data cleaning, variable
 construction, and coding scheme implementation are documented
 in the R analysis script and will be released as a public
 replication package alongside the final thesis submission.
-CourtListener data integration---which would enable
-title-based class action identification, docket activity
-counts, and attorney identifiers---is identified as a
-priority extension in Chapter~\ref{ch:conclusion}.

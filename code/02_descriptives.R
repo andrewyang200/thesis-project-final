@@ -126,7 +126,7 @@ fig_cif <- ggplot(cif_overall_df, aes(x = time, y = prob, color = outcome)) +
   geom_ribbon(aes(ymin = lower, ymax = upper, fill = outcome),
               alpha = 0.15, color = NA, show.legend = FALSE) +
   geom_step(linewidth = 1.2) +
-  scale_x_continuous(limits = c(0, 8), breaks = seq(0, 8, 2)) +
+  scale_x_continuous(limits = c(0, 10), breaks = seq(0, 10, 2)) +
   scale_y_continuous(limits = c(0, 1), labels = percent_format(accuracy = 1)) +
   scale_color_manual(values = thesis_colors[c("Settlement", "Dismissal")]) +
   scale_fill_manual(values = thesis_colors[c("Settlement", "Dismissal")]) +
@@ -135,6 +135,11 @@ fig_cif <- ggplot(cif_overall_df, aes(x = time, y = prob, color = outcome)) +
     x     = "Years Since Filing",
     y     = "Cumulative Probability",
     color = "Outcome"
+  ) +
+  theme(
+    legend.position = c(0.85, 0.85),
+    legend.background = element_rect(fill = "white", color = NA),
+    legend.key.size = unit(1.2, "lines")
   )
 
 save_figure(fig_cif, "fig_cif_overall")
@@ -291,7 +296,7 @@ fig_circ_d <- cif_circuit_df %>%
     color = "Circuit"
   )
 
-save_figure(fig_circ_d, "fig_cif_circuit_dismissal", width = 9)
+save_figure(fig_circ_d, "fig_cif_circuit_dismissal")
 
 # Figure 5: Settlement by circuit
 fig_circ_s <- cif_circuit_df %>%
@@ -313,7 +318,7 @@ fig_circ_s <- cif_circuit_df %>%
     color = "Circuit"
   )
 
-save_figure(fig_circ_s, "fig_cif_circuit_settlement", width = 9)
+save_figure(fig_circ_s, "fig_cif_circuit_settlement")
 
 
 # =============================================================================

@@ -37,7 +37,7 @@ phase. Resolution slows markedly after year four, with fewer
 than 7\% of cases remaining pending beyond eight years
 (Figure~\ref{fig:km_overall}).
 
-\begin{figure}[htb]
+\begin{figure}[!htb]
     \centering
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
@@ -103,11 +103,11 @@ incidence is simultaneously suppressed, reaching 26.8\% at
 five years compared with 51.0\% pre-PSLRA
 (Figure~\ref{fig:cif_pslra}).
 
-\begin{figure}[htb]
+\begin{figure}[!htb]
     \centering
     \includegraphics[width=\linewidth]{fig_cif_pslra.png}
     \vskip 5pt
-    \caption[Cumulative Incidence of Outcomes by PSLRA Regime]{Aalen-Johansen CIFs stratified by PSLRA regime. Solid lines = Pre-PSLRA ($n = 1{,}032$); dashed = Post-PSLRA ($n = 11{,}936$). Green = settlement; orange/red = dismissal. Gray's test---which evaluates whether CIFs differ significantly across groups in the presence of competing risks---rejects equality for both settlement (statistic $= 131.3$, $p < 0.001$) and dismissal (statistic $= 82.1$, $p < 0.001$).}
+    \caption[Cumulative Incidence of Outcomes by PSLRA Regime]{Aalen-Johansen CIFs stratified by PSLRA regime. Solid lines = Pre-PSLRA ($n = 1{,}032$); dashed = Post-PSLRA ($n = 11{,}936$). Blue = settlement; orange/red = dismissal. Gray's test---which evaluates whether CIFs differ significantly across groups in the presence of competing risks---rejects equality for both settlement (statistic $= 131.3$, $p < 0.001$) and dismissal (statistic $= 82.1$, $p < 0.001$).}
     \label{fig:cif_pslra}
 \end{figure}
 
@@ -131,9 +131,9 @@ reverses post-PSLRA, where five-year dismissal probability
 
 \begin{table}[htbp]
 \centering
-\caption{Cumulative Incidence at Key Horizons by PSLRA Regime (\%), Aalen-Johansen Estimates}
+\caption[Cumulative Incidence at Key Horizons by PSLRA Regime]{Cumulative Incidence at Key Horizons by PSLRA Regime (\%), Aalen-Johansen Estimates}
 \label{tab:cif_horizons}
-\renewcommand{\arraystretch}{1.3}
+\renewcommand{\arraystretch}{1.2}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l l r r r r @{}}
 \toprule
 \textbf{Regime} & \textbf{Outcome} & \textbf{1 yr} & \textbf{2 yr} & \textbf{3 yr} & \textbf{5 yr} \\
@@ -167,7 +167,7 @@ association is highly sensitive to time-trend controls and
 loses statistical significance entirely in circuit-specific
 sub-samples.
 
-\begin{table}[htb]
+\begin{table}[htbp]
 \centering
 \caption{Baseline Cause-Specific Cox Models (PSLRA Only)}
 \label{tab:cox_baseline}
@@ -207,7 +207,7 @@ Beyond two years, the PSLRA association with dismissal is
 indistinguishable from null (HR $= 1.063$, 95\% CI:
 0.886--1.276, $p = 0.510$).
 
-\begin{table}[htb]
+\begin{table}[htbp]
 \centering
 \caption{Piecewise PSLRA Associations by Outcome and Time Period}
 \label{tab:piecewise}
@@ -259,14 +259,16 @@ exploratory layer.
 The preceding analyses establish that the PSLRA is associated
 with large and statistically significant differences in
 hazard rates. A natural question is how much of this raw
-association reflects the reform itself, and how much reflects
+association remains after adjusting for observable case-mix
+shifts, and how much is sensitive to
 concurrent changes in observable case composition. If the
 post-PSLRA period sees disproportionately more cases filed
 in high-dismissal circuits, for instance, part of the raw
 PSLRA association could be an artifact of compositional
-shifts rather than a consequence of the reform.
+shifts rather than a stable period difference under a common
+case mix.
 
-To decompose the raw PSLRA association, we apply the
+To probe that sensitivity, we apply the
 four-strategy triangulation framework described in
 Chapter~\ref{ch:methodology}, using inverse probability of
 treatment weighting to re-weight the pre-PSLRA
@@ -289,15 +291,17 @@ estimation.
 \centering
 \caption[PSLRA Composition-Adjusted Hazard Ratios]{PSLRA Hazard Ratios Under Four Estimation Strategies ($n = 12{,}866$)}
 \label{tab:iptw_triangulation}
-\renewcommand{\arraystretch}{1.3}
-\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r r @{}}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r c r c @{}}
 \toprule
-\textbf{Strategy} & \textbf{Settlement HR} & \textbf{Dismissal HR} \\
+& \multicolumn{2}{c}{\textbf{Settlement}} & \multicolumn{2}{c}{\textbf{Dismissal}} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5}
+\textbf{Strategy} & \textbf{HR} & \textbf{95\% CI} & \textbf{HR} & \textbf{95\% CI} \\
 \midrule
-1.\ Unadjusted                         & 0.557            & 1.414 \\
-2.\ Regression-Adjusted                & 0.784            & 1.661 \\
-3.\ Covariate-Adjusted IPTW (Weighted Regression) & 0.780            & 1.754 \\
-4.\ Marginal Structural Model          & \textbf{0.741}   & \textbf{1.519} \\
+1.\ Unadjusted                    & 0.557          & (0.505, 0.615)          & 1.414          & (1.273, 1.570) \\
+2.\ Regression-Adjusted           & 0.784          & (0.709, 0.867)          & 1.661          & (1.493, 1.847) \\
+3.\ IPTW + Regression Covariates  & 0.780          & (0.682, 0.892)          & 1.755          & (1.549, 1.987) \\
+4.\ Marginal Structural Model     & \textbf{0.741} & \textbf{(0.632, 0.868)} & \textbf{1.519} & \textbf{(1.335, 1.729)} \\
 \bottomrule
 \end{tabular*}
 \begin{minipage}{\textwidth}
@@ -306,9 +310,12 @@ estimation.
 IPTW uses ATT (average treatment on the treated) weights with
 99th-percentile trimming (cap $\approx 43.5$).
 Effective sample size after weighting: 578 (56.0\% efficiency).
-All 20 covariate-level balance rows achieve $|\text{SMD}| < 0.1$ after weighting;
-balance diagnostics are presented in
-Section~\ref{sec:results_diagnostics}.
+All 19 covariate rows achieve $|\text{SMD}| < 0.1$ after
+weighting; the adjusted propensity-score distance is 0.053,
+and the largest covariate $|\text{SMD}|$ is 0.035.
+Rows~3 and~4 use weighted Cox models with robust (Lin-Wei
+sandwich) standard errors. Balance diagnostics are presented
+in Section~\ref{sec:results_diagnostics}.
 Row~4 (MSM) is the preferred composition-adjusted estimate
 because it avoids outcome-model assumptions.
 \end{minipage}
@@ -321,42 +328,44 @@ marginal structural model (row~4).
 
 For dismissal, the composition-adjusted MSM HR is 1.519,
 modestly amplified from the unadjusted 1.414. After
-adjusting for observable shifts in circuit composition, case
+conditioning on observed shifts in circuit composition, case
 origin, and statutory basis, the PSLRA remains associated
 with a 52\% higher instantaneous dismissal hazard. The
-amplification is a point-estimate comparison rather than a
-formally tested difference, so the interpretation is
-suggestive rather than statistically confirmed. It suggests
-that concurrent compositional changes
-in the case mix---such as shifts in circuit filing
-patterns---partially offset the PSLRA's
-dismissal-accelerating association; removing this confounding
-reveals a somewhat larger underlying divergence.
+amplification is only a point-estimate comparison rather
+than a formally tested difference, however, so it should be
+read as a sensitivity result rather than as evidence that
+weighting has recovered a larger underlying effect.
 
 For settlement, the composition-adjusted MSM HR is 0.741,
 attenuated from the unadjusted 0.557. The raw 44\%
 reduction in settlement hazard shrinks to a 26\% reduction
-after composition adjustment, indicating that a meaningful
-share of the raw settlement suppression is associated with
-observable shifts in the case mix across the pre- and
-post-PSLRA periods. The residual association is not
+after composition adjustment. That arithmetic attenuation is
+transparent, but it remains a comparison of point estimates
+under different adjustment sets, not a formal decomposition
+of how much of the raw settlement gap is explained by case
+mix shifts across the pre- and post-PSLRA periods. The
+residual association is not
 causally attributable to the reform; unmeasured temporal
 confounders may account for part or all of it.
 
 An important caveat applies to the amplification comparison:
-Table~\ref{tab:iptw_triangulation} reports point estimates
-but not confidence intervals for the MSM (row~4) and
-covariate-adjusted IPTW (row~3) strategies. Bootstrapped
-inference for these specifications is deferred to future
-work.
+Table~\ref{tab:iptw_triangulation} reports 95\% confidence
+intervals for all four strategies. Rows~3 and~4 rely on
+robust sandwich standard errors from weighted Cox models
+rather than on bootstrap intervals, so they quantify
+sampling uncertainty under the weighted specification but do
+not resolve the overlap and post-treatment-bias concerns
+discussed below.
 
 Figure~\ref{fig:cif_weighted} shows the IPTW-weighted
 CIFs by PSLRA regime. After
-re-weighting, the visual gap between pre- and post-PSLRA
-curves narrows for settlement but persists for dismissal,
-consistent with the hazard ratio estimates.
+re-weighting, the settlement gap narrows and reverses
+direction, with the weighted pre-PSLRA settlement curve
+lying above the post-PSLRA curve, while the dismissal gap
+persists in the same direction, consistent with the hazard
+ratio estimates.
 
-\begin{figure}[htb]
+\begin{figure}[!htb]
     \centering
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
@@ -372,14 +381,14 @@ consistent with the hazard ratio estimates.
         \label{fig:cif_weighted_dismissal}
     \end{subfigure}
     \vskip 10pt
-    \caption[IPTW-Weighted Cumulative Incidence by PSLRA Regime]{IPTW-weighted Aalen-Johansen CIFs by PSLRA regime (ATT weights, 99th-percentile trimming). The gap between pre- and post-PSLRA curves represents the composition-adjusted divergence after removing observable covariate imbalance.}
+    \caption[IPTW-Weighted Cumulative Incidence by PSLRA Regime]{IPTW-weighted Aalen-Johansen CIFs by PSLRA regime (ATT weights, 99th-percentile trimming). The pre-PSLRA cohort is reweighted to match the post-PSLRA observable case mix. Unlike the descriptive CIFs in Figure~\ref{fig:cif_pslra}, these diagnostic plots retain the longer 0--15-year display window used in the IPTW script, so their x-axis is not directly comparable to the 0--8-year descriptive panels.}
     \label{fig:cif_weighted}
 \end{figure}
 
-Consistent with the composition-adjusted interpretation
-established above, these weighted CIFs isolate the PSLRA
-component from observable case-mix shifts but do not
-control for unmeasured temporal confounders.
+Consistent with the weighting design, these reweighted CIFs
+compare the two regimes under a common observable case mix,
+but they do not control for unmeasured temporal confounders
+or post-treatment bias in the weighting variables.
 
 \subsection{Robustness and Identification Limits}
 \label{sec:results_robustness}
@@ -391,11 +400,11 @@ artifact of any particular coding, sampling, or time-trend
 choice (Figure~\ref{fig:robustness},
 Table~\ref{tab:robustness}).
 
-\begin{figure}[htb]
+\begin{figure}[!htb]
     \centering
     \includegraphics[width=\linewidth]{fig_robustness_hr.png}
     \vskip 5pt
-    \caption[PSLRA Hazard Ratios Across Robustness Specifications]{PSLRA hazard ratios across robustness specifications. Each row is a separate baseline Cox model. Green triangles = settlement HR; red circles = dismissal HR. Dashed line at HR $= 1$ (null). Note the log scale on the horizontal axis.}
+    \caption[PSLRA Hazard Ratios Across Robustness Specifications]{PSLRA hazard ratios across robustness specifications. Each row is a separate Cox specification. Blue triangles = settlement HR; red circles = dismissal HR. Dashed line at HR $= 1$ (null). Note the log scale on the horizontal axis.}
     \label{fig:robustness}
 \end{figure}
 
@@ -408,13 +417,13 @@ Table~\ref{tab:robustness}).
 \toprule
 \textbf{Specification} & \textbf{Outcome} & \textbf{HR} & \textbf{95\% CI} & \textbf{$p$} \\
 \midrule
-Scheme A: Primary       & Settlement & 0.563 & (0.511, 0.621) & $<$0.001 \\
+Scheme A: Narrow        & Settlement & 0.563 & (0.511, 0.621) & $<$0.001 \\
                         & Dismissal  & 1.409 & (1.269, 1.565) & $<$0.001 \\
 \addlinespace[0.5em]
-Scheme B: Code 12 = S   & Settlement & 0.799 & (0.730, 0.874) & $<$0.001 \\
+Scheme B: Intermediate  & Settlement & 0.799 & (0.730, 0.874) & $<$0.001 \\
                         & Dismissal  & 1.183 & (1.053, 1.330) & 0.005 \\
 \addlinespace[0.5em]
-Scheme C: Codes 12+5 = S & Settlement & 0.788 & (0.722, 0.859) & $<$0.001 \\
+Scheme C: Broad          & Settlement & 0.788 & (0.722, 0.859) & $<$0.001 \\
                         & Dismissal  & 1.183 & (1.053, 1.330) & 0.005 \\
 \addlinespace[0.5em]
 Excl.\ post-2020        & Settlement & 0.558 & (0.506, 0.616) & $<$0.001 \\
@@ -438,7 +447,7 @@ judgment) as settlements, producing settlement HRs of
 $\approx 0.79$ compared with 0.563 under Scheme~A. The
 PSLRA settlement association is sensitive to disposition
 coding but remains significant under all schemes.
-Dismissal HRs attenuate from 1.409 to 1.183 under liberal
+Dismissal HRs attenuate from 1.409 to 1.183 under intermediate
 coding, with $p$ rising from $< 0.001$ to 0.005.
 
 Second, excluding post-2020 cases has virtually no effect on
@@ -495,7 +504,7 @@ analyses.
 \subsubsection*{Temporal Identification and Placebo Results}
 
 To further probe whether the observed PSLRA association
-reflects the reform itself or pre-existing trends, we
+is robust to pre-existing trends, we
 implement the identification strategies described in
 Section~\ref{sec:temporal_id}.
 
@@ -516,13 +525,15 @@ and a settlement HR of 1.638 (95\% CI: 1.289--2.082,
 $p < 0.001$). The placebo dismissal HR is below unity,
 indicating a \emph{downward} pre-existing trend in dismissal
 rates during the early 1990s---the opposite direction from
-the PSLRA's subsequent upward association. The directional
-contrast means the pre-trend does not inflate the estimated
-PSLRA effect, but the model's ability to detect
-period-specific effects in the absence of any legislative
-change precludes clean causal attribution. This reinforces
-our decision to frame all estimates as associational or
-composition-adjusted.
+the PSLRA's subsequent upward association. That directional
+contrast rules out a simple monotone story in which an
+upward pre-trend mechanically inflates the later dismissal
+estimate, but it also shows that period-specific dynamics
+were already moving before the law changed. The model's
+ability to detect such effects in the absence of any
+legislative change precludes clean causal attribution. This
+reinforces our decision to frame all estimates as
+associational or composition-adjusted.
 
 \subsubsection*{Synthesis: The Weight of Evidence}
 
@@ -552,7 +563,7 @@ standard single-outcome analyses would miss
 (Figures~\ref{fig:cif_circuit_dismissal}
 and~\ref{fig:cif_circuit_settlement}).
 
-\begin{figure}[htb]
+\begin{figure}[!htb]
     \centering
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
@@ -599,7 +610,7 @@ volume and, as Section~\ref{sec:results_pslra} established,
 the circuit with the lowest settlement propensity
 (Table~\ref{tab:cox_circuit}; $n = 12{,}952$).
 
-\begin{table}[htb]
+\begin{table}[htbp]
 \centering
 \caption[Cause-Specific Cox Models with Circuit Effects]{Cause-Specific Cox Models with Circuit Effects (Ref: Second Circuit, $n = 12{,}952$). DC and Federal Circuits omitted ($n < 50$ each).}
 \label{tab:cox_circuit}
@@ -652,7 +663,7 @@ below the reference (HR $= 0.745$). The circuit-only Cox
 models achieve moderate discrimination (C-index:
 settlement $= 0.646$, dismissal $= 0.569$).
 
-\subsection{PSLRA $\times$ Circuit Interaction}
+\subsection{PSLRA \texorpdfstring{$\times$}{x} Circuit Interaction}
 
 Likelihood ratio tests comparing the additive
 circuit-PSLRA specification against a model with interaction
@@ -676,7 +687,7 @@ association: $1.411 \times 0.377 \approx 0.532$).
 
 \begin{table}[htbp]
 \centering
-\caption{PSLRA $\times$ Circuit Interaction Models ($n = 10{,}652$; Ref: Second Circuit)}
+\caption[PSLRA $\times$ Circuit Interaction Models]{PSLRA $\times$ Circuit Interaction Models ($n = 10{,}652$; Ref: Second Circuit)}
 \label{tab:interaction}
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r c r r c r @{}}
@@ -701,10 +712,15 @@ $\times$ Ninth    & 0.761 & (0.525, 1.101) & 0.148
 $\times$ Eleventh & 0.235 & (0.137, 0.403) & $< 0.001$
                   & 0.678 & (0.395, 1.165) & 0.160 \\
 \midrule
-\multicolumn{4}{l}{C-index: 0.690 (settlement), 0.607 (dismissal)} \\
+\multicolumn{7}{l}{C-index (in-sample, training data): 0.690 (settlement), 0.607 (dismissal)} \\
 \bottomrule
 \end{tabular*}
 \end{table}
+
+These in-sample discrimination figures are reported only for
+within-specification comparison and are not directly
+comparable to the held-out performance metrics in
+Table~\ref{tab:performance}.
 
 For settlement, the main PSLRA term is marginally
 significant (HR $= 1.411$, $p = 0.040$), indicating a
@@ -750,7 +766,7 @@ covariate adjustment (Table~\ref{tab:frailty}).
 
 \begin{table}[htbp]
 \centering
-\caption{PSLRA Hazard Ratio: Fixed-Effects vs.\ Frailty vs.\ Cluster-Robust Estimation}
+\caption[PSLRA Hazard Ratio Across Estimation Strategies]{PSLRA Hazard Ratio: Fixed-Effects vs.\ Frailty vs.\ Cluster-Robust Estimation}
 \label{tab:frailty}
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r c r @{}}
@@ -799,7 +815,14 @@ within-circuit correlation.
 \section{Case Characteristics: MDL, Origin, and Statutory Basis}
 \label{sec:results_characteristics}
 
-Beyond the PSLRA and circuit geography, case-level characteristics---most notably MDL consolidation---are strongly associated with resolution dynamics. The extended cause-specific Cox models reveal that MDL assignment bilaterally suppresses both settlement and dismissal hazards by approximately 72--75\%, while Fine-Gray subdistribution models expose a striking sign reversal for settlement that is invisible to cause-specific analysis.
+Beyond the PSLRA and circuit geography, case-level
+characteristics---most notably MDL consolidation---are
+strongly associated with resolution dynamics. The extended
+cause-specific Cox models show that MDL assignment is
+associated with substantially lower settlement and dismissal
+hazards, while Fine-Gray subdistribution models expose a
+striking settlement-side sign reversal that cause-specific
+analysis alone would miss.
 
 \subsection{Extended Cause-Specific Cox Models}
 
@@ -817,9 +840,9 @@ basis across regimes.
 
 \begin{table}[htbp]
 \centering
-\caption{Extended Cause-Specific Cox Model: Settlement ($n = 12{,}866$)}
+\caption[Extended Cause-Specific Cox Model: Settlement]{Extended Cause-Specific Cox Model: Settlement ($n = 12{,}866$)}
 \label{tab:cox_ext_settle}
-\renewcommand{\arraystretch}{1.1}
+\renewcommand{\arraystretch}{1.2}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r c @{}}
 \toprule
 \textbf{Covariate} & \textbf{HR} & \textbf{95\% CI} \\
@@ -854,9 +877,9 @@ Missing               &  0.831 & (0.600, 1.151) \\
 
 \begin{table}[htbp]
 \centering
-\caption{Extended Cause-Specific Cox Model: Dismissal ($n = 12{,}866$)}
+\caption[Extended Cause-Specific Cox Model: Dismissal]{Extended Cause-Specific Cox Model: Dismissal ($n = 12{,}866$)}
 \label{tab:cox_ext_dismiss}
-\renewcommand{\arraystretch}{1.1}
+\renewcommand{\arraystretch}{1.2}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r c @{}}
 \toprule
 \textbf{Covariate} & \textbf{HR} & \textbf{95\% CI} \\
@@ -926,9 +949,9 @@ the cumulative probability of the focal outcome.
 
 \begin{table}[htbp]
 \centering
-\caption{Cause-Specific vs.\ Subdistribution Hazard Ratios: Selected Covariates, Extended Models}
+\caption[Cause-Specific vs.\ Subdistribution Hazard Ratios]{Cause-Specific vs.\ Subdistribution Hazard Ratios: Selected Covariates, Extended Models}
 \label{tab:fg_comparison}
-\renewcommand{\arraystretch}{1.3}
+\renewcommand{\arraystretch}{1.2}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l l r r c r @{}}
 \toprule
 \textbf{Outcome} & \textbf{Covariate} & \textbf{CS HR} & \textbf{FG SHR} & \textbf{FG 95\% CI} & \textbf{FG $p$} \\
@@ -1013,8 +1036,8 @@ applied to the extended cause-specific models.
 \centering
 \caption{Proportional Hazards Tests: Extended Cause-Specific Cox Models}
 \label{tab:ph_tests}
-\renewcommand{\arraystretch}{1.15}
-\begin{tabular}{l r r r r}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r r r r @{}}
 \toprule
 & \multicolumn{2}{c}{\textbf{Settlement}} &
   \multicolumn{2}{c}{\textbf{Dismissal}} \\
@@ -1030,7 +1053,7 @@ applied to the extended cause-specific models.
 \addlinespace[0.3em]
 \textbf{GLOBAL}        & 597.4  & $< 0.001$ & 361.8 & $< 0.001$ \\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \begin{minipage}{\textwidth}
 \vskip 4pt
 \footnotesize \textit{Note:} Grambsch--Therneau test of
@@ -1071,24 +1094,28 @@ confined to the cause-specific Cox framework.
 Figure~\ref{fig:schoenfeld} displays scaled Schoenfeld
 residuals for the PSLRA indicator plotted against time.
 In the settlement model, the smoothed trajectory drifts
-upward from the constant-HR baseline, indicating that
+upward toward the constant-HR baseline, indicating that
 the settlement-suppression association weakens at longer
 durations. In the dismissal model, the trajectory
 trends downward over time, consistent with the piecewise
 finding that the PSLRA's dismissal association is
 strongest in the first year and decays thereafter.
 
-\begin{figure}[htbp]
+\begin{figure}[!htb]
 \centering
 \includegraphics[width=0.48\textwidth]{fig_schoenfeld_settlement_pslra.pdf}%
 \hfill
 \includegraphics[width=0.48\textwidth]{fig_schoenfeld_dismissal_pslra.pdf}
-\caption{Scaled Schoenfeld residuals for the PSLRA
+\caption[Scaled Schoenfeld Residuals for the PSLRA Indicator]{Scaled Schoenfeld residuals for the PSLRA
 indicator in the extended settlement (left) and dismissal
 (right) models. The solid curve is the smoothed
 time-varying coefficient $\hat{\beta}(t)$; the dashed
 red line marks the constant fitted coefficient. Departure
-from the dashed line indicates non-proportionality.}
+from the dashed line indicates non-proportionality. The
+visible banding is an expected artifact of a binary PSLRA
+indicator under highly imbalanced post-to-pre risk sets; the
+smooth tracks the time-varying coefficient across those
+bands.}
 \label{fig:schoenfeld}
 \end{figure}
 
@@ -1113,15 +1140,18 @@ pre-PSLRA cohort to match the post-PSLRA covariate
 distribution.
 
 Figure~\ref{fig:iptw_balance} presents the Love plot---a
-diagnostic display in which each row is a covariate and the
-horizontal axis shows the standardized mean difference (SMD)
-between treated and control groups before and after
+diagnostic display in which each row is a covariate or the
+propensity-score distance summary and the horizontal axis
+shows the standardized mean difference (SMD) between treated
+and control groups before and after
 weighting; covariates falling within $|\text{SMD}| < 0.1$
-are considered adequately balanced. After weighting, all 20 covariate-level balance rows
-achieve $|\text{SMD}| < 0.10$, the conventional threshold
-for adequate balance \citep{austinfine2025}. The largest
-residual imbalance is $\text{SMD} = 0.035$ (Section~11
-statutory basis), well within the acceptable range. The
+are considered adequately balanced. After weighting, all 19
+covariate rows achieve $|\text{SMD}| < 0.10$, the
+conventional threshold for adequate balance
+\citep{austinfine2025}; the adjusted propensity-score
+distance is 0.053, and the largest covariate residual
+imbalance is $\text{SMD} = 0.035$ (Section~11 statutory
+basis), well within the acceptable range. The
 effective sample size of the reweighted pre-PSLRA cohort
 is 578 (56.0\% of the unweighted $n = 1{,}031$),
 indicating that moderate information loss accompanies
@@ -1130,32 +1160,37 @@ retain meaningful statistical power---as confirmed by
 all eight IPTW hazard ratios achieving $p < 0.001$
 (Table~\ref{tab:iptw_triangulation}).
 
-\begin{figure}[htbp]
+\begin{figure}[!htb]
 \centering
 \includegraphics[width=0.75\textwidth]{fig_iptw_balance.pdf}
-\caption{Love plot of standardized mean differences before
-(unadjusted) and after IPTW weighting. All 20 covariate-level balance
-levels fall below the $|\text{SMD}| = 0.10$ threshold
-after weighting. ATT weights with 99th-percentile trimming;
-effective sample size = 578.}
+\caption[IPTW Covariate Balance: Love Plot]{Love plot of standardized mean differences before
+(unadjusted) and after IPTW weighting. All 19 covariate rows
+fall below the $|\text{SMD}| = 0.10$ threshold after
+weighting, and the adjusted propensity-score distance is
+0.053. ATT weights with 99th-percentile trimming; effective
+sample size = 578.}
 \label{fig:iptw_balance}
 \end{figure}
 
 Figure~\ref{fig:ps_overlap} illustrates the positivity challenge underlying
 this analysis. The propensity score distributions for pre- and post-PSLRA
-cases overlap only in a narrow central range, reflecting the 11.6:1
-post-to-pre imbalance inherent to the legislative date cutoff. Cases in
-regions of near-zero overlap receive extreme ATT weights; trimming at the
-99th percentile (cap $\approx 43.5$) discards the most extreme pre-PSLRA
-reweightings and reduces the effective sample size to 578.
+cases overlap only in the upper range of the propensity-score
+distribution, concentrated roughly between 0.75 and 0.95,
+reflecting the 11.5:1 post-to-pre imbalance inherent to the
+legislative date cutoff. Cases in regions of near-zero
+overlap receive extreme ATT weights; trimming at the 99th
+percentile (cap $\approx 43.5$) discards the most extreme
+pre-PSLRA reweightings and reduces the effective sample size
+to 578.
 
-\begin{figure}[htbp]
+\begin{figure}[!htb]
 \centering
 \includegraphics[width=0.85\linewidth]{fig_ps_overlap.pdf}
-\caption{Mirror density plot of estimated propensity scores for pre-PSLRA
+\caption[Propensity Score Overlap by PSLRA Regime]{Mirror density plot of estimated propensity scores for pre-PSLRA
 (lower panel, reflected) and post-PSLRA (upper panel) cases. Overlap is
-concentrated in a narrow central range, reflecting the 11.6:1 post-to-pre
-sample imbalance. ATT weights reweight pre-PSLRA cases toward the post-PSLRA
+concentrated in the upper range of the propensity-score distribution
+(roughly 0.75--0.95), reflecting the 11.5:1 post-to-pre sample
+imbalance. ATT weights reweight pre-PSLRA cases toward the post-PSLRA
 covariate distribution; extreme weights are trimmed at the 99th percentile.}
 \label{fig:ps_overlap}
 \end{figure}
@@ -1221,20 +1256,19 @@ predictions.
 
 \begin{table}[htbp]
 \centering
-\caption{Predictive Discrimination: Held-Out Test Set
-($n = 3{,}861$)}
+\caption[Predictive Discrimination: Held-Out Test Set]{Predictive Discrimination: Held-Out Test Set ($n = 3{,}861$)}
 \label{tab:performance}
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r r r r r @{}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r r r r r r @{}}
 \toprule
 \textbf{Model} & \textbf{C-index} & \textbf{AUC@1yr}
-  & \textbf{AUC@3yr} & \textbf{AUC@5yr} & \textbf{IBS} \\
+  & \textbf{AUC@2yr} & \textbf{AUC@3yr} & \textbf{AUC@5yr} & \textbf{IBS} \\
 \midrule
-Cox (Settlement)       & 0.679 & 0.732 & 0.705 & 0.793 & 0.121 \\
-Cox (Dismissal)        & 0.597 & 0.595 & 0.643 & 0.775 & 0.184 \\
+Cox (Settlement)       & 0.679 & 0.732 & 0.708 & 0.705 & 0.793 & 0.121 \\
+Cox (Dismissal)        & 0.597 & 0.595 & 0.618 & 0.643 & 0.775 & 0.184 \\
 \addlinespace[0.5em]
-Fine-Gray (Settlement) & 0.555 & 0.659 & 0.531 & 0.377 & --- \\
-Fine-Gray (Dismissal)  & 0.595 & 0.592 & 0.633 & 0.770 & --- \\
+Fine-Gray (Settlement) & 0.555 & 0.659 & 0.601 & 0.531 & 0.377 & --- \\
+Fine-Gray (Dismissal)  & 0.595 & 0.592 & 0.611 & 0.633 & 0.770 & --- \\
 \bottomrule
 \end{tabular*}
 \begin{minipage}{\textwidth}
@@ -1265,9 +1299,11 @@ that is weakest at three years and strongest at five. The
 dismissal-side Cox model is weaker, suggesting that
 unobserved case-merit factors remain important. Fine-Gray
 performance is lower overall, and the settlement
-subdistribution model is especially weak by five years
-(AUC@5yr $= 0.377$), falling below the no-skill threshold in
-Figure~\ref{fig:auc_over_time}. Cox IBS values of 0.121 for
+subdistribution model deteriorates sharply over longer
+horizons: its AUC falls from 0.531 at three years to 0.377
+at five years, crossing below the no-skill threshold
+between those horizons in Figure~\ref{fig:auc_over_time}.
+Cox IBS values of 0.121 for
 settlement and 0.184 for dismissal indicate improvement over
 naive marginal prediction, but they also confirm substantial
 residual uncertainty.
@@ -1277,15 +1313,16 @@ across horizons: Cox settlement performs best, Cox dismissal
 is weaker, and Fine-Gray settlement deteriorates sharply at
 long horizons.
 
-\begin{figure}[htbp]
+\begin{figure}[!htb]
 \centering
-\includegraphics[width=\linewidth]{fig_auc_over_time.pdf}
-\caption{Time-dependent AUC at 1, 2, 3, and 5-year prediction horizons for
+\includegraphics[width=0.9\linewidth]{fig_auc_over_time.pdf}
+\caption[Time-Dependent AUC: Cox and Fine-Gray Models]{Time-dependent AUC at 1, 2, 3, and 5-year prediction horizons for
 cause-specific Cox and Fine-Gray models on the held-out 30\% test set
 ($n = 3{,}861$). Cox settlement performs best overall,
 Fine-Gray models show lower discrimination, and the
-Fine-Gray settlement curve falls below
-the no-skill line by year five. Dotted line marks the no-skill
+Fine-Gray settlement curve crosses below
+the no-skill line between the 3- and 5-year horizons and is
+clearly below it at 5 years. Dotted line marks the no-skill
 classifier (AUC $= 0.5$). Computed via \texttt{timeROC} with IPCW
 weights.}
 \label{fig:auc_over_time}

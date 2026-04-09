@@ -48,22 +48,16 @@ heterogeneity across judicial circuits.
 
 \subsection{Composition Adjustment and Unobserved Heterogeneity}
 
-Two methodological extensions augment the core competing-risks
-framework in this thesis: propensity-score re-weighting for
-composition adjustment, and shared frailty models for
-unobserved clustering.
-
-Inverse probability of treatment weighting uses a propensity
+For the first challenge, inverse probability of treatment
+weighting (IPTW) uses a propensity
 score to re-weight observations so that treated and control
 groups are balanced on observed covariates
-\citep{xieliu2005}. \citet{austinfine2025} extend IPTW to
+\citep{xieliu2005}. Recent work extends IPTW to
 competing-risks settings, showing that weighted Aalen-Johansen
 and cause-specific Cox estimators can recover adjusted
 cumulative incidence and hazard estimates under strong
-identifying assumptions. In our setting, those assumptions are
-not cleanly satisfied, so IPTW is used as a composition
-adjustment rather than as a causal design; the precise scope
-of that interpretation is developed in
+identifying assumptions \citep{austinfine2025}. The scope
+of those assumptions in our setting is developed in
 Chapter~\ref{ch:methodology}.
 
 Shared frailty models address a different source of bias:
@@ -74,14 +68,15 @@ are not captured by observed covariates, standard Cox
 estimates that pool across circuits may be biased
 \citep{ruetenbudde2019}. A shared frailty model introduces
 a circuit-level random effect (the ``frailty'') that captures
-this unobserved clustering. \citet{ruetenbudde2019} develop
-competing-risks frailty models for multicenter clinical data,
-where center-level frailties capture institutional
-heterogeneity in baseline risk---directly analogous to
-modeling unobserved jurisdictional variation across federal
-circuits. \citet{frevent2024} extend this framework to
-spatially correlated frailties, treating geographic units
-as clusters with shared latent risk factors.
+this unobserved clustering. In the competing-risks setting
+specifically, frailty models have been applied to multicenter
+clinical data, where center-level frailties capture
+institutional heterogeneity in baseline risk---directly
+analogous to jurisdictional variation across federal circuits
+\citep{ruetenbudde2019}. Subsequent work extends this
+framework to spatially correlated frailties, treating
+geographic units as clusters with shared latent risk factors
+\citep{frevent2024}.
 
 The small number of circuit-level clusters in our setting
 constrains the precision of frailty variance estimates; the
@@ -107,16 +102,13 @@ modeling the competing nature of outcomes.
 
 \subsection{The PSLRA and Procedural Reform}
 
-The PSLRA represents
-the most significant structural break in the history of
-securities class action litigation. The Act introduced
-heightened pleading standards requiring plaintiffs to plead
-facts giving rise to a ``strong inference'' of scienter, imposed
-an automatic stay of discovery pending resolution of motions to
-dismiss, and established lead-plaintiff provisions favoring
-institutional investors \citep{johnson2001}. Empirical studies
-have found that the PSLRA was associated with higher early
-dismissal rates for cases lacking strong merit signals---such as accounting
+The PSLRA represents the most significant procedural reform in
+securities class action history, reshaping the litigation
+landscape through heightened pleading requirements, an
+automatic discovery stay, and lead-plaintiff provisions
+\citep{johnson2001}. Empirical studies have found that these
+reforms were associated with higher early dismissal rates for
+cases lacking strong merit signals---such as accounting
 restatements, parallel SEC enforcement actions, or insider
 trading allegations---while allowing meritorious cases to
 proceed \citep{johnson2001, choi2007}.
@@ -146,24 +138,23 @@ Other determinants include merit signals (accounting
 restatements, SEC investigations), statutory basis
 (Section~11 versus Section~10(b) claims), and forum variation
 across federal circuits \citep{johnson2001, perino2003}.
-\citet{wang2022} find that law firm market share is associated
-with case outcomes and settlement patterns.
-Furthermore, multidistrict litigation (MDL) consolidation represents a
+Law firm market share has also been shown to be associated
+with case outcomes and settlement patterns \citep{wang2022}.
+Furthermore, MDL consolidation represents a
 distinct procedural pathway that concentrates large numbers
 of related cases before a single judge. Yet, the current
 literature lacks a dynamic analysis of how this consolidation
-alters the underlying hazard processes of case resolution
-over time. Because MDL consolidation suppresses both
-settlement and dismissal rates simultaneously, its net
-effect on cumulative outcome probabilities cannot be
+changes settlement and dismissal timing jointly over
+follow-up. Because MDL can reshape both pathways at once,
+its net effect on cumulative outcome probabilities cannot be
 determined from static models that examine each outcome
 in isolation.
 
 \subsection{Prior Use of Survival Methods}
 
-While survival methods are rare in this domain, \citet{brochet2014}
-analyze settlement speed using Cox proportional hazards models
-conditional on cases that eventually settle. That design
+While survival methods are rare in this domain, one notable
+exception includes a Cox analysis of settlement timing among
+cases that eventually settle \citep{brochet2014}. That design
 mischaracterizes the data-generating process. Because
 dismissals tend to occur earlier than settlements, treating
 dismissed cases as right-censored implies that they remain at
@@ -175,17 +166,7 @@ this thesis.
 
 \section{Federal Court Administrative Data}
 
-Our analysis relies on the IDB, which aggregates civil case data reported by
-the Administrative Office of the U.S.\ Courts from all 94
-federal district courts \citep{fjc_idb_portal, fjc_idb_guide}.
-The IDB contains longitudinal records from approximately 1970
-to the present, capturing filing dates, termination dates,
-nature-of-suit codes, disposition codes, and court identifiers.
-Securities class actions are primarily identified using
-nature-of-suit (NOS) Code~850 (``Securities, Commodities,
-and Exchange'').
-
-A major challenge is outcome coding. Voluntary dismissals may
+A major challenge in using the IDB for this analysis is outcome coding. Voluntary dismissals may
 include settlement-like resolutions, and judgment-bearing
 dispositions can conflate plaintiff and defendant victories
 unless the IDB's \texttt{JUDGMENT} field is consulted.
@@ -212,22 +193,23 @@ break; and (3) the IDB provides rich administrative data but
 requires careful handling of disposition codes and class-action
 flags.
 
-Despite these foundations, existing empirical work has not
-estimated the specific objects that a competing-risks framework
-provides. Practitioner reports provide descriptive cohort plots
+Despite these foundations, existing empirical work has generally
+not estimated the specific objects that a competing-risks
+framework provides. Practitioner reports provide descriptive cohort plots
 without formal hazard modeling \citep{cornerstone2024}.
 Academic studies use Cox models conditional on settlement
 without accounting for competing risks \citep{brochet2014},
 or analyze outcomes using static regression methods that ignore
-duration \citep{cox2008, johnson2001}. None estimate joint
+duration \citep{cox2008, johnson2001}. To our knowledge, none estimate joint
 cause-specific hazard functions, subdistribution hazards, and
 cumulative incidence curves for settlement and dismissal while
 properly accounting for censoring and the mutually exclusive
-nature of outcomes. Furthermore, no prior study has attempted
-to disentangle the PSLRA's legislative effect from concurrent
-changes in case composition using propensity-score methods, nor
-has any modeled unobserved circuit-level heterogeneity through
-shared frailty specifications in this litigation context.
+nature of outcomes. Furthermore, we are not aware of prior
+work that separates the PSLRA-period association from
+concurrent changes in case composition using propensity-score
+methods, or that models unobserved circuit-level heterogeneity
+through shared frailty specifications in this litigation
+context.
 
 This thesis fills the gap by applying a full
 competing-risks framework---cause-specific and

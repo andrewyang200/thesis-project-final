@@ -109,12 +109,12 @@
 | Spline time trend | 0.714 | 3.515 |
 
 ### Performance
-| Model | C-index | AUC @ 1yr | AUC @ 3yr | AUC @ 5yr | IBS |
-|---|---|---|---|---|---|
-| Cox (Settlement) | 0.679 | 0.732 | 0.705 | 0.793 | 0.1212 |
-| Cox (Dismissal) | 0.597 | 0.595 | 0.643 | 0.775 | 0.1842 |
-| Fine-Gray (Settlement) | 0.555 | 0.659 | 0.531 | 0.377 | NA |
-| Fine-Gray (Dismissal) | 0.595 | 0.592 | 0.633 | 0.770 | NA |
+| Model | C-index | AUC @ 1yr | AUC @ 2yr | AUC @ 3yr | AUC @ 5yr | IBS |
+|---|---|---|---|---|---|---|
+| Cox (Settlement) | 0.679 | 0.732 | 0.708 | 0.705 | 0.793 | 0.1212 |
+| Cox (Dismissal) | 0.597 | 0.595 | 0.618 | 0.643 | 0.775 | 0.1842 |
+| Fine-Gray (Settlement) | 0.555 | 0.659 | 0.601 | 0.531 | 0.377 | NA |
+| Fine-Gray (Dismissal) | 0.595 | 0.592 | 0.611 | 0.633 | 0.770 | NA |
 
 ---
 

@@ -22,7 +22,7 @@ Every chapter MUST open with 1-3 sentences stating:
 ## LaTeX Conventions
 - Use `\input{Chapters/filename}` to include chapter files
 - Cross-references: `Figure~\ref{fig:xxx}`, `Table~\ref{tab:xxx}`, `Equation~\eqref{eq:xxx}`
-- `\citet{key}` for textual citations, `\citep{key}` for parenthetical
+- `\citep{key}` for textual citations, `\citep{key}` for parenthetical
 - Wrap all math in `\( \)` for inline, `\[ \]` or `equation` env for display
 - Use `booktabs` for tables (no vertical rules)
 - Keep paragraphs focused — one idea per paragraph

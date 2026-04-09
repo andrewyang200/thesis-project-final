@@ -5,54 +5,57 @@
 \usepackage{amsthm}
 \usepackage{latexsym}
 \usepackage{graphicx}
-\graphicspath{{../output/figures/}}
+\graphicspath{{./Figures/}}
 \usepackage{url}
 \usepackage{booktabs} % Added for professional-looking tables in data.tex
 \usepackage{natbib}
 \usepackage{subcaption}
-\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue]{hyperref}
+\usepackage[hidelinks]{hyperref}
+
 
 % Ensure chapter-based line numbering if needed, though often omitted for reports
 % \usepackage{lineno}
 % \linenumbers
 
-\title{Settlement or Dismissal? Competing-Risks Survival Analysis of U.S. Federal Securities Class Actions}
-\submitted{April 9, 2026}
+\title{The Litigation Clock: Competing-Risks Survival Analysis of U.S. Federal Securities Class Actions}
+\submitted{April 2026}
 \author{Andrew Yang}
 \advisor{Prof. Ioannis Akrotirianakis} % Placeholder for your advisor
 
 \dedication{} % Placeholder, as discussed
 
 \abstract{
-\input{./chapters/abstract}
+\input{./Chapters/abstract}
 }
 
 \acknowledgements{
-\input{./chapters/acknow}
+\input{./Chapters/acknow}
 }
+
 
 \begin{document}
 
+
 \chapter{Introduction}\label{ch:intro}
-\input{./chapters/intro}
+\input{./Chapters/intro}
 
 \chapter{Literature Review}\label{ch:litreview}
-\input{./chapters/litreview}
+\input{./Chapters/litreview}
 
 \chapter{Methodology}\label{ch:methodology}
-\input{./chapters/methodology}
+\input{./Chapters/methodology}
 
 \chapter{Data}\label{ch:data}
-\input{./chapters/data}
+\input{./Chapters/data}
 
 \chapter{Results}\label{ch:results}
-\input{./chapters/results}
+\input{./Chapters/results}
 
 \chapter{Discussion}\label{ch:discussion}
-\input{./chapters/discussion}
+\input{./Chapters/discussion}
 
-\chapter{Conclusion and Future Directions}\label{ch:conclusion}
-\input{./chapters/conclusion}
+\chapter{Conclusion}\label{ch:conclusion}
+\input{./Chapters/conclusion}
 
 \bibliographystyle{abbrv}
 \bibliography{refs}

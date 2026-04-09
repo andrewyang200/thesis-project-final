@@ -164,7 +164,7 @@ Based on the file type or scope given to you:
 - [ ] Does every `\ref{fig:X}` point to a figure that exists?
 - [ ] Does every `\ref{tab:X}` point to a table that exists?
 - [ ] Does every `\eqref{eq:X}` point to a numbered equation that exists?
-- [ ] Does every `\cite{X}` / `\citet{X}` / `\citep{X}` have a matching .bib entry?
+- [ ] Does every `\cite{X}` / `\citep{X}` / `\citep{X}` have a matching .bib entry?
 - [ ] Are there figures or tables that exist in output/ but are never referenced in text?
 - [ ] Are there .bib entries that are never cited?
 - [ ] Do figure/table captions accurately describe their contents?

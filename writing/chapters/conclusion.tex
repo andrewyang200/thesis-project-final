@@ -40,23 +40,21 @@ record. Taken together, the most defensible substantive claim
 is an early dismissal filter, not a uniform shift in all
 aspects of litigation dynamics.
 
-Second, the IPTW composition-adjusted decomposition
-(Section~\ref{sec:results_iptw}) separates the raw PSLRA
-association into a component linked to observable case-mix
-shifts and a residual component that remains after
-adjustment. In point-estimate terms, the dismissal
-association strengthens modestly after composition
-adjustment (1.414 to 1.519), suggesting that observable
-compositional shifts partially offset the raw dismissal
-association. The settlement estimate attenuates from 0.557
-to 0.741, implying that observed case-mix differences
-account for about 41\% of the raw settlement gap, but the
-residual settlement association does not survive the
-cluster-robust specification ($p = 0.158$) or the two
-largest circuit-specific sub-samples. These estimates are
-composition-adjusted rather than causally identified, but
-they provide a principled sensitivity check unavailable in
-prior work.
+Second, the IPTW composition-adjusted sensitivity analysis
+(Section~\ref{sec:results_iptw}) shows that conditioning on
+observable case-mix shifts leaves the dismissal association
+elevated and materially attenuates the settlement
+association. Those contrasts are informative, but they are
+sensitivity comparisons rather than a formal decomposition of
+the raw PSLRA gap, especially because some weighting
+covariates may themselves lie on post-PSLRA pathways. The
+settlement association in the extended fixed-effects model
+also does not survive the cluster-robust specification
+($p = 0.158$), and the settlement result weakens in the two
+largest circuit-specific sub-samples. The IPTW estimates are
+composition-adjusted rather than causally identified, but the
+broader triangulation provides a principled sensitivity check
+unavailable in prior work.
 
 Third, circuit geography emerges as a dominant structural
 predictor of case trajectories. Relative to the Second
@@ -74,8 +72,8 @@ competing dismissal pathway is modeled directly.
 
 Throughout, we have treated the 1992 placebo failure, the
 post-treatment-bias concern in the IPTW covariates, and the
-settlement association's fragility under circuit-specific
-decomposition as binding interpretive limits rather than as
+settlement association's fragility in circuit-specific
+subsamples as binding interpretive limits rather than as
 afterthoughts. Those boundaries shape the contribution, but
 they are not themselves a separate substantive finding.
 
@@ -108,7 +106,7 @@ management, discovery scheduling, and motion practice drive
 the geographic patterns we observe.
 
 \paragraph{Plaintiff firm sophistication.}
-\citet{wang2022} documents that law firm identity is a
+\citep{wang2022} documents that law firm identity is a
 strong predictor of litigation outcomes, yet the IDB lacks
 attorney identifiers. CourtListener integration would
 provide title-based class-action validation, lead-counsel

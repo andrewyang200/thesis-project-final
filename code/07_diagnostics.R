@@ -557,6 +557,12 @@ perf_table <- tibble(
     if (!is.null(troc_fg_s))  round(get_auc(troc_fg_s)[1], 3)  else NA,
     if (!is.null(troc_fg_d))  round(get_auc(troc_fg_d)[1], 3)  else NA
   ),
+  `AUC @ 2yr` = c(
+    if (!is.null(troc_cox_s)) round(get_auc(troc_cox_s)[2], 3) else NA,
+    if (!is.null(troc_cox_d)) round(get_auc(troc_cox_d)[2], 3) else NA,
+    if (!is.null(troc_fg_s))  round(get_auc(troc_fg_s)[2], 3)  else NA,
+    if (!is.null(troc_fg_d))  round(get_auc(troc_fg_d)[2], 3)  else NA
+  ),
   `AUC @ 3yr` = c(
     if (!is.null(troc_cox_s)) round(get_auc(troc_cox_s)[3], 3) else NA,
     if (!is.null(troc_cox_d)) round(get_auc(troc_cox_d)[3], 3) else NA,

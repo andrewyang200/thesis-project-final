@@ -7,8 +7,9 @@ to the broader literature and policy landscape, and
 establishes the identification limits that constrain
 interpretation. We organize the discussion around five
 substantive themes: the
-PSLRA as a time-varying procedural filter, the decomposition
-of the raw PSLRA association via composition adjustment, judicial
+PSLRA as a time-varying procedural filter, the
+composition-adjusted sensitivity analysis of the raw PSLRA
+association, judicial
 geography as a structural determinant of outcomes, the role
 of case-level characteristics, and the identification limits
 that constrain causal interpretation of all estimates.
@@ -42,20 +43,21 @@ are also being filtered. The most defensible claim is
 therefore about timing and pathway, not about the normative
 quality of the filtered cases.
 
-\section{Composition-Adjusted Decomposition}
+\section{Composition-Adjusted Sensitivity}
 
 The IPTW triangulation (Section~\ref{sec:results_iptw})
-addresses how much of the raw PSLRA association survives
-after adjusting for observable case-mix changes. The answer
-differs sharply by outcome. For dismissal, the
-composition-adjusted estimate strengthens modestly in
-point-estimate terms, rising from 1.414 to 1.519. This
-suggests that observable compositional shifts partially
-offset rather than explain away the raw dismissal
-association. For settlement, the weighted estimate moves
-from 0.557 to 0.741, implying that observable case-mix
-differences account for about 41\% of the raw settlement
-gap.
+addresses whether the raw PSLRA association survives after
+conditioning on observable case-mix changes. The answer
+differs sharply by outcome. For dismissal, the weighted
+estimate is slightly larger than the raw estimate, so
+observable compositional shifts do not explain away the
+dismissal association. For settlement, weighting materially
+attenuates the negative association. That attenuation is
+arithmetically large, but it should not be read as a formal
+statement that a fixed share of the raw settlement gap is
+``explained'' by composition; the exercise compares point
+estimates under different adjustment strategies rather than
+identifying a decomposition.
 
 The composition-adjusted estimates inherit three important
 caveats. First, some weighting covariates may themselves lie
@@ -115,7 +117,7 @@ Circuit baseline.
 The strongest dismissal-side attenuations appear outside the
 Second Circuit, reinforcing that the PSLRA's practical
 association is geographically uneven. Prior work by
-\citet{johnson2001} and \citet{choi2007} has documented
+\citep{johnson2001} and \citep{choi2007} have documented
 circuit-level variation in PSLRA application; our
 competing-risks framework provides the first quantitative
 estimates of how this variation manifests in the joint
@@ -147,11 +149,16 @@ and Statutory Basis}
 
 The MDL finding (Section~\ref{sec:results_characteristics})
 reinforces the substantive importance of the estimand
-difference. MDL consolidation suppresses both cause-specific
-hazards, especially dismissal, yet raises the cumulative
-probability of settlement in the Fine-Gray model.
-That sign reversal is precisely the kind of result that a
-single-outcome framework would obscure. For parties weighing
+difference. MDL consolidation is associated with lower
+cause-specific settlement and dismissal hazards, especially
+dismissal, yet raises the cumulative probability of
+settlement in the Fine-Gray model. That sign reversal is
+precisely the kind of result that a single-outcome framework
+would obscure, but the settlement-side Fine-Gray model also
+has weak held-out discrimination and rejects proportional
+subdistribution hazards, so the SHR is best read as a
+cumulative-incidence summary rather than a stable predictive
+relation. For parties weighing
 consolidation, the implication is straightforward: MDL cases
 appear slower to resolve, but they are also much less likely
 to exit through dismissal.
@@ -183,11 +190,13 @@ but does not confirm, a PSLRA interpretation: a V-shaped
 secular pattern in dismissal risk remains possible, and the
 model's ability to detect period-specific effects where no
 law changed precludes clean causal attribution. The placebo
-therefore weakens the claim that an upward pre-trend
-mechanically inflates the PSLRA estimate, but it does not
-resolve identification on its own. The narrow-window
-analysis remains directionally consistent and supportive of
-robustness, but it is not a formal regression discontinuity
+therefore rules out a simple story in which an upward
+pre-trend mechanically inflates the PSLRA estimate, but it
+also shows that the clean window sits inside an already
+moving pre-reform period. It is a warning about
+identification, not affirmative robustness evidence. The
+narrow-window analysis remains directionally consistent, but
+it is not a formal regression discontinuity
 design. All estimates are therefore framed as associational or
 composition-adjusted throughout.
 
@@ -200,8 +209,8 @@ confounders. If the reform altered where and how securities
 class actions were filed, the composition-adjusted estimates
 condition on some of the reform's potential downstream
 channels. The composition-adjusted HR should therefore be
-interpreted as the component of the raw association not
-explained by those observed case-mix shifts, not as the
+interpreted as an association conditional on those observed
+case-mix shifts, not as the
 ``true'' reform effect and not as a literal lower bound on
 the total PSLRA association.
 

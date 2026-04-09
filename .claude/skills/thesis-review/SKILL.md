@@ -23,7 +23,7 @@ When executing a review, use this skill document to inform your standards, but A
 - [ ] Covariate names match between text, tables, and code
 - [ ] The same model results aren't reported with different numbers in different places
 - [ ] Tense is consistent (past tense for methods/results, present for discussion)
-- [ ] Citation style is uniform (\citet vs \citep used correctly)
+- [ ] Citation style is uniform (\citep vs \citep used correctly)
 
 ### Completeness Check
 - [ ] Every chapter has an opening goal statement

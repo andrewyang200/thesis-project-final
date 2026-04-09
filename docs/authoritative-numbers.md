@@ -414,12 +414,12 @@ CS settlement MDL: 0.490 (suppressed) vs FG SHR: 2.468 (amplified, p<0.001).
 
 ## 9. PERFORMANCE (held-out 30% test set)
 
-| Model | C-index | SE | AUC@1yr | AUC@3yr | AUC@5yr | IBS |
-|---|---|---|---|---|---|---|
-| Cox (Settlement) | 0.679 | 0.009 | 0.732 | 0.705 | 0.793 | 0.1212 |
-| Cox (Dismissal) | 0.597 | 0.007 | 0.595 | 0.643 | 0.775 | 0.1842 |
-| Fine-Gray (Settlement) | 0.555 | 0.010 | 0.659 | 0.531 | 0.377 | NA |
-| Fine-Gray (Dismissal) | 0.595 | 0.007 | 0.592 | 0.633 | 0.770 | NA |
+| Model | C-index | SE | AUC@1yr | AUC@2yr | AUC@3yr | AUC@5yr | IBS |
+|---|---|---|---|---|---|---|---|
+| Cox (Settlement) | 0.679 | 0.009 | 0.732 | 0.708 | 0.705 | 0.793 | 0.1212 |
+| Cox (Dismissal) | 0.597 | 0.007 | 0.595 | 0.618 | 0.643 | 0.775 | 0.1842 |
+| Fine-Gray (Settlement) | 0.555 | 0.010 | 0.659 | 0.601 | 0.531 | 0.377 | NA |
+| Fine-Gray (Dismissal) | 0.595 | 0.007 | 0.592 | 0.611 | 0.633 | 0.770 | NA |
 
 ---
 
